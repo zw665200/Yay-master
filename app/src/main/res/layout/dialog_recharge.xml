@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tb_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_20"
+        android:gravity="center"
+        android:text="@string/earn_dialog_recharge_title"
+        android:textColor="@color/color_title"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_30"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_50"
+        android:background="@drawable/shape_rectangle_grey_8_333333">
+
+        <EditText
+            android:id="@+id/et_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_100"
+            android:autofillHints="name"
+            android:background="@null"
+            android:hint="@string/earn_dialog_recharge_input_hint"
+            android:inputType="number"
+            android:textColor="@color/color_content"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/tv_amount_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:background="@drawable/shape_corner_yellow_10"
+            android:padding="@dimen/dp_5"
+            android:text="@string/earn_dialog_recharge_input_all"
+            android:textColor="@color/color_content"
+            android:textSize="@dimen/sp_12" />
+
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_recharge"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_30"
+        android:background="@drawable/shape_corner_yellow_10">
+
+        <TextView
+            android:id="@+id/btn_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/earn_dialog_recharge"
+            android:textColor="@color/color_content"
+            android:textSize="@dimen/sp_16" />
+
+    </FrameLayout>
+
+</LinearLayout>

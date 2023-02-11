@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.frank.ffmpeg">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <application>
+
+<!--        <activity android:name=".activity.MainActivity"/>-->
+       <!-- audio handle -->
+        <activity android:name=".activity.AudioHandleActivity" /> <!-- media handle -->
+        <activity android:name=".activity.MediaHandleActivity" /> <!-- video handle -->
+        <activity android:name=".activity.VideoHandleActivity" /> <!-- media player -->
+        <activity
+            android:name=".activity.MediaPlayerActivity"
+            android:screenOrientation="landscape" /> <!-- local pusher -->
+        <activity android:name=".activity.PushActivity" /> <!-- real time pusher -->
+        <activity
+            android:name=".activity.LiveActivity"
+            android:screenOrientation="portrait" /> <!-- filter effect -->
+        <activity
+            android:name=".activity.FilterActivity"
+            android:screenOrientation="landscape" /> <!-- video preview -->
+        <activity
+            android:name=".activity.VideoPreviewActivity"
+            android:screenOrientation="portrait" /> <!-- probe media format -->
+        <activity
+            android:name=".activity.ProbeFormatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AudioEffectActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.AudioPlayActivity" />
+        <activity android:name=".activity.EqualizerActivity" />
+    </application>
+
+</manifest>

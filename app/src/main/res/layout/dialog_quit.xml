@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tb_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_20"
+        android:gravity="center"
+        android:text="@string/club_notice"
+        android:textColor="@color/color_title"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/dp_30"
+        android:layout_marginEnd="@dimen/dp_30"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:lineSpacingExtra="@dimen/dp_5"
+        android:textColor="@color/color_content"
+        android:textSize="@dimen/sp_15" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_30"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rectangle_grey"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="@string/quit_cancel"
+            android:textColor="@color/color_content"
+            android:textSize="@dimen/sp_15" />
+
+        <Button
+            android:id="@+id/btn_task"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_weight="1"
+            android:background="@drawable/shape_corner_yellow"
+            android:gravity="center"
+            android:text="@string/quit_ok"
+            android:textColor="@color/color_content"
+            android:textSize="@dimen/sp_15" />
+
+    </LinearLayout>
+
+</FrameLayout>

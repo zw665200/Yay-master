@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/include_title"
+        layout="@layout/layout_title" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/wzbg_dl"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/service_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/sp_15"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_15"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/permission_sub_title"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_18" />
+
+        <FrameLayout
+            android:id="@+id/fl_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_15"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_15"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@drawable/shape_rectangle_grey_8">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/permission_camera_title"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/sp_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/permission_camera_content"
+                    android:textColor="@color/color_dark_grey"
+                    android:textSize="@dimen/sp_12" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/checkbox_camera"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/dp_10"
+                android:background="@drawable/selector_checkbox"
+                android:button="@null"
+                android:checked="true"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_micro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_15"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_15"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@drawable/shape_rectangle_grey_8">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/permission_micro_title"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/sp_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/permission_micro_content"
+                    android:textColor="@color/color_dark_grey"
+                    android:textSize="@dimen/sp_12" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/checkbox_micro"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/dp_10"
+                android:background="@drawable/selector_checkbox"
+                android:button="@null"
+                android:checked="true"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_15"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_15"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@drawable/shape_rectangle_grey_8">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/permission_location_title"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/sp_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/permission_location_content"
+                    android:textColor="@color/color_dark_grey"
+                    android:textSize="@dimen/sp_12" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/checkbox_location"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/dp_10"
+                android:background="@drawable/selector_checkbox"
+                android:button="@null"
+                android:checked="true"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_15"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_15"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@drawable/shape_rectangle_grey_8">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/permission_notice_title"
+                    android:textColor="@color/color_black"
+                    android:textSize="@dimen/sp_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/permission_notice_content"
+                    android:textColor="@color/color_dark_grey"
+                    android:textSize="@dimen/sp_12" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/checkbox_notice"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/dp_10"
+                android:background="@drawable/selector_checkbox"
+                android:button="@null"
+                android:checked="true"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sp_15"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/agreement_check"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_gravity="center_vertical"
+                android:checked="true"
+                android:theme="@style/MyCheckBox2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/permission_check"
+                android:textColor="@color/color_dark_grey"
+                android:textSize="@dimen/sp_12" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_auth"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_15"
+            android:background="@drawable/background_gradient_yellow"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="@string/permission_auth"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_16" />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginStart="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_15"
+            android:background="@drawable/shape_rectangle_light_yellow"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="@string/permission_jump"
+            android:textColor="@color/color_yellow"
+            android:textSize="@dimen/sp_16" />
+
+    </LinearLayout>
+
+</LinearLayout>

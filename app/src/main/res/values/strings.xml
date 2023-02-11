@@ -1,0 +1,528 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="custom_app_name">Yay</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Match</string>
+    <string name="title_club">Club</string>
+    <string name="title_notifications">Message</string>
+    <string name="title_mine">Mine</string>
+
+    <!--public-->
+    <string name="public_not_enough_coin">Not enough gems</string>
+
+    <!--login-->
+    <string name="login_agreement">Please read \&#034;Privacy Policy\&#034; and \&#034;Terms of User\&#034;</string>
+    <string name="login_google_web_client_id_remote">771687555433-8m21bkngvhtapd6phkvtifbrh6ptq04j.apps.googleusercontent.com</string>
+    <string name="login_google_web_client_id_local">771687555433-gab5npokh0sj3rqiovt1qvuv6shpri73.apps.googleusercontent.com</string>
+    <string name="login_google_web_client_id">771687555433-oupof2l886igrk43i9vvt6jf5e67cs32.apps.googleusercontent.com</string>
+    <string name="login_failed">login failed</string>
+    <string name="login_success">Successful login</string>
+    <string name="login_facebook">Log in With Facebook</string>
+    <string name="login_whatsapp">Log in with Test(Demo)</string>
+    <string name="login_google">Log in with Google</string>
+    <string name="login_phone_register">Register by phone</string>
+    <string name="login_phone_login">Login by phone</string>
+    <string name="login_input_number">Enter the phone number</string>
+    <string name="login_input_code">Enter verification code</string>
+    <string name="login_input_pwd">Please enter your password</string>
+    <string name="login_input_pwd_again">Please enter the login password again</string>
+    <string name="login_input_right_number">Please enter a valid phone number</string>
+    <string name="login_input_right_code">Please enter the correct verification code</string>
+    <string name="login_input_right_pwd">Please enter the correct password</string>
+    <string name="login_pwd_tip">Login password consists of 4–20 upper or lower case letters, symbols, or numbers</string>
+    <string name="login_get_message_code">Send</string>
+    <string name="login_sign_up">Register</string>
+    <string name="login_login">Log in</string>
+    <string name="login_pwd_forget">Forgot password?</string>
+    <string name="login_pwd_get">Retrieve password</string>
+    <string name="login_pwd_reset">Reset Password</string>
+    <string name="login_next_step">Next step</string>
+    <string name="login_next_submit">Submit</string>
+    <string name="login_read">I have read and agree to</string>
+    <string name="login_user_agreement">Terms of Service</string>
+    <string name="login_and">and</string>
+    <string name="login_privacy_agreement">Privacy Policy</string>
+    <string name="login_phone_code_hint">+00</string>
+
+    <!--facebook-->
+    <string name="facebook_app_id">566373715252467</string>
+    <string name="fb_login_protocol_scheme">fb566373715252467</string>
+    <string name="facebook_client_token">01901f392d519967f569962c7f7ac150</string>
+
+    <!--region-->
+    <string name="region_title">Select region</string>
+    <string name="region_search_hint">Search</string>
+    <string name="region_name">%1$s&#32;%2$s</string>
+
+    <!--guide-->
+    <string name="guide_title_gender">Select gender</string>
+    <string name="guide_title_age">Select birthday</string>
+    <string name="guide_title_nickname">Add nickname</string>
+    <string name="guide_title_avatar">Add a profile picture</string>
+    <string name="guide_title_wallpaper">Upload photos</string>
+    <string name="guide_title_fun">Highlight interests tags</string>
+    <string name="guide_next_step">Continue</string>
+    <string name="guide_next_jump">Skip</string>
+    <string name="guide_gender_i_am">I am…</string>
+    <string name="guide_gender_male">Male</string>
+    <string name="guide_gender_female">Female</string>
+    <string name="guide_gender_looking_for">Looking for…</string>
+    <string name="guide_gender_birthday">My birthday</string>
+    <string name="guide_nickname_hint">Enter your nickname</string>
+    <string name="guide_album_tip">Please upload a photo</string>
+    <string name="guide_tag_tip">Highlight interests tags</string>
+    <string name="guide_avatar_setting">Set profile picture</string>
+    <string name="guide_avatar_upload">Upload a real profile picture can help you more quickly gain the favor of the opposite sex</string>
+    <string name="guide_notice_limit_age">*You must over 18 years of age</string>
+
+    <!--home-->
+    <string name="home_match_video">Video</string>
+    <string name="home_match_audio">Voice</string>
+    <string name="home_match_game">Game</string>
+    <string name="home_match_all_people">Everyone</string>
+    <string name="home_match_global">Global</string>
+    <string name="home_sex_ref">Gender Filter</string>
+    <string name="home_region_ref">Country Filter</string>
+    <string name="home_male">Male</string>
+    <string name="home_female">Female</string>
+    <string name="home_all_gender">Everyone</string>
+    <string name="home_choose_tip_1">Members enjoy %1$d off</string>
+    <string name="home_choose_tip_2">per filter</string>
+    <string name="home_my_lemon">My gems</string>
+    <string name="home_hand_off">Hands-free mode</string>
+    <string name="home_purchase">Recharge</string>
+    <string name="home_prime">Prime</string>
+    <string name="home_free">Free</string>
+    <string name="home_match_begin">Start Matching</string>
+
+    <!--permission-->
+    <string name="permission_title">Permission Required</string>
+    <string name="permission_sub_title">Yay needs your permission for you to enjoy discover</string>
+    <string name="permission_camera_title">Camera Permission</string>
+    <string name="permission_camera_content">To show others a real and interesting you</string>
+    <string name="permission_micro_title">Microphone Permission</string>
+    <string name="permission_micro_content">Delivering Sound during voice/video Calls</string>
+    <string name="permission_location_title">Location Permission</string>
+    <string name="permission_location_content">To recommend interesting people nearby based on your location</string>
+    <string name="permission_notice_title">Notification Permission</string>
+    <string name="permission_notice_content">To notify when someone sends you a video or private message</string>
+    <string name="permission_check">Ticking means you agree to authorize all the above permissions</string>
+    <string name="permission_auth">Continue</string>
+    <string name="permission_jump">Skip</string>
+    <string name="permission_choose">Please check permissions</string>
+    <string name="permission_agree">Please check the consent authorization</string>
+
+    <!--app-->
+    <string name="app_foreground">Running in the foreground</string>
+
+    <!--match-->
+    <string name="match_follow">Follow</string>
+    <string name="match_followed">Followed</string>
+    <string name="match_video">Video</string>
+    <string name="match_audio">Voice</string>
+    <string name="match_game">Game</string>
+    <string name="match_send_single">Matching…</string>
+    <string name="match_chat_hint">Say something…</string>
+    <string name="match_chat_send">Send</string>
+    <string name="match_chat_split">:</string>
+    <string name="match_video_apply">S/he invites you to a Video Call, Accept?</string>
+    <string name="match_audio_apply">S/he invites you to a Voice Call, Accept?</string>
+    <string name="match_video_reject">The other party has declined</string>
+    <string name="match_video_next">Skip</string>
+    <string name="match_error">Match failed</string>
+    <string name="match_timeout">Match timeout</string>
+    <string name="match_disconnect">The other party has hung up, continue to match</string>
+    <string name="match_connect_timeout">Times out, entering next match</string>
+    <string name="match_waiting_to_connect">The Match is successful, awaiting response…</string>
+    <string name="match_waiting_to_connect_personal">Awaiting response…</string>
+    <string name="match_offline">The other party is offline</string>
+    <string name="match_gone">The other party has left</string>
+    <string name="match_room_banned">Room blocked</string>
+    <string name="match_face_not_found">No face detected</string>
+    <string name="match_connection_disconnected">Network connection lost</string>
+    <string name="match_connection_connecting">Establishing a network connection</string>
+    <string name="match_connection_connected">Network connected</string>
+    <string name="match_connection_reconnecting">Re-establishing network connection</string>
+    <string name="match_connection_failed">Network connection failed</string>
+    <string name="match_failed_invite_title">Recommendations</string>
+    <string name="match_failed_invite">Someone has invited you to Club</string>
+    <string name="match_failed_invite_accept">Go meet them</string>
+    <string name="match_finish">Chat has ended!</string>
+    <string name="match_finish_title">Are you satisfied with S/he?</string>
+    <string name="match_item_gift_get_more">Get more gems</string>
+    <string name="match_item_gift_send">Send</string>
+    <string name="match_game_matching">The matching is still in progress. you will be reminded if the match is successful, so feel free to play the game~</string>
+    <string name="match_game_tip_1">Rules: Start the lottery after coin insertion</string>
+    <string name="match_game_tip_2">Rules: One party inserts coins and the other gets a chance to draw</string>
+    <string name="match_game_tap_1">Coin Paradise</string>
+    <string name="match_game_tap_2">Gift paradise</string>
+    <string name="match_game_record">Winning record</string>
+    <string name="match_game_win">Winning</string>
+    <string name="match_game_lottery_time">Lottery %1$s times</string>
+    <string name="match_game_start">Start</string>
+    <string name="match_game_insert">Insert</string>
+    <string name="match_broadcast_content">%1$s gets %2$s %3$s</string>
+    <string name="match_game_draw_5">Draw Once 5</string>
+    <string name="match_game_draw_8">Draw Once 8</string>
+    <string name="match_game_draw_30">Ten Times 30</string>
+    <string name="match_game_draw_50">Ten Times 50</string>
+    <string name="match_game_reward_get">Get</string>
+    <string name="match_game_reward_title">OK</string>
+    <string name="match_hand_off_tip">Hands-free mode is on. It will automatically connect if matched</string>
+    <string name="match_add_time">Recharge Duration</string>
+    <string name="match_me">Me</string>
+    <string name="match_hand_free_toast">Hands-free mode is on. It will automatically connect if matched</string>
+    <string name="match_game_wait_lottery">Wait for the other party to start the draw</string>
+    <string name="match_game_wait_lottery_tip">Rules: One party inserts coins, the other gets a chance to draw and win the prizes</string>
+    <string name="match_game_wait_lottery_tip_2">Tip: Prizes can be viewed on the <font color="#ECA23D">"Revenue Page"</font></string>
+    <string name="match_wait_tip_1">Don\'t be shy, go say hi~~</string>
+    <string name="match_wait_tip_2">A warm smile can make a good impression~~</string>
+    <string name="match_wait_tip_3">Make friends in a civilized way, show your personal charm~</string>
+    <string name="match_wait_tip_4">You can set different beauty effects at any time~~</string>
+    <string name="match_wait_tip_5">Hey~ why not try the gender and region filter below~</string>
+    <string name="match_wait_tip_6">Why not try the mini-games in the bottom right corner while you wait~</string>
+    <string name="match_wait_tip_7">You will be notified if the match is successful during the game~</string>
+    <string name="match_wait_long_time">Unable to connect. Try again later…</string>
+    <string name="match_send">Send</string>
+    <string name="match_free">Free</string>
+    <string name="match_add_time_tip">The call will be hung up if there\'s no duration recharge</string>
+    <string name="match_ticket_receive">The other party gives you a raffle ticket, you can start the draw</string>
+    <string name="match_ticket_unused">It is detected that you still have unused tickets, please use first</string>
+
+    <!--match record-->
+    <string name="record_title">Match record</string>
+    <string name="record_visitor">Who viewed my profile</string>
+    <string name="record_game_matcher">Recent game teammates</string>
+    <string name="record_all">All</string>
+    <string name="record_no_data">You have no match records yet</string>
+    <string name="record_to_match">Go match</string>
+    <string name="record_to_online">The match invitation has been successfully sent, waiting for the other party to accept</string>
+    <string name="record_to_offline">The other party is not online</string>
+    <string name="record_following">Following</string>
+    <string name="record_followed">Followers</string>
+    <string name="record_follow_each_other">Mutual followers</string>
+    <string name="record_follow_title">Recommendations for you</string>
+    <string name="record_no_following">You haven\'t followed anyone</string>
+    <string name="record_no_followed">Nobody is following you yet</string>
+    <string name="record_no_friends">You don\'t have any mutual followers yet</string>
+    <string name="record_make_friends">Meet new people</string>
+
+    <!--club-->
+    <string name="club_title">Club</string>
+    <string name="club_subtitle_01">All</string>
+    <string name="club_subtitle_02">Star</string>
+    <string name="club_subtitle_03">Popular</string>
+    <string name="club_subtitle_04">New</string>
+    <string name="club_available">Available</string>
+    <string name="club_unavailable">In call</string>
+    <string name="club_notice">Tips</string>
+    <string name="club_notice_coin_enough">You will be charged %1$s gems/minute.</string>
+    <string name="club_notice_coin_deficient">You will be charged %1$s gems/minute.</string>
+    <string name="club_unlock_content">Unlock will cost %1ds</string>
+    <string name="club_unlock_sure">Confirm</string>
+    <string name="club_unlock_cancel">Cancel</string>
+    <string name="club_notice_top_up">Recharge</string>
+    <string name="club_notice_cancel">Cancel</string>
+    <string name="club_notice_sure">Initiate</string>
+    <string name="club_score">Score:%1$s</string>
+    <string name="club_level">Level:LV%1$d</string>
+
+    <!--notification-->
+    <string name="notification_title">Message</string>
+    <string name="notification_system_notification">Yay Team</string>
+    <string name="notification_item_see">click</string>
+
+    <!--store-->
+    <string name="store_title">Gem shop</string>
+    <string name="store_price">$%1$s</string>
+    <string name="store_question">Contact us if you have any questions</string>
+    <string name="store_pay_free">Free</string>
+    <string name="store_pay_success">Payment successful</string>
+
+    <!--mine-->
+    <string name="mine_followed">Followers</string>
+    <string name="mine_following">Followings</string>
+    <string name="mine_follow">follow</string>
+    <string name="mine_unfollow">unfollow</string>
+    <string name="mine_member">Yay VIP</string>
+    <string name="mine_store">Gem shop</string>
+    <string name="mine_income">My Income</string>
+    <string name="mine_income_host">Host Income</string>
+    <string name="mine_short_video">Short videos</string>
+    <string name="mine_photo_wall">Photo wall</string>
+
+    <!--chat-->
+    <string name="chat_video_blur_tip">The blur effect disappears when facing the camera</string>
+    <string name="chat_video_blur_remove">Remove blur effect</string>
+
+    <!--beauty-->
+    <string name="beauty_title">Beauty effect</string>
+    <string name="beauty_lightening">Whitening</string>
+    <string name="beauty_smoothness">Smooth</string>
+    <string name="beauty_redness">Rosy</string>
+    <string name="beauty_sharpness">Sharpen</string>
+
+    <!--report-->
+    <string name="report_title">Violation report</string>
+    <string name="report_commit">Report</string>
+    <string name="report_commit_success">Successful report</string>
+
+    <!--addition-->
+    <string name="addition_title">Please select a package</string>
+    <string name="addition_tip">Take some time to get to know them well</string>
+    <string name="addition_discount_tip">Yay VIP can enjoy 20% discount each time</string>
+    <string name="addition_my_lemon">My gem</string>
+    <string name="addition_prime">Yay VIP</string>
+    <string name="addition_commit">Confirm</string>
+    <string name="addition_item_title">%1$d minute</string>
+    <string name="addition_item_every_minute">Per minute</string>
+
+    <!--follow-->
+    <string name="follow_title">Relationship List</string>
+    <string name="follow_following">Followings(%1$d)</string>
+    <string name="follow_followed">Followers(%1$d)</string>
+
+    <!--profile-->
+    <string name="profile_title">Edit Profile</string>
+    <string name="profile_avatar">Avatar</string>
+    <string name="profile_save">Save</string>
+    <string name="profile_nickname">Nickname</string>
+    <string name="profile_sex">Gender</string>
+    <string name="profile_age">Age</string>
+    <string name="profile_region">Country</string>
+    <string name="profile_tag">Interest tags</string>
+    <string name="profile_video_upload">Upload a personal short video(hold and drag to reorder)</string>
+    <string name="profile_image_upload">Upload personal photos(hold and drag to reorder)</string>
+    <string name="profile_modify_content_hint">Enter the modified content</string>
+    <string name="profile_modify_commit">Save</string>
+    <string name="profile_modify_birthday_hint">*You must over 18 years of age</string>
+
+    <!--setting-->
+    <string name="setting_title">General settings</string>
+    <string name="setting_blur_title">Blur effect</string>
+    <string name="setting_blur_content">If the other person\'s face is not facing the camera during a video call, the screen will display a layer of blur. This blur can be manuallremoved or automatically removed when the other person\'s face is facing the camera. The blur is enabled by default and can be disabled to remove the blur effect.</string>
+    <string name="setting_notice">Notifications</string>
+    <string name="setting_share">Share with friends</string>
+    <string name="setting_feedback">Help and Feedback</string>
+    <string name="setting_invite">Email verification</string>
+    <string name="setting_anchor">Hosts Recruitment</string>
+    <string name="setting_feedback_feedback">Help and feedback</string>
+    <string name="setting_feedback_eq">Frequently Asked Questions</string>
+    <string name="setting_feedback_privacy">Privacy policy</string>
+    <string name="setting_feedback_service">Terms of service</string>
+    <string name="setting_feedback_delete">Delete account</string>
+    <string name="setting_feedback_logout">Logout</string>
+
+    <!--notice-->
+    <string name="notice_video_title">Video invitation</string>
+    <string name="notice_video_content">Push a notification when new video call request</string>
+    <string name="notice_privacy_title">Private messages</string>
+    <string name="notice_privacy_content">Push a notification when there is a new private message</string>
+    <string name="notice_add_follow_title">New followers</string>
+    <string name="notice_add_follow_content">Push a notification when there are new followers</string>
+    <string name="notice_followed_title">Followed users are online</string>
+    <string name="notice_followed_content">When the user you follow is online, a reminder will be pushed</string>
+
+    <!--account delete-->
+    <string name="account_delete_title">Delete account</string>
+    <string name="account_delete_des_00">Please confirm before deleting</string>
+    <string name="account_delete_des_01">1. After deleting your account, the platform will clear all data related to your account. This includes, but is not limited to, membership privileges an gem balances. Please operate with caution!</string>
+    <string name="account_delete_des_02">2. The user should confirm that the automatic subscription has been cancelled, so as to avoid automatic deduction after deleting the account.</string>
+    <string name="account_delete_des_03">3. It takes 24 hours to delete the account to take effect. During this period, the original account cannot be logged in</string>
+    <string name="account_delete_des_04">4. After 24 hours after confirming the cancellation submission, the original login method can log in again and register as a new account on our platform, but it has nothing to do with the canceled account.</string>
+    <string name="account_delete_sure">Confirm </string>
+    <string name="account_delete_refuse">let me think about it</string>
+
+    <!--not find dialog-->
+    <string name="not_find_title">Tips</string>
+    <string name="not_find_content">After deleting your account, the platform will clear all data related to your account. This includes but is not limited to, membership privileges an gem balances. Please operate with caution!</string>
+    <string name="not_find_agree">Please check to agree to delete the account</string>
+    <string name="not_find_commit">Application submitted</string>
+
+    <!--feedback-->
+    <string name="feedback">Help and feedback</string>
+    <string name="feedback_hint">To help us troubleshoot the issue, please describe the problem and the process in detail</string>
+    <string name="feedback_contact">Enter the problem you encountered</string>
+    <string name="feedback_submit">Submit</string>
+    <string name="feedback_img_content">Please upload feedback images</string>
+    <string name="feedback_check">Please check what you have entered</string>
+    <string name="feedback_commit_success">Successful submission, the official reply will be sent to you via email. Please make sure that your email address has been verified</string>
+    <string name="feedback_commit_failed">Submission Failed</string>
+
+    <!--agree-->
+    <string name="agree_user_agreement">Terms of service</string>
+    <string name="agree_privacy_agreement">Privacy policy</string>
+    <string name="agree_ok">Agree</string>
+    <string name="agree_refuse">Disagree</string>
+
+    <!--question-->
+    <string name="question_title">Frequently Asked Questions</string>
+    <string name="question_title_1">What is a Yay VIP? What rights do I have?</string>
+    <string name="question_content_1">Subscribed to Yay VIP, you can use the advanced functions of Yay app, the specific benefits are as follows:\n
+    1. Earn 1200 Gems Per Month;\n
+    2. Only need to spend 8 gems for each matching filter item(gender / country);\n
+    3. Unlimited private messages;\n
+    4. Unlimited modification of gender;\n
+    5. Unlimited modification of location;\n
+    6. Use the rear camera;\n
+    7. Unlock who viewed your file;\n
+    8. Unique Badge: Have a unique profile identity;\n
+    Membership is valid for 1 month. You can check the remaining period of the subscription on the "My  VIP" page. The subscription will be automatically renewed at the end of the validity period. If you want to cancel the VIP subscription, you must do it in Google Play Store / iTunes.</string>
+    <string name="question_title_2">What are Gems? What can I use it for?</string>
+    <string name="question_content_2">Gems are props that can be used for advanced services, such as filtering matching objects by gender and country preferences when matching, making additional video calls, playing designated games, unlocking mini-games, unlocking game teammate files, etc.</string>
+    <string name="question_title_3">I can\'t subscribe or buy gems, what should I do?</string>
+    <string name="question_content_3">Android:\n
+    If you\'re having trouble subscribing to a membership or purchasing gems, try the following steps:\n
+    1. Add a new payment method\n
+    Go to the "Google Play Store App" > Tap "Menu" in the upper left corner > "Payment Methods" > "Change to one of the listed payment methods" > The new payment method will be added to your Google account (note, support payment method may vary by location).\n
+    2. Update payment information\n
+    Go to the "Google Play Store app" > tap "Menu" in the upper left corner > "Payment Methods" > update your payment information\n
+    3. If the default payment method is declined\n
+    Please contact your bank/payments support center to see if there is an issue with your payment account. If the problem is still not resolved, please read the following articles, or contact the official directly to help you solve the payment problem:\n
+    (1).[Issues related to in-app payment]\n
+    (2).[Solve the payment problem of your account]\n
+    (3).[Need help related to transaction failure? ]\n
+    (4).[Still not solving the problem? Please contact us]\n
+
+    iOS:\n
+    If you encounter problems when subscribing to members or purchasing gems, please click the link below to read the help article or contact iTunes support staff or directly contact the official:\n
+    (1).[The payment method was rejected in the App Store or iTunes Store, click here to view]\n
+    (2). Contact iTunes Support [iTunes Support Center]\n
+    (3).[Still did not solve the problem? Please contact us]</string>
+    <string name="question_title_4">I have subscribed to Yay VIP, but what should I do if the benefits have not yet taken effect?</string>
+    <string name="question_content_4">Android:\n
+    If you have successfully subscribed to Yay VIP, but the benefits have not yet taken effect, please try to close and restart the app. If the problem persists, please contact the official directly, attach "a picture of your Google Play receipt" and submit a request so that we can obtain all necessary information such as order number, purchase amount and order date for reference.\n
+    (1). To find your receipt, please click [here]\n
+    (2). To contact the official, please click [Contact Us]\n
+
+    iOS:\n
+    If you have successfully subscribed to Yay VIP, but the benefits have not yet taken effect, please try to close and restart the app. If the problem persists, please contact the official directly, attach "a picture of your iTunes receipt" and submit a request so that we can obtain all necessary information such as order number, purchase amount and order date for reference.\n
+    (1). To find your receipt, please click [here]\n
+    (2). To contact the official, please click [Contact Us]</string>
+    <string name="question_title_5">What should I do if I purchased gems but haven not received them yet?</string>
+    <string name="question_content_5">Android:\n If you are successfully purchased gems but have not received them, try closing and restarting the app.
+        If the problem persists, please contact the official directly, attach "a picture of your Google Play receipt" and submit a request so that we can get all the necessary information,
+        such as the order number, purchase amount and order date for reference.\n
+        (1). To find your receipt, please click [here]\n
+        (2). To contact the official, please click [Contact Us]</string>
+    <string name="question_title_6">What if another user makes me uncomfortable (how to report it)?</string>
+    <string name="question_content_6">Safety is our top priority. We have a "zero tolerance" policy for violations of our Community Guidelines,
+        so if you see a violation of our policies, please feel free to report it to us so we can take action.
+        If you are successfully matched to enter the chat room, you can report the user who violated the guidelines to us by clicking the shield with ! at the top of the page.</string>
+    <string name="question_title_7">You can give us feedback if you have another questions</string>
+
+    <!--email-->
+    <string name="email_title">Email verification</string>
+    <string name="email_edit_hint">Please enter your Email</string>
+    <string name="email_edit_code_hint">Enter verification code</string>
+    <string name="email_validate_send">Click to verify</string>
+    <string name="email_validate_finish">Finish verification</string>
+    <string name="email_tip_1">Verify your email to get the latest offers and new campaigns.</string>
+    <string name="email_tip_2">A verification Email has been sent to %1$s, Don\'t forget to check your spam folder and enter the verification code above to complete thverification</string>
+    <string name="email_tip_3">Your Email %1$s has been verified. You will receive official updates and promotions through this Email.</string>
+    <string name="email_btn_validate">Verified</string>
+    <string name="email_resend">Resend Email</string>
+    <string name="email_change">Change Email</string>
+    <string name="email_wait">Please send again in a minute</string>
+
+    <!--level-->
+    <string name="level_title">My level</string>
+    <string name="level_score">Level:%1$s</string>
+    <string name="level_next_hint">You need %i more experience points to reach the next level..</string>
+    <string name="level_des">Both giving gifts and playing games can increase experience. The more experience you gain, the higher your level, and the higher the level, you can unlock more exclusive gifts and gameplay</string>
+    <string name="level_unlock">Unlocked</string>
+    <string name="level_item_content">get EXP from %1$s</string>
+
+    <!--score-->
+    <string name="score_title">Grace rating</string>
+    <string name="score_score">Grace rating:%1$s</string>
+    <string name="score_hint">Your current rating is good. Keep it up!</string>
+    <string name="score_des_1" formatted="false">Based on the number of matches in the last 30 days (accounting for 70%), the length of the chat, the evaluation of the other party, plus the previous ratings (accounting for 30%), the current demeanor score is calculated comprehensively</string>
+    <string name="score_des_2">If there is no match in the last 30 days, or if the number of matches is less than 10, the demeanor score will be very low; the demeanor score will affect the quality of matched users</string>
+
+    <!--earn-->
+    <string name="earn_title">Host Income</string>
+    <string name="earn_title_2">My Income</string>
+    <string name="earn_sub_title">Recharge Record</string>
+    <string name="earn_sub_des">The value diamonds are settled as actual diamonds income after deducting the costs(Calls 47% &amp; Gifts 30% &amp; Game 20%) of the platform. The income can be withdraw or recharged to the gem wallet for consumption</string>
+    <string name="earn_sub_des_2">The value diamonds are settled as actual diamonds income after deducting the costs(Gifts 70% &amp; Game 20%) of the platform. The income can be  recharged to the gem wallet for consumption</string>
+    <string name="earn_gift_count">Gifts(%1$s)</string>
+    <string name="earn_video_count">Videos(%1$s)</string>
+    <string name="earn_game_count">Games(%1$s)</string>
+    <string name="earn_gift_item_title_1">Item</string>
+    <string name="earn_gift_item_title_2">Value</string>
+    <string name="earn_gift_item_title_3">Income</string>
+    <string name="earn_gift_item_title_4">User</string>
+    <string name="earn_video_item_title_1">Item</string>
+    <string name="earn_video_item_title_2">Value</string>
+    <string name="earn_video_item_title_3">Income</string>
+    <string name="earn_video_item_title_4">User</string>
+    <string name="earn_game_item_title_1">Item</string>
+    <string name="earn_game_item_title_2">Value</string>
+    <string name="earn_game_item_title_3">Income</string>
+    <string name="earn_recharge">Recharge to Gem Wallet</string>
+    <string name="earn_count">X%1$d</string>
+    <string name="earn_duration">%1$ds</string>
+    <string name="earn_cost">value %1$s</string>
+    <string name="earn_no_record">There is no record yet</string>
+    <string name="earn_dialog_recharge_title">Recharge To Wallet</string>
+    <string name="earn_dialog_recharge_input_hint">input recharge amount</string>
+    <string name="earn_dialog_recharge_input_all">recharge all</string>
+    <string name="earn_dialog_recharge">Recharge</string>
+
+    <!--history-->
+    <string name="history_title">Recharge Record</string>
+    <string name="history_sub_title">Total Recharge</string>
+    <string name="history_item_name">Recharge Time</string>
+
+    <!--prime-->
+    <string name="prime_title">Get Yay VIP</string>
+    <string name="prime_rights_tip">Enjoy <font color="#FBD930">eight benefits</font></string>
+    <string name="prime_sub">Subscribe now</string>
+    <string name="prime_rights_01">Each matching filter only costs %1$d gems (Gender/ Country)</string>
+    <string name="prime_rights_02">Earn 1200 Gems Per Month</string>
+    <string name="prime_rights_03">Unlimited Private Messages: Keep in touch with anyone you want</string>
+    <string name="prime_rights_04">Unlimited modification of gender</string>
+    <string name="prime_rights_05">Unlimited modification of region</string>
+    <string name="prime_rights_06">Rear Camera: Use the back camera without limit</string>
+    <string name="prime_rights_07">Unlock who viewed your profile</string>
+    <string name="prime_rights_08">Unique Badge: Have a unique profile identity</string>
+    <string name="prime_price">%1$s/month</string>
+    <string name="prime_get_free">Get for free</string>
+    <string name="prime_get">Claimed</string>
+    <string name="prime_end_time">Membership is valid until:%1$s</string>
+
+    <!--game-->
+    <string name="game_title">Probability theory</string>
+    <string name="game_step_one">Step 1: Please select the game scene</string>
+    <string name="game_step_continue">Continue</string>
+    <string name="game_game_start">Game Start</string>
+    <string name="match_game_find_matcher">View Matches</string>
+    <string name="game_step_finish">Game Over</string>
+    <string name="game_all_gender">Unknown</string>
+    <string name="game_male">Male</string>
+    <string name="game_female">Female</string>
+    <string name="game_explain_content_1">Let similar souls meet</string>
+    <string name="game_explain_content_2">They say\n the probability of <font color="#ECA23D">meeting each other</font> is 0.000478\nThere is always an encounter, a <font color="#ECA23D">mutual liking</font>, <font color="#ECA23D">mutual appreciation</font>.\n\n We have prepared 3 adventure scenes, Start a <font color="#ECA23D">soul matching</font> journey with adventure</string>
+    <string name="game_explain_content_3">* Make your choice according to the scene. After the game is over, the system will <b>match you with the most suitable  friends according to your choices</b>, You may also <b>get rewards</b> in the game</string>
+    <string name="game_explain_content_4">* If you select gender filter before starts, the system will match it according to the preference</string>
+
+    <!--share-->
+    <string name="share_title">Share with friends</string>
+    <string name="share_sub_title">you will get 100 gems when S/he successfully registered  </string>
+    <string name="share_short_msg">Newsletter</string>
+    <string name="share_messenger">Messenger</string>
+    <string name="share_whatsapp">WhatsApp</string>
+    <string name="share_facebook">Facebook</string>
+    <string name="share_other">Other</string>
+    <string name="share_copy_link">Copy link</string>
+    <string name="share_friends_title">Successfully registered friends (the rewarded gems have been recharged directly to the gem wallet)</string>
+    <string name="share_copy_success">Copy successfully</string>
+
+    <!--quit-->
+    <string name="quit_match_video">Are you sure to quit？</string>
+    <string name="quit_match_audio">Are you sure to quit？</string>
+    <string name="quit_match_game">Are you sure to quit？</string>
+    <string name="quit_ok">Confirm</string>
+    <string name="quit_cancel">Cancel</string>
+
+</resources>

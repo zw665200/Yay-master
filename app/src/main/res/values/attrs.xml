@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AutoTextView">
+        <attr name="auto3d_textSize" format="integer" />
+        <attr name="auto3d_textColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="MaxHeightRecyclerView">
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="RadiusCardView">
+        <attr name="topLeftRadius" format="dimension" />
+        <attr name="topRightRadius" format="dimension" />
+        <attr name="bottomRightRadius" format="dimension" />
+        <attr name="bottomLeftRadius" format="dimension" />
+    </declare-styleable>
+
+</resources>

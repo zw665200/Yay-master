@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_corner_black_30_alpha"
+    android:padding="@dimen/dp_10"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/gilland"
+        android:gravity="center"
+        android:text="30"
+        android:textColor="@color/color_timer"
+        android:textSize="@dimen/sp_80" />
+
+    <TextView
+        android:id="@+id/tv_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_corner_purple"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:paddingStart="@dimen/sp_15"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingEnd="@dimen/sp_15"
+        android:paddingBottom="@dimen/dp_5"
+        android:text="@string/match_add_time"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/sp_13" />
+
+</LinearLayout>

@@ -1,0 +1,3 @@
+rootProject.name = "YAY"
+include ':app',':chatkit-ui',':contactkit-ui',':conversationkit-ui',":ffmpeg"
+include ':http'

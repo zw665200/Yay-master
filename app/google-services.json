@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "771687555433",
+    "project_id": "yay-367610",
+    "storage_bucket": "yay-367610.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771687555433:android:71de844d42a1128d0eddf8",
+        "android_client_info": {
+          "package_name": "com.ql.recovery.yay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771687555433-896nkf2bpms5pt58ababbknocdaupta4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ql.recovery.yay",
+            "certificate_hash": "e492a3b7e99c8eb83d523d45bc72165adc88be9c"
+          }
+        },
+        {
+          "client_id": "771687555433-8m21bkngvhtapd6phkvtifbrh6ptq04j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ql.recovery.yay",
+            "certificate_hash": "e51a39a298ea3ec63e4a7e993459f7256233c476"
+          }
+        },
+        {
+          "client_id": "771687555433-3cip5c4a7u32m0j8c52aike3vt7lm0af.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOpeWepVgMv9joPN7o_xklKawkDLnAp6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771687555433-1bsdgaouvjhhle5lb3k88pd3epflfa59.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "771687555433-rg4knv02dlm3gk6kt5qersdra9moq8k9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.yay"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

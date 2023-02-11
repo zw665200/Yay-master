@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--        定义轨道的背景-->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="10dp" />
+            <solid android:color="@color/color_dark_grey" />
+        </shape>
+    </item>
+    <!--    定义已完成部分的样式-->
+    <item android:id="@android:id/progress">
+        <clip android:gravity="left">
+            <shape>
+                <corners android:radius="10dp" />
+                <solid android:color="#FFD05C" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

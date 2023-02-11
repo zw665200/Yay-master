@@ -1,0 +1,170 @@
+com.netease.yunxin.kit.conversationkit.ui.BuildConfig
+com.netease.yunxin.kit.conversationkit.ui.ConversationKitClient:
+    public void <init>()
+    public static void setConversationUIConfig(com.netease.yunxin.kit.conversationkit.ui.ConversationUIConfig)
+com.netease.yunxin.kit.conversationkit.ui.ConversationUIConfig:
+    public void <init>()
+com.netease.yunxin.kit.conversationkit.ui.ConversationUIService
+com.netease.yunxin.kit.conversationkit.ui.common.ConversationConstant$Action
+com.netease.yunxin.kit.conversationkit.ui.common.ConversationConstant$ViewType
+com.netease.yunxin.kit.conversationkit.ui.common.ConversationConstant
+com.netease.yunxin.kit.conversationkit.ui.common.ConversationUtils:
+    public void <init>()
+com.netease.yunxin.kit.conversationkit.ui.common.DataUtils:
+    public void <init>()
+com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationFragmentBinding:
+    public static com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationFragmentBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationSelectActivityBinding:
+    public static com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationSelectActivityBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.conversationkit.ui.databinding.P2pViewHolderLayoutBinding:
+    public static com.netease.yunxin.kit.conversationkit.ui.databinding.P2pViewHolderLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.conversationkit.ui.databinding.SelectorViewHolderLayoutBinding:
+    public static com.netease.yunxin.kit.conversationkit.ui.databinding.SelectorViewHolderLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.conversationkit.ui.databinding.TeamViewHolderLayoutBinding:
+    public static com.netease.yunxin.kit.conversationkit.ui.databinding.TeamViewHolderLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean:
+    private static final java.lang.String TAG
+    public void <init>(com.netease.yunxin.kit.conversationkit.model.ConversationInfo,java.lang.String,int)
+com.netease.yunxin.kit.conversationkit.ui.page.ConversationFragment:
+    public void flushData()
+    private java.util.List generateDialogContent(boolean)
+    private synthetic void lambda$showStickDialog$11(com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean,com.netease.yunxin.kit.common.ui.viewholder.BaseBean,com.netease.yunxin.kit.common.ui.dialog.ListAlertDialog,java.lang.String)
+    public void setConversationCallback(com.netease.yunxin.kit.conversationkit.ui.page.interfaces.IConversationCallback)
+    private void showStickDialog(com.netease.yunxin.kit.common.ui.viewholder.BaseBean)
+com.netease.yunxin.kit.conversationkit.ui.page.ConversationSelectActivity:
+    public static void start(android.content.Context)
+com.netease.yunxin.kit.conversationkit.ui.page.PopItemFactory:
+    private static final java.lang.String TAG
+    public void <init>()
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel$3
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel$4
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel:
+    private static final int PAGE_LIMIT
+    private static synthetic java.lang.Object $deserializeLambda$(java.lang.invoke.SerializedLambda)
+    static synthetic androidx.lifecycle.MutableLiveData access$400(com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel)
+    public void addStickTop(com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean)
+    public void removeStick(com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean)
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.SelectorViewModel:
+    private static final int PAGE_LIMIT
+    public void setConversationFactory(com.netease.yunxin.kit.conversationkit.ui.IConversationFactory)
+com.netease.yunxin.kit.conversationkit.ui.view.ConversationAdapter:
+    public void addForwardData(java.util.List)
+    public void removeData(java.lang.String)
+com.netease.yunxin.kit.conversationkit.ui.view.ConversationView:
+    public void removeConversation(java.lang.String)
+com.netease.yunxin.kit.conversationkit.ui.ConversationCustom
+com.netease.yunxin.kit.conversationkit.ui.ConversationKitClient
+com.netease.yunxin.kit.conversationkit.ui.ConversationUIConfig
+com.netease.yunxin.kit.conversationkit.ui.IConversationFactory:
+    public abstract com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean CreateBean(com.netease.yunxin.kit.conversationkit.model.ConversationInfo)
+    public abstract int getItemViewType(com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean)
+com.netease.yunxin.kit.conversationkit.ui.IConversationViewLayout
+com.netease.yunxin.kit.conversationkit.ui.ItemClickListener
+com.netease.yunxin.kit.conversationkit.ui.common.ConversationUtils
+com.netease.yunxin.kit.conversationkit.ui.common.DataUtils
+com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationActivityBinding
+com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationFragmentBinding:
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationSelectActivityBinding:
+    public final android.widget.TextView conversationSubtitleTv
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationViewLayoutBinding:
+    public final android.view.View conversationLine
+com.netease.yunxin.kit.conversationkit.ui.databinding.SelectorViewHolderLayoutBinding:
+    public final android.widget.FrameLayout conversationAvatarFl
+    public final android.widget.TextView conversationUnreadTv
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.conversationkit.ui.page.ConversationActivity:
+    public com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationActivityBinding viewBinding
+com.netease.yunxin.kit.conversationkit.ui.page.ConversationFragment:
+    public final java.lang.String TAG
+    public com.netease.yunxin.kit.conversationkit.ui.page.interfaces.IConversationCallback conversationCallback
+    public static synthetic com.netease.yunxin.kit.conversationkit.ui.databinding.ConversationFragmentBinding access$000(com.netease.yunxin.kit.conversationkit.ui.page.ConversationFragment)
+    public final void doCallback()
+    public final void loadUIConfig()
+    public final void registerObserver()
+    public final void unregisterObserver()
+com.netease.yunxin.kit.conversationkit.ui.page.ConversationSelectActivity:
+    public final java.lang.String TAG
+    public static synthetic java.util.HashSet access$000(com.netease.yunxin.kit.conversationkit.ui.page.ConversationSelectActivity)
+    public final void updateTitleBar()
+com.netease.yunxin.kit.conversationkit.ui.page.DefaultViewHolderFactory:
+    public final int getItemViewType(com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean)
+com.netease.yunxin.kit.conversationkit.ui.page.interfaces.IConversationCallback
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel$1:
+    public final void onSuccess(java.util.List)
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel$2:
+    public final void onSuccess(java.lang.Void)
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel$5:
+    public final void onEvent(java.util.List)
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel$6:
+    public final void onEvent(com.netease.yunxin.kit.conversationkit.model.ConversationInfo)
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel:
+    public final java.lang.String LIB_TAG
+    public final java.lang.String TAG
+    public static synthetic com.netease.yunxin.kit.conversationkit.ui.IConversationFactory access$000(com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel)
+    public static synthetic androidx.lifecycle.MutableLiveData access$300(com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.ConversationViewModel)
+    public final void deleteConversation(com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean)
+    public final void fetchConversation()
+    public final androidx.lifecycle.MutableLiveData getAddRemoveStickLiveData()
+    public final androidx.lifecycle.MutableLiveData getChangeLiveData()
+    public final androidx.lifecycle.MutableLiveData getFriendInfoLiveData()
+    public final androidx.lifecycle.MutableLiveData getMuteInfoLiveData()
+    public final androidx.lifecycle.MutableLiveData getQueryLiveData()
+    public final androidx.lifecycle.MutableLiveData getStickLiveData()
+    public final androidx.lifecycle.MutableLiveData getTeamInfoLiveData()
+    public final int getUnreadCount()
+    public final androidx.lifecycle.MutableLiveData getUserInfoLiveData()
+    public final boolean hasMore()
+    public final void loadMore(com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean)
+    public final void setComparator(java.util.Comparator)
+    public final void setConversationFactory(com.netease.yunxin.kit.conversationkit.ui.IConversationFactory)
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.SelectorViewModel$1:
+    public final void onSuccess(java.util.List)
+com.netease.yunxin.kit.conversationkit.ui.page.viewmodel.SelectorViewModel:
+    public final java.lang.String TAG
+    public final void fetchConversation()
+    public final androidx.lifecycle.MutableLiveData getQueryLiveData()
+    public final boolean hasMore()
+    public final void loadMore(com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean)
+    public final void queryConversation(com.netease.yunxin.kit.conversationkit.model.ConversationInfo)
+com.netease.yunxin.kit.conversationkit.ui.view.ConversationAdapter:
+    public final java.lang.String TAG
+    public final void addStickTop(java.lang.String)
+    public final void appendData(java.util.List)
+    public final com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean getData(int)
+    public final void onBindViewHolder(com.netease.yunxin.kit.common.ui.viewholder.BaseViewHolder,int)
+    public final com.netease.yunxin.kit.common.ui.viewholder.BaseViewHolder onCreateViewHolder(android.view.ViewGroup,int)
+    public final void removeAll()
+    public final void removeData(int)
+    public final void removeData(java.util.List)
+    public final void removeStickTop(java.lang.String)
+    public final void setComparator(java.util.Comparator)
+    public final void setData(java.util.List)
+    public final void setViewHolderClickListener(com.netease.yunxin.kit.common.ui.viewholder.ViewHolderClickListener)
+    public final void setViewHolderFactory(com.netease.yunxin.kit.conversationkit.ui.IConversationFactory)
+    public final void update(java.util.List)
+    public final void updateFriendInfo(java.util.List)
+    public final void updateMuteInfo(com.netease.nimlib.sdk.friend.model.MuteListChangedNotify)
+    public final void updateTeamInfo(java.util.List)
+    public final void updateUserInfo(java.util.List)
+com.netease.yunxin.kit.conversationkit.ui.view.ConversationView:
+    public final int LOAD_MORE_DIFF
+    public final java.lang.String TAG
+    public static synthetic com.netease.yunxin.kit.conversationkit.ui.page.interfaces.ILoadListener access$000(com.netease.yunxin.kit.conversationkit.ui.view.ConversationView)
+    public static synthetic com.netease.yunxin.kit.conversationkit.ui.view.ConversationAdapter access$100(com.netease.yunxin.kit.conversationkit.ui.view.ConversationView)
+    public final void addData(java.util.List)
+    public final void addStickTop(java.lang.String)
+    public final void remove(java.util.List)
+    public final void removeAll()
+    public final void removeStickTop(java.lang.String)
+    public final void update(com.netease.yunxin.kit.conversationkit.ui.model.ConversationBean)
+    public final void update(java.util.List)
+    public final void updateFriendInfo(java.util.List)
+    public final void updateMuteInfo(com.netease.nimlib.sdk.friend.model.MuteListChangedNotify)
+    public final void updateTeamInfo(java.util.List)
+    public final void updateUserInfo(java.util.List)
+com.netease.yunxin.kit.conversationkit.ui.view.P2PViewHolder:
+    public final void loadUIConfig()
+com.netease.yunxin.kit.conversationkit.ui.view.TeamViewHolder:
+    public final void loadUIConfig()

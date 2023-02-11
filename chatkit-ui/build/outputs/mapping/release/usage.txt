@@ -1,0 +1,1228 @@
+com.netease.yunxin.kit.adapters.DataAdapter$Builder:
+    public final com.netease.yunxin.kit.adapters.DataAdapter$Builder addBindView(kotlin.jvm.functions.Function2)
+    public final com.netease.yunxin.kit.adapters.DataAdapter$Builder addBindView(kotlin.jvm.functions.Function4)
+com.netease.yunxin.kit.adapters.DataAdapter:
+    public static final synthetic void access$setAddBindView$p(com.netease.yunxin.kit.adapters.DataAdapter,kotlin.jvm.functions.Function2)
+    public static final synthetic void access$setAddBindView3$p(com.netease.yunxin.kit.adapters.DataAdapter,kotlin.jvm.functions.Function4)
+com.netease.yunxin.kit.adapters.MutableDataAdapter$Builder
+com.netease.yunxin.kit.adapters.MutableDataAdapter$MyViewHolder
+com.netease.yunxin.kit.adapters.MutableDataAdapter
+com.netease.yunxin.kit.chatkit.ui.BuildConfig
+com.netease.yunxin.kit.chatkit.ui.ChatDefaultFactory$ChatDefaultFactoryHolder:
+    private void <init>()
+com.netease.yunxin.kit.chatkit.ui.ChatDefaultFactory:
+    public void addCustomViewHolder(int,java.lang.Class)
+    public void removeCustomViewHolder(int)
+com.netease.yunxin.kit.chatkit.ui.ChatKitClient:
+    public void <init>()
+    public static void addCustomAttach(int,java.lang.Class)
+    public static void addCustomViewHolder(int,java.lang.Class)
+    public static void init(android.content.Context)
+    public static void removeCustomAttach(int)
+    public static void removeCustomViewHolder(int)
+    public static void setChatUIConfig(com.netease.yunxin.kit.chatkit.ui.ChatUIConfig)
+    public static void setMessageMapProvider(com.netease.yunxin.kit.chatkit.map.IMessageMapProvider)
+    public static void setPageMapProvider(com.netease.yunxin.kit.chatkit.map.IPageMapProvider)
+com.netease.yunxin.kit.chatkit.ui.ChatKitUIConstant
+com.netease.yunxin.kit.chatkit.ui.ChatMessageType:
+    public static final int CUSTOM_START
+    public static final int CUSTOM_STICKER
+com.netease.yunxin.kit.chatkit.ui.ChatUIConfig:
+    public void <init>()
+com.netease.yunxin.kit.chatkit.ui.ChatUIService
+com.netease.yunxin.kit.chatkit.ui.builder.ChatFragmentBuilder:
+    public com.netease.yunxin.kit.chatkit.ui.builder.ChatFragmentBuilder setChatMessageProperties(com.netease.yunxin.kit.chatkit.ui.view.message.MessageProperties)
+    public com.netease.yunxin.kit.chatkit.ui.builder.ChatFragmentBuilder setChatMessageViewHolderFactory(com.netease.yunxin.kit.chatkit.ui.IChatFactory)
+    public com.netease.yunxin.kit.chatkit.ui.builder.ChatFragmentBuilder setChatViewCustom(com.netease.yunxin.kit.chatkit.ui.builder.IChatViewCustom)
+com.netease.yunxin.kit.chatkit.ui.common.BaseMessageViewHolder
+com.netease.yunxin.kit.chatkit.ui.common.ChatCallback:
+    public com.netease.yunxin.kit.chatkit.ui.common.ChatCallback setShowSuccess(boolean)
+com.netease.yunxin.kit.chatkit.ui.common.ChatUtils:
+    public void <init>()
+com.netease.yunxin.kit.chatkit.ui.common.MessageHelper:
+    public void <init>()
+com.netease.yunxin.kit.chatkit.ui.common.MessageUtil$ATagSpan
+com.netease.yunxin.kit.chatkit.ui.common.MessageUtil:
+    private static final float DEF_SCALE
+    private static final float SMALL_SCALE
+    public void <init>()
+    private static com.netease.yunxin.kit.chatkit.ui.common.MessageUtil$ATagSpan getTagSpan(java.lang.String)
+    public static void identifyFaceExpressionAndATags(android.content.Context,android.view.View,java.lang.String,int)
+    public static void identifyFaceExpressionAndTags(android.content.Context,android.view.View,java.lang.String,int,float)
+    public static android.text.SpannableString makeSpannableStringTags(android.content.Context,java.lang.String,float,int)
+    public static android.text.SpannableString makeSpannableStringTags(android.content.Context,java.lang.String,float,int,boolean)
+com.netease.yunxin.kit.chatkit.ui.common.RevokeObserver
+com.netease.yunxin.kit.chatkit.ui.common.TeamNotificationHelper:
+    public void <init>()
+com.netease.yunxin.kit.chatkit.ui.custom.ChatStickerViewHolder
+com.netease.yunxin.kit.chatkit.ui.custom.StickerAttachment:
+    public java.lang.String getCatalog()
+    public java.lang.String getChartLet()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatBaseMessageViewHolderBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatBaseMessageViewHolderBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatEmojiItemLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatEmojiItemLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatEmojiLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatEmojiLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatLayoutFragmentBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatLayoutFragmentBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageActionItemBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageActionItemBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageAitContactViewHolderBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageAitContactViewHolderBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageAitSelectorDialogBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageAitSelectorDialogBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageAudioViewHolderBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageAudioViewHolderBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageBottomLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageBottomLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageFileViewHolderBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageFileViewHolderBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageForwardConfirmLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageForwardConfirmLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageForwardLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageForwardLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageLocationViewHolderBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageLocationViewHolderBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageRecordViewBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageRecordViewBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageRevokedViewBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageRevokedViewBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageStickerViewBinding
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageTextViewHolderBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageTextViewHolderBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageThumbnailViewHolderBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageThumbnailViewHolderBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatPopMenuItemLayoutBinding
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatSearchItemLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatSearchItemLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatStickerPickerViewBinding
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatUserItemLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatUserItemLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatUserListLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatUserListLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatUserSelectedItemLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatUserSelectedItemLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatViewLayoutBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ChatViewLayoutBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.ItemReportBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ItemReportBinding inflate(android.view.LayoutInflater)
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.ItemReportBinding inflate(android.view.LayoutInflater,android.view.ViewGroup,boolean)
+com.netease.yunxin.kit.chatkit.ui.databinding.SearchLocationViewHolderBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.SearchLocationViewHolderBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.databinding.WatchImageViewHolderBinding:
+    public static com.netease.yunxin.kit.chatkit.ui.databinding.WatchImageViewHolderBinding inflate(android.view.LayoutInflater)
+com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardConfirmDialog:
+    public static final java.lang.String FORWARD_MESSAGE_SEND
+    public static final java.lang.String FORWARD_SESSION_LIST
+    public static final java.lang.String FORWARD_TYPE
+    public static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardSelectDialog:
+    public static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.dialog.MenuDialog:
+    public final void setWindowAlpha(float)
+com.netease.yunxin.kit.chatkit.ui.dialog.ReportDialog:
+    public final void setWindowAlpha(float)
+com.netease.yunxin.kit.chatkit.ui.model.ChatConstants
+com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean:
+    public com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean setMessageData(com.netease.yunxin.kit.chatkit.model.IMMessageInfo)
+    public com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean setViewType(int)
+com.netease.yunxin.kit.chatkit.ui.model.ChatSearchBean:
+    public java.util.List getHitInfo()
+com.netease.yunxin.kit.chatkit.ui.model.ait.AitBlock:
+    public int getFirstSegmentStart()
+com.netease.yunxin.kit.chatkit.ui.model.ait.AitContactsModel:
+    public static final java.lang.String ACCOUNT_ALL
+    public com.netease.yunxin.kit.chatkit.ui.model.ait.AitBlock getAitBlock(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.page.ChatMessageAckActivity:
+    private static final java.lang.String IMMESSAGE_KEY
+com.netease.yunxin.kit.chatkit.ui.page.ChatP2PActivity:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.ChatSearchActivity:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.ChatSettingActivity:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.ChatTeamActivity:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity:
+    public static final int LAUNCH_DETAIL
+    public static final java.lang.String LAUNCH_LOCATION_MESSAGE
+    public static final int LAUNCH_SEND
+    public static final java.lang.String LAUNCH_TYPE
+    public static final java.lang.String SEND_LOCATION_RESULT
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.WatchImageActivity:
+    public static final java.lang.String EXT_FIRST_DISPLAY_INDEX_KEY
+    public static final java.lang.String EXT_MESSAGE_LIST_KEY
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.WatchVideoActivity:
+    public static final java.lang.String EXT_MESSAGE_VIDEO_KEY
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.adapter.SearchMessageAdapter:
+    private com.netease.yunxin.kit.common.ui.viewholder.IViewHolderFactory viewHolderFactory
+    public void addForwardData(java.util.List)
+    public void appendData(java.util.List)
+    public com.netease.yunxin.kit.chatkit.ui.model.ChatSearchBean getData(int)
+    public void removeData(int)
+    public void removeData(com.netease.yunxin.kit.chatkit.ui.model.ChatSearchBean)
+    public void setViewHolderFactory(com.netease.yunxin.kit.common.ui.viewholder.IViewHolderFactory)
+com.netease.yunxin.kit.chatkit.ui.page.adapter.WatchImageAdapter:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$4:
+    public boolean onTextSelected(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$6:
+    public boolean onCollection(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public boolean onCustom(android.view.View,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String)
+    public boolean onMultiSelected(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment:
+    private static final java.lang.String LOG_TAG
+    public void onNewIntent(android.content.Intent)
+    public void setChatViewCustom(com.netease.yunxin.kit.chatkit.ui.builder.IChatViewCustom)
+    public void setIMessageItemClickListener(com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageItemClickListener)
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatP2PFragment:
+    private static final java.lang.String TAG
+    private static final int TYPE_DELAY_TIME
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatReadUserListFragment:
+    public static final java.lang.String ACK_KEY
+    public static final java.lang.String TID_KEY
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatTeamFragment:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$5
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel:
+    public static final java.lang.String TAG
+    private static synthetic java.lang.Object $deserializeLambda$(java.lang.invoke.SerializedLambda)
+    public void addMsgCollection(com.netease.yunxin.kit.chatkit.model.IMMessageInfo)
+    private void onMessageSend(com.netease.nimlib.sdk.msg.model.IMMessage,boolean)
+    public void replyImageMessage(java.io.File,com.netease.nimlib.sdk.msg.model.IMMessage)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel:
+    private static final java.lang.String TAG
+    private static final java.lang.String TYPE_STATE
+    private static synthetic java.lang.Object $deserializeLambda$(java.lang.invoke.SerializedLambda)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatReadStateViewModel:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatSettingViewModel:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatTeamViewModel:
+    private static final java.lang.String TAG
+    private static synthetic java.lang.Object $deserializeLambda$(java.lang.invoke.SerializedLambda)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.SearchMessageViewModel:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.WatchImageVideoViewModel:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.util.AppUtil:
+    private static final java.lang.String HARMONY_OS
+    public void <init>()
+    public static java.lang.String MD5Encode(java.lang.String)
+    public static java.lang.String MD5Encode(byte[])
+    public static java.lang.String byteArrayToHexString(byte[])
+    private static java.lang.String byteToHexString(byte)
+    public static boolean checkPackageInfo(android.content.Context,java.lang.String)
+    public static void copyApkFromAssets(android.content.Context,java.lang.String,java.lang.String)
+    public static long date2TimeStamp(java.lang.String)
+    public static int dp2px(android.content.Context,float)
+    public static void getAllInstalledAppPakageName(android.content.Context)
+    public static java.lang.String getAppMetaData(android.content.Context,java.lang.String)
+    public static int getCurrentNavigationBarHeight(android.app.Activity)
+    public static java.lang.String getDeviceInfo()
+    public static java.util.List getMonthList()
+    public static int getMonthOfDay(int,int)
+    public static int getNavigationBarHeight(android.content.Context)
+    public static int getNavigationBarHeightIfRoom(android.app.Activity)
+    public static int getPackageVersionCode(android.content.Context,java.lang.String)
+    public static java.lang.String getPackageVersionName(android.content.Context,java.lang.String)
+    public static java.lang.String getPathFromUri(android.content.Context,android.net.Uri)
+    public static java.lang.String getRandomStringByLength(int)
+    public static int getScreenHeight(android.content.Context)
+    public static java.lang.String getTodayDate()
+    public static java.lang.String getTodayDay()
+    public static java.lang.String getTodayMonth()
+    public static java.lang.String getTodayYear()
+    public static java.util.List getYearList()
+    public static void hideKeyboard(android.content.Context,android.view.View)
+    public static boolean isDebugger(android.content.Context)
+    public static boolean isHarmonyOS()
+    public static boolean isKeyboardShown(android.content.Context)
+    public static boolean isKeyboardShown(android.view.View)
+    public static boolean isNavigationBarShown(android.app.Activity)
+    public static boolean navigationGestureEnabled(android.content.Context)
+    public static int px2dp(android.content.Context,float)
+    public static int sp2px(android.content.Context,int)
+    public static java.lang.String timeStamp2Date(java.lang.Long,java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.util.ToastUtil:
+    private void <init>()
+    public static void show(android.content.Context,int,int)
+    public static void show(android.content.Context,java.lang.CharSequence,int)
+    public static void show(android.content.Context,java.lang.String)
+    public static void showLong(android.content.Context,int)
+    public static void showLong(android.content.Context,java.lang.CharSequence)
+    public static void showShort(android.content.Context,int)
+com.netease.yunxin.kit.chatkit.ui.view.ChatView:
+    public void updateMessage(com.netease.nimlib.sdk.msg.model.IMMessage,java.lang.Object)
+    public void updateMessage(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.Object)
+    public void updateUserInfo(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.CheckedImageButton:
+    public void <init>(android.content.Context,android.util.AttributeSet)
+    public void <init>(android.content.Context,android.util.AttributeSet,int)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiManager$1
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiManager$Entry:
+    void <init>(java.lang.String,java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiManager$EntryLoader
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiManager:
+    private static final int CACHE_MAX_SIZE
+    private static final java.lang.String EMOJI_DIR
+    public void <init>()
+    static synthetic java.util.Map access$100()
+    static synthetic java.util.List access$200()
+    public static void init(android.content.Context)
+    private static void load(android.content.Context)
+    private static java.util.regex.Pattern makePattern()
+    private static java.lang.String patternOfDefault()
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiPickerView:
+    private void showEmojiView()
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView:
+    public static final int EMOJI_PER_PAGE
+    public static final int STICKER_PER_PAGE
+    private void resetEmotionPager()
+    public void setCategoryDataReloadFlag()
+    private void showEmojiGridView()
+    public void showEmojis()
+com.netease.yunxin.kit.chatkit.ui.view.emoji.ImageSpanAlignCenter
+com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerCategory:
+    private static final long serialVersionUID
+    public int getCount()
+    public java.lang.String getTitle()
+    public void setName(java.lang.String)
+    public void setSystem(boolean)
+    public void setTitle(java.lang.String)
+    public boolean system()
+com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerItem:
+    public java.lang.String getIdentifier()
+com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerManager:
+    private static final java.lang.String CATEGORY_AJMD
+    private static final java.lang.String CATEGORY_LT
+    private static final java.lang.String CATEGORY_XXY
+    private static final java.lang.String TAG
+    public void init()
+com.netease.yunxin.kit.chatkit.ui.view.input.ActionConstants
+com.netease.yunxin.kit.chatkit.ui.view.input.ActionFactory:
+    public void <init>()
+com.netease.yunxin.kit.chatkit.ui.view.input.ActionsPanelAdapter:
+    private static final int COLUMN_COUNT
+    private static final int PAGE_SIZE
+    private static final int ROW_COUNT
+com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout:
+    private static final long SHOW_DELAY_TIME
+    public static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.view.input.RecordView:
+    public static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageData
+com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageItemClickListener:
+    public boolean onTextSelected(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$RotateRunnable:
+    private static final long NEVER
+com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$SnapRunnable:
+    private static final long NEVER
+com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$TranslateRunnable:
+    private static final float DECELERATION_RATE
+    private static final long NEVER
+com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView:
+    private static final float CROPPED_SIZE
+    private static final float DOUBLE_TAP_SCALE_FACTOR
+    private static final long ROTATE_ANIMATION_DURATION
+    private static final float SCALE_OVERZOOM_FACTOR
+    private static final long SNAP_DELAY
+    private static final long SNAP_DURATION
+    private static final float SNAP_THRESHOLD
+    public static final int TRANSLATE_BOTH
+    public static final int TRANSLATE_NONE
+    public static final int TRANSLATE_X_ONLY
+    public static final int TRANSLATE_Y_ONLY
+    private static final long ZOOM_ANIMATION_DURATION
+    private static final long ZOOM_CORRECTION_DELAY
+    public void bindDrawable(android.graphics.drawable.Drawable)
+    public void clear()
+    public void enableAllowCrop(boolean)
+    public boolean isPhotoBound()
+    public boolean isVideo()
+    public boolean isVideoReady()
+    public void rotateClockwise()
+    public void rotateCounterClockwise()
+com.netease.yunxin.kit.chatkit.ui.view.media.SimpleVideoPlayer:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.view.message.ChatMessageListView:
+    public boolean hasMoreForwardMessages()
+    public void updateMessage(com.netease.nimlib.sdk.msg.model.IMMessage,java.lang.Object)
+    public void updateMessage(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.Object)
+com.netease.yunxin.kit.chatkit.ui.view.message.MessageProperties:
+    public static final int INT_NULL
+    public void setAvatarCornerRadius(float)
+    public void setMessageTextColor(int)
+    public void setMessageTextSize(int)
+    public void setReceiveMessageBg(android.graphics.drawable.Drawable)
+    public void setSelfMessageBg(android.graphics.drawable.Drawable)
+    public void setShowP2pMessageStatus(boolean)
+    public void setShowStickerMessage(boolean)
+    public void setShowTeamMessageStatus(boolean)
+    public void setSignalBgColor(int)
+    public void setTimeTextColor(int)
+    public void setTimeTextSize(int)
+    public void setUserNickColor(int)
+    public void setUserNickTextSize(int)
+com.netease.yunxin.kit.chatkit.ui.view.message.adapter.ChatMessageAdapter$EndItemBindingListener
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatAudioMessageViewHolder:
+    public static final int CLICK_TO_PLAY_AUDIO_DELAY
+    public static final int MAX_LENGTH_FOR_AUDIO
+    public static final int MIN_LENGTH_FOR_AUDIO
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder:
+    private static final java.lang.String LOG_TAG
+    private static final int MAX_RECEIPT_NUM
+    private static final int REVOKE_TIME_INTERVAL
+    private static final int SHOW_TIME_INTERVAL
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatFileMessageViewHolder:
+    private static final int PROGRESS_MAX
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatImageMessageViewHolder:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatLocationMessageViewHolder:
+    public static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatNotificationMessageViewHolder:
+    private static final java.lang.String LOG_TAG
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatThumbBaseViewHolder:
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatTipsMessageViewHolder:
+    private static final java.lang.String LOG_TAG
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatVideoMessageViewHolder:
+    private static final int PROGRESS_MAX
+    private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatActionFactory:
+    private com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenuAction getCollectionAction(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    private com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenuAction getMultiSelectAction(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    private synthetic void lambda$getCollectionAction$5(android.view.View,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    private synthetic void lambda$getMultiSelectAction$4(android.view.View,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenu:
+    private static final float CONTAINER_PADDING
+    private static final int DEFAULT_COLUMN_NUM
+    private static final float ITEM_SIZE_HEIGHT
+    private static final float ITEM_SIZE_WIDTH
+    private static final java.lang.String LOG_TAG
+    private static final int Y_OFFSET
+com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenuAction:
+    public void <init>(java.lang.String,java.lang.String,int)
+    public java.lang.String getAction()
+    public void setActionClickListener(com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenuAction$OnClickListener)
+    public void setIcon(int)
+    public void setTitle(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.popmenu.IChatPopMenuClickListener:
+    public boolean onCollection(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public boolean onCustom(android.view.View,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String)
+    public boolean onMultiSelected(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.adapters.DataAdapter$Builder
+com.netease.yunxin.kit.adapters.DataAdapter$MyViewHolder:
+    public final synthetic com.netease.yunxin.kit.adapters.DataAdapter this$0
+com.netease.yunxin.kit.adapters.DataAdapter:
+    public kotlin.jvm.functions.Function2 addBindView
+    public kotlin.jvm.functions.Function4 addBindView3
+    public final void onBindViewHolder(com.netease.yunxin.kit.adapters.DataAdapter$MyViewHolder,int)
+    public final void onBindViewHolder(com.netease.yunxin.kit.adapters.DataAdapter$MyViewHolder,int,java.util.List)
+    public final com.netease.yunxin.kit.adapters.DataAdapter$MyViewHolder onCreateViewHolder(android.view.ViewGroup,int)
+com.netease.yunxin.kit.chatkit.ui.ActivityWorkaround$OnKeyboardStateChangeListener:
+    public abstract void hideKeyboard(int)
+    public abstract void showKeyboard(int)
+com.netease.yunxin.kit.chatkit.ui.ActivityWorkaround:
+    public final void setOnKeyboardStateChangeListener(com.netease.yunxin.kit.chatkit.ui.ActivityWorkaround$OnKeyboardStateChangeListener)
+com.netease.yunxin.kit.chatkit.ui.ChatCustom:
+    public final java.lang.String getReplyMsgBrief(com.netease.yunxin.kit.chatkit.model.IMMessageInfo)
+com.netease.yunxin.kit.chatkit.ui.ChatDefaultFactory$1
+com.netease.yunxin.kit.chatkit.ui.ChatDefaultFactory:
+    public final com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder createViewHolderCustom(android.view.ViewGroup,int)
+    public final int getCustomViewType(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.ChatKitClient
+com.netease.yunxin.kit.chatkit.ui.ChatMessageType:
+    public static final int NORMAL_MESSAGE_VIEW_TYPE_TEXT
+com.netease.yunxin.kit.chatkit.ui.ChatUIConfig
+com.netease.yunxin.kit.chatkit.ui.IChatFactory:
+    public abstract com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder createViewHolder()
+    public abstract int getItemViewType()
+com.netease.yunxin.kit.chatkit.ui.IChatInputMenu
+com.netease.yunxin.kit.chatkit.ui.IPermissionListener
+com.netease.yunxin.kit.chatkit.ui.builder.ChatFragmentBuilder
+com.netease.yunxin.kit.chatkit.ui.builder.P2PChatFragmentBuilder
+com.netease.yunxin.kit.chatkit.ui.builder.TeamChatFragmentBuilder
+com.netease.yunxin.kit.chatkit.ui.common.ChatCallback:
+    public boolean showSuccess
+    public void onSuccess(java.lang.Object)
+com.netease.yunxin.kit.chatkit.ui.common.ChatUtils:
+    public static java.util.Map getFileTypeMap()
+com.netease.yunxin.kit.chatkit.ui.common.MessageHelper$1:
+    public final void onSuccess(com.netease.yunxin.kit.corekit.im.model.UserInfo)
+com.netease.yunxin.kit.chatkit.ui.common.MessageHelper$2:
+    public final void onSuccess(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.common.MessageHelper:
+    public static void getChatDisplayNameYou(java.lang.String,java.lang.String,com.netease.yunxin.kit.corekit.im.provider.FetchCallback)
+    public static void getReplyMessageInfo(java.lang.String,com.netease.yunxin.kit.corekit.im.provider.FetchCallback)
+    public static java.lang.String getReplyMsgBrief(com.netease.yunxin.kit.chatkit.model.IMMessageInfo)
+com.netease.yunxin.kit.chatkit.ui.common.MessageUtil:
+    public static java.util.regex.Pattern mATagPattern
+    public static void getEmotDrawable(android.content.Context,java.lang.String,float)
+    public static void viewSetText(android.view.View,android.text.SpannableString)
+com.netease.yunxin.kit.chatkit.ui.common.TeamNotificationHelper:
+    public static java.lang.String getTeamMemberDisplayName(java.lang.String,com.netease.yunxin.kit.corekit.im.model.UserInfo)
+com.netease.yunxin.kit.chatkit.ui.custom.StickerAttachment
+com.netease.yunxin.kit.chatkit.ui.databinding.ActivityLocationBinding:
+    public final android.widget.FrameLayout locationList
+    public final android.widget.LinearLayout locationSearchBar
+    public final androidx.constraintlayout.widget.Barrier mapBottomBarrier
+    public final android.view.View mapDetailBottom
+    public final android.widget.FrameLayout mapViewContainer
+    public final android.widget.ImageView mapViewEmptyIcon
+    public final android.widget.TextView mapViewEmptyTip
+    public final android.view.View mapViewTop
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ActivityWatchImageVideoBinding:
+    public final android.widget.ImageView mediaMore
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatActivityBinding:
+    public final android.widget.FrameLayout container
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatBaseMessageViewHolderBinding:
+    public final androidx.constraintlayout.widget.Guideline marginEnd
+    public final androidx.constraintlayout.widget.Guideline marginStart
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatEmojiItemLayoutBinding
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatEmojiLayoutBinding:
+    public final android.widget.LinearLayout emojiLayout
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatLayoutFragmentBinding:
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMeesageMoreItemViewBinding
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageAudioViewHolderBinding:
+    public final android.widget.RelativeLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageBottomLayoutBinding:
+    public final android.widget.FrameLayout chatMessageInputContainer
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageFileViewHolderBinding:
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageForwardConfirmLayoutBinding:
+    public final android.view.View baseline
+    public final android.widget.TextView tvNickname
+    public final android.widget.TextView tvTitle
+    public final android.view.View verticalLine
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageForwardLayoutBinding
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageLocationViewHolderBinding:
+    public final com.netease.yunxin.kit.common.ui.widgets.RoundFrameLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageRecordViewBinding:
+    public final android.widget.FrameLayout recordButton
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageRevokedViewBinding
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageTextViewHolderBinding:
+    public final android.widget.FrameLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageThumbnailViewHolderBinding:
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatPopMenuLayoutBinding:
+    public final android.widget.FrameLayout contentLayout
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatReadStateLayoutBinding:
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatSearchItemLayoutBinding:
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatSearchMessageActivityBinding:
+    public final android.widget.ImageView ivEmpty
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatSettingActivityBinding:
+    public final android.widget.RelativeLayout rlySignal
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatUserItemLayoutBinding:
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatUserListLayoutBinding:
+    public final androidx.constraintlayout.widget.ConstraintLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatUserSelectedItemLayoutBinding:
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ChatViewLayoutBinding:
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.DialogMenuBinding:
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.DialogReportBinding:
+    public final android.widget.LinearLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.ItemReportBinding:
+    public final android.widget.ImageView ivCheck
+    public final android.widget.TextView tvDes
+    public final android.widget.TextView tvTitle
+    public final android.widget.FrameLayout getRoot()
+com.netease.yunxin.kit.chatkit.ui.databinding.SearchLocationViewHolderBinding
+com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardConfirmDialog$UserAdapter:
+    public final void setForwardType(int)
+com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardConfirmDialog$UserItemViewHolder$1:
+    public final void onSuccess(com.netease.yunxin.kit.corekit.im.model.UserInfo)
+com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardConfirmDialog$UserItemViewHolder:
+    public final void bind(java.lang.String)
+    public final com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardConfirmDialog$UserItemViewHolder setData(boolean,int)
+    public final void setUserInfo(com.netease.yunxin.kit.corekit.im.model.UserInfo,java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardConfirmDialog:
+    public final void hide()
+    public final void setCallback(com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardConfirmDialog$ForwardCallback)
+com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardSelectDialog$ForwardTypeSelectedCallback:
+    public abstract void onP2PSelected()
+    public abstract void onTeamSelected()
+com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardSelectDialog:
+    public final void setSelectedCallback(com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardSelectDialog$ForwardTypeSelectedCallback)
+com.netease.yunxin.kit.chatkit.ui.dialog.MenuDialog$showReportDialog$1:
+    public final void invoke(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.dialog.MenuDialog:
+    public final void showReportDialog()
+com.netease.yunxin.kit.chatkit.ui.dialog.ReportDialog$commit$1:
+    public final void invoke(boolean)
+com.netease.yunxin.kit.chatkit.ui.dialog.ReportDialog:
+    public static final synthetic android.app.Activity access$getActivity$p(com.netease.yunxin.kit.chatkit.ui.dialog.ReportDialog)
+    public static final synthetic java.util.List access$getList$p(com.netease.yunxin.kit.chatkit.ui.dialog.ReportDialog)
+    public final void commit()
+    public final void initRegionList()
+com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean:
+    public int viewType
+    public final float getLoadProgress()
+    public final com.netease.yunxin.kit.chatkit.model.IMMessageInfo getMessageData()
+    public final boolean isHaveRead()
+    public final boolean isRevoked()
+    public final void setHaveRead(boolean)
+    public final void setLoadProgress(float)
+    public final void setPinAccid(com.netease.nimlib.sdk.msg.model.MsgPinOption)
+    public final void setRevoked(boolean)
+com.netease.yunxin.kit.chatkit.ui.model.ChatSearchBean:
+    public final java.lang.String getAccount()
+    public final java.lang.String getAvatar()
+    public final android.text.SpannableString getSpannableString(int)
+    public final long getTime()
+com.netease.yunxin.kit.chatkit.ui.model.ait.AitBlock:
+    public final void addSegment(int)
+    public final com.netease.yunxin.kit.chatkit.ui.model.ait.AitBlock$AitSegment findLastSegmentByEnd(int)
+    public final void moveLeft(int,int)
+    public final void moveRight(int,java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.model.ait.AitContactsModel:
+    public final void addAitMember(java.lang.String,java.lang.String,int)
+    public final com.netease.yunxin.kit.chatkit.ui.model.ait.AitBlock$AitSegment findAitSegmentByEndPos(int)
+    public final java.util.List getAitTeamMember()
+    public final void reset()
+com.netease.yunxin.kit.chatkit.ui.page.ChatBaseActivity:
+    public abstract void setStatusBarLight()
+com.netease.yunxin.kit.chatkit.ui.page.ChatMessageAckActivity:
+    public com.google.android.material.tabs.TabLayoutMediator mediator
+com.netease.yunxin.kit.chatkit.ui.page.ChatSearchActivity:
+    public static synthetic com.netease.nimlib.sdk.team.model.Team access$000(com.netease.yunxin.kit.chatkit.ui.page.ChatSearchActivity)
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.databinding.ChatSearchMessageActivityBinding access$200(com.netease.yunxin.kit.chatkit.ui.page.ChatSearchActivity)
+com.netease.yunxin.kit.chatkit.ui.page.ChatSettingActivity$1:
+    public final void onSuccess(com.netease.nimlib.sdk.msg.model.StickTopSessionInfo)
+com.netease.yunxin.kit.chatkit.ui.page.ChatSettingActivity$2:
+    public final void onSuccess(java.lang.Void)
+com.netease.yunxin.kit.chatkit.ui.page.ChatSettingActivity$3:
+    public final void onSuccess(java.lang.Void)
+com.netease.yunxin.kit.chatkit.ui.page.ChatSettingActivity:
+    public final void selectUsersCreateGroup()
+com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity$1:
+    public final void hideKeyboard(int)
+    public final void showKeyboard(int)
+com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity$2
+com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity$3
+com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity:
+    public com.netease.yunxin.kit.chatkit.ui.page.adapter.SearchLocationAdapter adapter
+    public com.netease.yunxin.kit.chatkit.map.ChatLocationBean mSelectLoc
+    public com.netease.yunxin.kit.chatkit.map.IPageMapProvider pageMapProvider
+    public android.os.Handler searchHandler
+    public static void access$000(com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity,boolean)
+    public static synthetic com.netease.yunxin.kit.chatkit.map.ChatLocationBean access$102(com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity,com.netease.yunxin.kit.chatkit.map.ChatLocationBean)
+    public static void access$200(com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity,com.netease.yunxin.kit.chatkit.map.ChatLocationBean)
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.page.adapter.SearchLocationAdapter access$300(com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity)
+    public static synthetic void access$400(com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity)
+    public final void emptyPage()
+    public final void initData(android.content.Intent)
+    public final void initView(android.os.Bundle)
+    public final boolean isMyLocation(com.netease.yunxin.kit.chatkit.map.ChatLocationBean)
+    private synthetic void lambda$renderForDetail$0(android.view.View)
+    private synthetic void lambda$renderForDetail$1(com.netease.nimlib.sdk.msg.attachment.LocationAttachment,android.view.View)
+    private synthetic void lambda$renderForSend$2(android.view.View)
+    private synthetic void lambda$renderForSend$3(android.view.View)
+    private synthetic void lambda$renderForSend$4(android.view.View)
+    private synthetic void lambda$renderForSend$5(android.view.View)
+    public final void renderForDetail(android.os.Bundle)
+    public final void renderForSend(android.os.Bundle)
+    public final void selectLocation(com.netease.yunxin.kit.chatkit.map.ChatLocationBean)
+    public final void showSearch(boolean)
+com.netease.yunxin.kit.chatkit.ui.page.WatchBaseActivity:
+    public abstract void hideSystemUI()
+    public abstract void initViewModel()
+com.netease.yunxin.kit.chatkit.ui.page.WatchImageActivity:
+    public static void launch(android.content.Context,java.util.ArrayList,int)
+com.netease.yunxin.kit.chatkit.ui.page.adapter.AitContactAdapter:
+    public final com.netease.yunxin.kit.chatkit.ui.page.adapter.AitContactAdapter$AitContactHolder onCreateViewHolder(android.view.ViewGroup,int)
+    public final void setMembers(java.util.List)
+    public final void setOnItemSelectListener(com.netease.yunxin.kit.chatkit.ui.page.adapter.AitContactAdapter$OnItemSelectListener)
+com.netease.yunxin.kit.chatkit.ui.page.adapter.ChatUserAdapter$UserItemViewHolder:
+    public final void bind(com.netease.yunxin.kit.corekit.im.model.UserInfo)
+    public final com.netease.yunxin.kit.chatkit.ui.page.adapter.ChatUserAdapter$UserItemViewHolder setTid(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.page.adapter.ChatUserAdapter:
+    public final com.netease.yunxin.kit.chatkit.ui.page.adapter.ChatUserAdapter$UserItemViewHolder getViewHolder(android.view.ViewGroup,int)
+    public final void setTid(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.page.adapter.SearchLocationAdapter$OnLocationSelected
+com.netease.yunxin.kit.chatkit.ui.page.adapter.SearchLocationAdapter$SearchLocationViewHolder
+com.netease.yunxin.kit.chatkit.ui.page.adapter.SearchLocationAdapter
+com.netease.yunxin.kit.chatkit.ui.page.adapter.SearchMessageAdapter:
+    public final java.lang.String TAG
+    public final void onBindViewHolder(com.netease.yunxin.kit.common.ui.viewholder.BaseViewHolder,int)
+    public final com.netease.yunxin.kit.common.ui.viewholder.BaseViewHolder onCreateViewHolder(android.view.ViewGroup,int)
+    public final void setData(java.util.List)
+    public final void setViewHolderClickListener(com.netease.yunxin.kit.common.ui.viewholder.ViewHolderClickListener)
+com.netease.yunxin.kit.chatkit.ui.page.adapter.WatchImageAdapter:
+    public final void handlePictureView(com.netease.yunxin.kit.chatkit.ui.page.adapter.WatchImageAdapter$WatchImageViewHolder,com.netease.nimlib.sdk.msg.model.IMMessage,int)
+    public final void onBindViewHolder(com.netease.yunxin.kit.chatkit.ui.page.adapter.WatchImageAdapter$WatchImageViewHolder,int)
+    public final void onBindViewHolder(com.netease.yunxin.kit.chatkit.ui.page.adapter.WatchImageAdapter$WatchImageViewHolder,int,java.util.List)
+    public final com.netease.yunxin.kit.chatkit.ui.page.adapter.WatchImageAdapter$WatchImageViewHolder onCreateViewHolder(android.view.ViewGroup,int)
+    public final void updateImage(com.netease.yunxin.kit.chatkit.ui.page.adapter.WatchImageAdapter$WatchImageViewHolder,com.netease.nimlib.sdk.msg.model.IMMessage)
+    public final void updateVideo(com.netease.yunxin.kit.chatkit.ui.page.adapter.WatchImageAdapter$WatchImageViewHolder,com.netease.nimlib.sdk.msg.model.IMMessage)
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$1:
+    public final void onSuccess(java.lang.Void)
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$2:
+    public final void onSuccess(java.lang.Void)
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$3:
+    public final boolean hasPermission(java.lang.String)
+    private kotlin.Unit lambda$sendCustomMessage$6(com.netease.nimlib.sdk.msg.attachment.MsgAttachment,java.lang.String,com.ql.recovery.bean.UserInfo)
+    public final void onCustomAction(android.view.View,java.lang.String)
+    public final void sendCustomMessage(com.netease.nimlib.sdk.msg.attachment.MsgAttachment,java.lang.String)
+    public final void sendLocationLaunch()
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$4:
+    public final boolean onSelfIconClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final boolean onSelfIconLongClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final boolean onUserIconLongClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$5:
+    public final void loadMoreBackground(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void loadMoreForward(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void onVisibleItemChange(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$6$1:
+    public final void onP2PSelected()
+    public final void onTeamSelected()
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment:
+    public final int REQUEST_CAMERA_PERMISSION
+    public final int REQUEST_PERMISSION
+    public final int REQUEST_READ_EXTERNAL_STORAGE_PERMISSION
+    public final int REQUEST_VIDEO_PERMISSION
+    public com.netease.yunxin.kit.chatkit.ui.ChatUIConfig chatConfig
+    public com.netease.yunxin.kit.chatkit.ui.builder.IChatViewCustom chatViewCustom
+    public com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageItemClickListener delegateListener
+    public static synthetic void access$100(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment)
+    public static synthetic void access$700(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment)
+    public abstract java.lang.String getPermissionText()
+    public abstract void initCustom()
+    public final void loadConfig()
+    public abstract void openFile()
+    public abstract void requestCameraPermission()
+    public final void setChatConfig(com.netease.yunxin.kit.chatkit.ui.ChatUIConfig)
+    public abstract void showDeleteConfirmDialog()
+    public abstract void showLocation()
+    public abstract void showRevokeConfirmDialog()
+    public abstract void startP2PSelector()
+    public abstract void startPickFile()
+    public final void startPickMedia()
+    public abstract void startTeamList()
+    public abstract void watchImage()
+    public abstract void watchVideo()
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatReadUserListFragment:
+    public java.lang.String tid
+    public final void initView()
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatTeamFragment:
+    public final void onNewIntent(android.content.Intent)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$10:
+    public final void onSuccess(java.lang.Long)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$11:
+    public final void onSuccess(java.lang.Long)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$1:
+    public final void onEvent(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$2:
+    public final void onEvent(com.netease.yunxin.kit.chatkit.model.IMMessageInfo)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$3:
+    public final void onEvent(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$4:
+    public final void onSuccess(java.lang.Void)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$6:
+    public final void onSuccess(java.lang.Long)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$7:
+    public final void onSuccess(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$8:
+    public final void onSuccess(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel$9:
+    public final void onSuccess(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel:
+    public final java.lang.String Orientation_Vertical
+    public final int messagePageSize
+    public static synthetic com.netease.yunxin.kit.common.ui.viewmodel.FetchResult access$000(com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel)
+    public static synthetic void access$1000(com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel,com.netease.nimlib.sdk.msg.model.IMMessage,boolean)
+    public static synthetic com.netease.yunxin.kit.common.ui.viewmodel.FetchResult access$300(com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel)
+    public static synthetic androidx.lifecycle.MutableLiveData access$600(com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel)
+    public static synthetic long access$800(com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel)
+    public static synthetic long access$802(com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel,long)
+    public abstract void addMessagePin()
+    public abstract void clearChattingAccount()
+    public abstract void deleteMessage()
+    public abstract void fetchMessageListBothDirect()
+    public abstract void fetchMessageRemoteNewer()
+    public final androidx.lifecycle.MutableLiveData getAddPinMessageLiveData()
+    public final androidx.lifecycle.MutableLiveData getAttachmentProgressMutableLiveData()
+    public final androidx.lifecycle.MutableLiveData getQueryMessageLiveData()
+    public final androidx.lifecycle.MutableLiveData getRemovePinMessageLiveData()
+    public final androidx.lifecycle.MutableLiveData getRevokeMessageLiveData()
+    public final androidx.lifecycle.MutableLiveData getSendMessageLiveData()
+    public final java.lang.String getSessionId()
+    public final androidx.lifecycle.MutableLiveData getUserInfoLiveData()
+    public abstract boolean isShowReadStatus()
+    public abstract void onListFetchFailed()
+    public abstract void onListFetchSuccess()
+    public abstract void postMessageSend()
+    public abstract void queryRoamMsgHasMoreTime()
+    public abstract void removeMsgPin()
+    public abstract void replyMessage()
+    public abstract void replyTextMessage()
+    public abstract void revokeMessage()
+    public abstract void sendAudioMessage()
+    public abstract void sendCustomMessage()
+    public abstract void sendForwardMessage()
+    public abstract void sendLocationMessage()
+    public abstract void sendTextMessage()
+    public abstract void setChattingAccount()
+    public abstract void updateRoamMsgHasMoreTag()
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel$1:
+    public final void onEvent(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel$2:
+    public final void onSuccess(com.netease.yunxin.kit.corekit.im.model.UserInfo)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel:
+    public static synthetic com.netease.yunxin.kit.common.ui.viewmodel.FetchResult access$100(com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel)
+    public final androidx.lifecycle.MutableLiveData getMessageReceiptLiveData()
+    public final void getP2pUserInfo(java.lang.String)
+    public final androidx.lifecycle.MutableLiveData getP2pUserInfoLiveData()
+    public final androidx.lifecycle.MutableLiveData getTypeStateLiveData()
+    public final void sendInputNotification(boolean)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatReadStateViewModel$1:
+    public final void onSuccess(com.netease.yunxin.kit.chatkit.model.IMTeamMsgAckInfo)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatReadStateViewModel:
+    public final void fetchTeamAckInfo(com.netease.nimlib.sdk.msg.model.IMMessage)
+    public final androidx.lifecycle.MutableLiveData getTeamAckInfoLiveData()
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatSettingViewModel$1:
+    public final void onSuccess(com.netease.yunxin.kit.corekit.im.model.UserInfo)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatSettingViewModel:
+    public static synthetic com.netease.yunxin.kit.common.ui.viewmodel.FetchResult access$000(com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatSettingViewModel)
+    public final void getUserInfo(java.lang.String)
+    public final androidx.lifecycle.MutableLiveData getUserInfoLiveData()
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatTeamViewModel$1:
+    public final void onEvent(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatTeamViewModel$2:
+    public final void onSuccess(com.netease.nimlib.sdk.team.model.Team)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatTeamViewModel$3:
+    public final void onSuccess(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatTeamViewModel:
+    public static synthetic androidx.lifecycle.MutableLiveData access$200(com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatTeamViewModel)
+    public final androidx.lifecycle.MutableLiveData getTeamLiveData()
+    public final androidx.lifecycle.MutableLiveData getTeamMessageReceiptLiveData()
+    public final androidx.lifecycle.MutableLiveData getUserInfoData()
+    public final void refreshTeamMessageReceipt(java.util.List)
+    public final void requestTeamInfo(java.lang.String)
+    public final void requestTeamMembers(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.SearchMessageViewModel$1:
+    public final void onSuccess(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.SearchMessageViewModel:
+    public final androidx.lifecycle.MutableLiveData getSearchLiveData()
+    public final void searchMessage(java.lang.String,com.netease.nimlib.sdk.msg.constant.SessionTypeEnum,java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.WatchImageVideoViewModel$1:
+    public final void onEvent(com.netease.yunxin.kit.chatkit.model.IMMessageInfo)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.WatchImageVideoViewModel$2:
+    public final void onSuccess(java.lang.Void)
+com.netease.yunxin.kit.chatkit.ui.page.viewmodel.WatchImageVideoViewModel:
+    public final void downloadAttachment(com.netease.nimlib.sdk.msg.model.IMMessage)
+    public final androidx.lifecycle.MutableLiveData getStatusMessageLiveData()
+    public final void onDownloadFail(com.netease.nimlib.sdk.msg.model.IMMessage)
+    public final void onDownloadStart(com.netease.nimlib.sdk.msg.model.IMMessage)
+    public final void onDownloadSuccess(com.netease.nimlib.sdk.msg.model.IMMessage)
+    public final void requestFile(com.netease.nimlib.sdk.msg.model.IMMessage)
+com.netease.yunxin.kit.chatkit.ui.util.AppUtil
+com.netease.yunxin.kit.chatkit.ui.util.ToastUtil:
+    public static boolean isShow
+    public static void <clinit>()
+com.netease.yunxin.kit.chatkit.ui.view.ChatView$1:
+    public final void onListViewStartScroll()
+    public final void onListViewTouched()
+com.netease.yunxin.kit.chatkit.ui.view.ChatView:
+    public final void addMessageListForward(java.util.List)
+    public final void appendMessageList(java.util.List)
+    public final void updateMessageStatus(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void updateProgress(com.netease.nimlib.sdk.msg.model.AttachmentProgress)
+com.netease.yunxin.kit.chatkit.ui.view.IItemActionListener:
+    public abstract void onClick(com.netease.yunxin.kit.common.ui.action.ActionItem)
+com.netease.yunxin.kit.chatkit.ui.view.ait.AitContactSelectorDialog:
+    public final void setData(java.util.List)
+    public final void setOnItemSelectListener(com.netease.yunxin.kit.chatkit.ui.page.adapter.AitContactAdapter$OnItemSelectListener)
+com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager:
+    public final java.util.List getAitTeamMember()
+    public final java.lang.String getTid()
+    public final void insertReplyAit(java.lang.String,java.lang.String)
+    public final void reset()
+    public final void setAitTextChangeListener(com.netease.yunxin.kit.chatkit.ui.view.ait.AitTextChangeListener)
+    public final void setTeamMembers(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.view.ait.AitTextChangeListener:
+    public abstract void onTextAdd(java.lang.String,int)
+    public abstract void onTextDelete(int,int)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.CheckedImageButton:
+    public void <init>(android.content.Context)
+    public final boolean isChecked()
+    public final void setPaddingValue(int,int,int,int)
+    public final void updateBackground(int)
+    public final void updateImage(android.graphics.drawable.Drawable)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiAdapter:
+    public final android.content.Context context
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiManager$Entry:
+    public java.lang.String assetPath
+    public java.lang.String text
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiManager:
+    public static androidx.collection.LruCache drawableCache
+    public static java.util.regex.Pattern pattern
+    public static java.lang.ref.WeakReference sContext
+    public static android.content.Context getContext()
+    public static void getDrawable(android.content.Context,java.lang.String)
+    public static void getPattern()
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiPickerView:
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.databinding.ChatEmojiLayoutBinding access$000(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiPickerView)
+    public final com.netease.yunxin.kit.chatkit.ui.view.emoji.CheckedImageButton addEmojiIconTabBtn(int,android.view.View$OnClickListener)
+    public final void loadStickers()
+    public final void onCategoryChanged(int)
+    public final void setCheckedButtonImage(com.netease.yunxin.kit.chatkit.ui.view.emoji.CheckedImageButton,com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerCategory)
+    public final void show()
+    public final void showEmojiPager(int)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView:
+    public static synthetic java.util.List access$100(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView)
+    public static synthetic int access$1000(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView)
+    public static synthetic android.content.Context access$1200(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView)
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.view.emoji.IEmojiCategoryChanged access$300(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView)
+    public static synthetic int[] access$400(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView)
+    public static synthetic androidx.viewpager.widget.ViewPager access$600(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView)
+    public static synthetic java.util.List access$700(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView)
+    public static synthetic int[] access$800(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView,int)
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.view.emoji.IEmojiSelectedListener access$900(com.netease.yunxin.kit.chatkit.ui.view.emoji.EmojiView)
+    public final int getCategoryPageCount(com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerCategory)
+    public final void initData()
+    public final void setCategoryChangCheckedCallback(com.netease.yunxin.kit.chatkit.ui.view.emoji.IEmojiCategoryChanged)
+    public final void setCurEmotionPage(int)
+    public final void showStickerGridView()
+    public final void showStickers(int)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.IEmojiCategoryChanged:
+    public abstract void onCategoryChanged(int)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.IEmojiSelectedListener:
+    public abstract void onEmojiSelected(java.lang.String)
+    public abstract void onEmojiSendClick()
+    public abstract void onStickerSelected(java.lang.String,java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerAdapter$StickerViewHolder:
+    public android.widget.TextView descLabel
+    public android.widget.ImageView imageView
+    public final synthetic com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerAdapter this$0
+com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerCategory:
+    public int order
+    public transient java.util.List stickers
+    public boolean system
+    public java.lang.String title
+    public void <init>(java.lang.String,java.lang.String,boolean,int)
+    public final java.io.InputStream getCoverNormalInputStream(android.content.Context)
+    public final java.io.InputStream getCoverPressedInputStream(android.content.Context)
+    public final java.lang.String getName()
+    public final int getOrder()
+    public final void getStickers()
+    public final void hasStickers()
+    public final java.util.List loadStickerData()
+    public final java.io.InputStream makeFileInputStream(android.content.Context,java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerItem
+com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerManager$1
+com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerManager:
+    public static com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerManager instance
+    public final synchronized java.util.List getCategories()
+    public final synchronized com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerCategory getCategory(java.lang.String)
+    public final int getStickerOrder(java.lang.String)
+    public final java.lang.String getStickerUri(java.lang.String,java.lang.String)
+    public final boolean isSystemSticker(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.input.ActionFactory
+com.netease.yunxin.kit.chatkit.ui.view.input.ActionsPanel:
+    public com.netease.yunxin.kit.chatkit.ui.view.input.ActionsPanelAdapter adapter
+    public final void init(androidx.viewpager2.widget.ViewPager2,java.util.List,com.netease.yunxin.kit.chatkit.ui.view.IItemActionListener)
+com.netease.yunxin.kit.chatkit.ui.view.input.ActionsPanelAdapter:
+    public final void onBindViewHolder(com.netease.yunxin.kit.chatkit.ui.view.input.ActionsPanelAdapter$GridViewHolder,int)
+    public final void onBindViewHolder(com.netease.yunxin.kit.chatkit.ui.view.input.ActionsPanelAdapter$GridViewHolder,int,java.util.List)
+    public final com.netease.yunxin.kit.chatkit.ui.view.input.ActionsPanelAdapter$GridViewHolder onCreateViewHolder(android.view.ViewGroup,int)
+    public final void setOnActionItemClick(com.netease.yunxin.kit.chatkit.ui.view.IItemActionListener)
+com.netease.yunxin.kit.chatkit.ui.view.input.InputActionAdapter:
+    public final void disableAll(boolean)
+    public final com.netease.yunxin.kit.chatkit.ui.view.input.InputActionAdapter$ItemHolder onCreateViewHolder(android.view.ViewGroup,int)
+com.netease.yunxin.kit.chatkit.ui.view.input.InputState$EnumUnboxingLocalUtility:
+    public static void <clinit>()
+    public static int _valueOf(java.lang.String)
+    public static int[] _values()
+    public static synthetic java.lang.String name(int)
+    public static synthetic int valueOf(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.input.InputState$EnumUnboxingSharedUtility
+com.netease.yunxin.kit.chatkit.ui.view.input.InputState
+com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout$1:
+    public final void onEmojiSendClick()
+    public final void onStickerSelected(java.lang.String,java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout:
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageBottomLayoutBinding access$000(com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout)
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageProxy access$100(com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout)
+    public static synthetic android.text.TextWatcher access$200(com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout)
+    public final void init(com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageProxy)
+    public final void onCameraClick()
+    public final void onKeyboardHide()
+    public final void onKeyboardShow()
+    public final void onLocationClick()
+    public final void onVideoClick()
+    public final void showKeyboard()
+    public final void startRecord()
+    public final void switchEmoji()
+    public final void switchMore()
+    public final void switchRecord()
+com.netease.yunxin.kit.chatkit.ui.view.input.RecordView:
+    public boolean started
+    public final void endAudioRecord(boolean)
+    public final void endRecord()
+    public final void initAudioRecord()
+    public final boolean isInCircle(float,float,float,float,float)
+    public final void recordReachMaxTime(int)
+    public final void startAudioRecord()
+    public final void startRecord()
+    public final void willCancelAudioRecord(boolean)
+com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageItemClickListener:
+    public boolean onMessageClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public boolean onMessageLongClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public boolean onReEditRevokeMessage(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public boolean onReplyMessageClick(android.view.View,int,java.lang.String)
+    public boolean onSelfIconClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public boolean onSelfIconLongClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public boolean onSendFailBtnClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public boolean onUserIconClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public boolean onUserIconLongClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageLoadHandler:
+    public abstract void loadMoreBackground(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public abstract void loadMoreForward(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public abstract void onVisibleItemChange(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageProxy:
+    public abstract void audioCall()
+    public abstract void captureVideo()
+    public abstract boolean hasPermission(java.lang.String)
+    public abstract void onCustomAction(android.view.View,java.lang.String)
+    public abstract void onTypeStateChange(boolean)
+    public abstract void pickMedia()
+    public abstract void sendAudio(java.io.File,long)
+    public abstract void sendCustomMessage(com.netease.nimlib.sdk.msg.attachment.MsgAttachment,java.lang.String)
+    public abstract void sendFile()
+    public abstract void sendLocationLaunch()
+    public abstract void sendTextMessage(java.lang.String,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public abstract void takePicture()
+    public abstract void videoCall()
+com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$RotateRunnable
+com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$ScaleRunnable:
+    public static synthetic boolean access$100(com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$ScaleRunnable)
+    public final void stop()
+com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$SnapRunnable:
+    public final boolean start(float,float)
+    public final void stop()
+com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$TranslateRunnable:
+    public static synthetic boolean access$000(com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$TranslateRunnable)
+    public final boolean start(float,float)
+    public final void stop()
+com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView:
+    public boolean mAllowCrop
+    public android.graphics.Rect mCropRect
+    public int mCropSize
+    public com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$RotateRunnable mRotateRunnable
+    public byte[] mVideoBlob
+    public boolean mVideoReady
+    public static android.graphics.Bitmap sVideoImage
+    public static android.graphics.Bitmap sVideoNotReadyImage
+    public static synthetic void access$200(com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView,float,float,float)
+    public static synthetic int access$300(com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView,float,float)
+    public final boolean disallowParentIntercept(boolean,boolean,float)
+    public final void enableImageTransforms(boolean)
+    public final void generateMatrix()
+    public final void generateScale()
+    public final boolean interceptMoveLeft()
+    public final boolean interceptMoveRight()
+    public final void resetTransformations()
+    public final void rotate(float,boolean)
+    public final void setFullScreen(boolean,boolean)
+com.netease.yunxin.kit.chatkit.ui.view.media.SimpleVideoPlayer$PlayState$EnumUnboxingLocalUtility:
+    public static void <clinit>()
+    public static int _valueOf(java.lang.String)
+    public static int[] _values()
+    public static synthetic java.lang.String name(int)
+    public static synthetic int valueOf(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.media.SimpleVideoPlayer$PlayState
+com.netease.yunxin.kit.chatkit.ui.view.media.SimpleVideoPlayer:
+    public static synthetic android.media.MediaPlayer access$000(com.netease.yunxin.kit.chatkit.ui.view.media.SimpleVideoPlayer)
+    public static synthetic int access$400(com.netease.yunxin.kit.chatkit.ui.view.media.SimpleVideoPlayer)
+    public final void handlePlay(com.netease.nimlib.sdk.msg.model.IMMessage)
+    public final void initCountDownTimer(long)
+    public final void initVideoSize()
+    public final void onDestroy()
+    public final void onPause()
+    public final void onResume()
+    public final void pauseVideo()
+    public final void resumeVideo()
+com.netease.yunxin.kit.chatkit.ui.view.message.ChatMessageListView$OnListViewEventListener:
+    public abstract void onListViewStartScroll()
+    public abstract void onListViewTouched()
+com.netease.yunxin.kit.chatkit.ui.view.message.ChatMessageListView:
+    public static synthetic boolean access$000(com.netease.yunxin.kit.chatkit.ui.view.message.ChatMessageListView)
+    public static synthetic void access$002(com.netease.yunxin.kit.chatkit.ui.view.message.ChatMessageListView)
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.view.message.ChatMessageListView$OnListViewEventListener access$100(com.netease.yunxin.kit.chatkit.ui.view.message.ChatMessageListView)
+    public final void addMessageListForward(java.util.List)
+    public final void addPinMessage(java.lang.String,com.netease.nimlib.sdk.msg.model.MsgPinOption)
+    public final void appendMessage(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void appendMessageList(java.util.List)
+    public final void clearMessageList()
+    public final void deleteMessage(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final java.util.ArrayList filterMessagesByType(int)
+    public final boolean hasMoreNewerMessages()
+    public final void initRecyclerView()
+    public final boolean isLastItemVisibleCompleted()
+    public final void refreshTeamMessageReceipt()
+    public final void removePinMessage(java.lang.String)
+    public final void revokeMessage(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void scrollToMessage(java.lang.String)
+    public final com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean searchMessage(java.lang.String)
+    public final void updateAttachmentProgress(com.netease.nimlib.sdk.msg.model.AttachmentProgress)
+    public final void updateTeamInfo(com.netease.nimlib.sdk.team.model.Team)
+    public final void updateUserInfo(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.view.message.ChatMessageViewHolderFactory:
+    public abstract com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder createViewHolder()
+    public abstract com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder createViewHolderCustom(android.view.ViewGroup,int)
+    public abstract int getCustomViewType(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public abstract int getItemViewType()
+    public abstract com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder getViewHolderDefault()
+com.netease.yunxin.kit.chatkit.ui.view.message.MessageProperties:
+    public float avatarCornerRadius
+    public android.graphics.drawable.Drawable chatViewBackground
+    public java.util.Map fileDrawable
+    public int messageTextColor
+    public int messageTextSize
+    public android.graphics.drawable.Drawable receiveMessageBg
+    public int receiveMessageRes
+    public android.graphics.drawable.Drawable selfMessageBg
+    public int selfMessageRes
+    public long sendFileLimit
+    public boolean showP2pMessageStatus
+    public boolean showStickerMessage
+    public boolean showTeamMessageStatus
+    public boolean showTitleBar
+    public boolean showTitleBarRightIcon
+    public int signalBgColor
+    public int timeTextColor
+    public int timeTextSize
+    public android.view.View$OnClickListener titleBarRightClick
+    public int titleBarRightRes
+    public int userNickColor
+    public int userNickTextSize
+    public final void getAvatarCornerRadius()
+    public final void getMessageTextColor()
+    public final void getMessageTextSize()
+    public final void getReceiveMessageBg()
+    public final void getSelfMessageBg()
+    public final void getShowP2pMessageStatus()
+    public final void getShowTeamMessageStatus()
+    public final void getSignalBgColor()
+    public final void getTimeTextColor()
+    public final void getTimeTextSize()
+    public final void getUserNickColor()
+    public final void getUserNickTextSize()
+com.netease.yunxin.kit.chatkit.ui.view.message.adapter.ChatMessageAdapter:
+    public final void appendMessage(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void appendMessages(java.util.List)
+    public final void clearMessageList()
+    public final void forwardMessages(java.util.List)
+    public final com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean getFirstMessage()
+    public final com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean getLastMessage()
+    public final java.util.List getMessageList()
+    public final void onBindViewHolder(com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder,int)
+    public final void onBindViewHolder(com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder,int,java.util.List)
+    public final com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder onCreateViewHolder(android.view.ViewGroup,int)
+    public final void onViewAttachedToWindow(com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder)
+    public final void onViewDetachedFromWindow(com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder)
+    public final void pinMsg(java.lang.String,com.netease.nimlib.sdk.msg.model.MsgPinOption)
+    public final void removeMessage(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void removeMessagePin(java.lang.String)
+    public final void revokeMessage(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final int searchMessagePosition(java.lang.String)
+    public final void setItemClickListener(com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageItemClickListener)
+    public final void setMessageProperties(com.netease.yunxin.kit.chatkit.ui.view.message.MessageProperties)
+    public final void setMessageReader(com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageReader)
+    public final void setReceiptTime(long)
+    public final void setShowReadStatus(boolean)
+    public final void setTeamInfo(com.netease.nimlib.sdk.team.model.Team)
+    public final void setViewHolderFactory(com.netease.yunxin.kit.chatkit.ui.IChatFactory)
+    public final void updateMessageProgress(com.netease.nimlib.sdk.msg.model.AttachmentProgress)
+    public final void updateMessageStatus(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void updateUserInfo(java.util.List)
+com.netease.yunxin.kit.chatkit.ui.view.message.audio.ChatMessageAudioControl$2:
+    public final void onSuccess(java.lang.Void)
+com.netease.yunxin.kit.chatkit.ui.view.message.audio.ChatMessageAudioControl:
+    public static void <clinit>()
+    public static synthetic void access$000(com.netease.yunxin.kit.chatkit.ui.view.message.audio.ChatMessageAudioControl)
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.view.message.adapter.ChatMessageAdapter access$300(com.netease.yunxin.kit.chatkit.ui.view.message.audio.ChatMessageAudioControl)
+    public static synthetic com.netease.yunxin.kit.chatkit.model.IMMessageInfo access$400(com.netease.yunxin.kit.chatkit.ui.view.message.audio.ChatMessageAudioControl)
+    public final boolean playNextAudio(com.netease.yunxin.kit.chatkit.ui.view.message.adapter.ChatMessageAdapter,com.netease.yunxin.kit.chatkit.model.IMMessageInfo)
+    public final void setPlayNext(boolean,com.netease.yunxin.kit.chatkit.ui.view.message.adapter.ChatMessageAdapter,com.netease.yunxin.kit.chatkit.model.IMMessageInfo)
+    public final void startPlayAudioDelay(long,com.netease.yunxin.kit.chatkit.model.IMMessageInfo,com.netease.yunxin.kit.corekit.im.audioplayer.BaseAudioControl$AudioControlListener,int)
+com.netease.yunxin.kit.chatkit.ui.view.message.audio.ChatMessageAudioPlayable:
+    public final com.netease.yunxin.kit.chatkit.model.IMMessageInfo getMessage()
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatAudioMessageViewHolder:
+    public static synthetic com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean access$000(com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatAudioMessageViewHolder)
+    public final void endPlayAnim()
+    public final void initPlayAnim()
+    public final boolean isMessagePlaying(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final boolean isTheSame(java.lang.String)
+    public final void playControl(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void setAudioLayout(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder$1:
+    public final void onSuccess(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder$2:
+    public final void onSuccess(com.netease.yunxin.kit.corekit.im.model.UserInfo)
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder$3:
+    public final void onSuccess(java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder:
+    public static synthetic void access$000(com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatBaseMessageViewHolder,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public abstract void bindData()
+    public final android.view.ViewGroup getContainer()
+    public abstract void onAttachedToWindow()
+    public abstract boolean revokeMsgIsEdit()
+    public abstract void setItemClickListener()
+    public abstract void setMessageReader()
+    public abstract void setProperties()
+    public abstract void setReceiptTime()
+    public abstract void setShowReadStatus()
+    public final void setTeamInfo(com.netease.nimlib.sdk.team.model.Team)
+    public abstract void setTime()
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatFileMessageViewHolder:
+    public final com.netease.nimlib.sdk.msg.model.IMMessage getMsgInternal()
+    public final void updateProgress(int)
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatLocationMessageViewHolder:
+    public com.netease.yunxin.kit.chatkit.map.IChatMap chatMap
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatThumbBaseViewHolder:
+    public abstract int getImageThumbMaxEdge()
+    public void onMessageStatus(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.view.message.viewholder.ChatVideoMessageViewHolder:
+    public final com.netease.nimlib.sdk.msg.attachment.VideoAttachment getAttachment(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatActionFactory:
+    public final java.util.List getNormalActions(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final void setActionListener(com.netease.yunxin.kit.chatkit.ui.view.popmenu.IChatPopMenuClickListener)
+    public final void setChatPopMenu(com.netease.yunxin.kit.chatkit.ui.view.popmenu.IChatPopMenu)
+com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenu$MenuAdapter$MenuItemViewHolder:
+    public final synthetic com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenu$MenuAdapter this$1
+com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenu$MenuAdapter:
+    public final com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenu$MenuAdapter$MenuItemViewHolder onCreateViewHolder(android.view.ViewGroup,int)
+    public final void setMessageInfo(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenu:
+    public final com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenuAction getChatPopMenuAction(int)
+    public final void hide()
+    public final void initDefaultAction(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+    public final boolean isShowing()
+    public final void show(android.view.View,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,int)
+com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenuAction:
+    public java.lang.String action
+    public final com.netease.yunxin.kit.chatkit.ui.view.popmenu.ChatPopMenuAction$OnClickListener getActionClickListener()
+    public final int getIcon()
+    public final java.lang.String getTitle()

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/include_head"
+        layout="@layout/layout_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_60"
+        android:layout_marginEnd="@dimen/dp_15"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/include_gender"
+            layout="@layout/layout_gender"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/include_birthday"
+            layout="@layout/layout_birthday"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/include_nickname"
+            layout="@layout/layout_nickname"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/include_avatar"
+            layout="@layout/layout_avatar"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/include_wallpaper"
+            layout="@layout/layout_wallpaper"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/include_tags"
+            layout="@layout/layout_fun"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_next_step"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/background_gradient_yellow"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="@string/guide_next_step"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_16" />
+
+        <TextView
+
+            android:id="@+id/tv_jump"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/shape_rectangle_light_yellow"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="@string/guide_next_jump"
+            android:textColor="@color/color_yellow"
+            android:textSize="@dimen/sp_16"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</FrameLayout>

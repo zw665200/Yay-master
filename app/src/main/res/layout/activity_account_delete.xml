@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <include
+        android:id="@+id/include_title"
+        layout="@layout/layout_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_60"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/sp_16"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:text="@string/account_delete_des_00"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_16"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:text="@string/account_delete_des_01"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_13" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_16"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:text="@string/account_delete_des_02"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_13" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_16"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:text="@string/account_delete_des_03"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_13" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_16"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:text="@string/account_delete_des_04"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_13" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginEnd="@dimen/sp_16"
+            android:background="@drawable/shape_rectangle_red"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:text="@string/account_delete_sure"
+            android:textColor="@color/color_red"
+            android:textSize="@dimen/sp_16" />
+
+        <Button
+            android:id="@+id/refuse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/sp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/sp_16"
+            android:background="@drawable/shape_corner_blue"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:text="@string/account_delete_refuse"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/sp_16" />
+
+
+    </LinearLayout>
+
+</FrameLayout>

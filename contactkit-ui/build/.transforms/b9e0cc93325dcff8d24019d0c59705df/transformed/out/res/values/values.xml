@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_14131b">#ff14131b</color>
+    <color name="color_337eff">#337EFF</color>
+    <color name="color_3eaf96">#3eaf96</color>
+    <color name="color_4d000000">#4d000000</color>
+    <color name="color_537ff4">#537FF4</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_8f8f8f">#8F8F8F</color>
+    <color name="color_929299">#929299</color>
+    <color name="color_a6adb6">#A6ADB6</color>
+    <color name="color_b3b7bc">#B3B7BC</color>
+    <color name="color_d9d9d9">#D9D9D9</color>
+    <color name="color_dbdde4">#dbdde4</color>
+    <color name="color_deb0e8">#DBE0E8</color>
+    <color name="color_e6605c">#E6605C</color>
+    <color name="color_e9eff5">#e9eff5</color>
+    <color name="color_ededef">#ededef</color>
+    <color name="color_eff1f4">#EFF1F4</color>
+    <color name="color_f24957">#f24957</color>
+    <color name="color_f2f4f5">#F2F4F5</color>
+    <color name="color_f5f8fc">#F5F8FC</color>
+    <color name="color_ffffff">#ffffffff</color>
+    <color name="title_color">#333333</color>
+    <dimen name="dimen_100_dp">100dp</dimen>
+    <dimen name="dimen_10_dp">10dp</dimen>
+    <dimen name="dimen_115_dp">115dp</dimen>
+    <dimen name="dimen_118_dp">118dp</dimen>
+    <dimen name="dimen_12_dp">12dp</dimen>
+    <dimen name="dimen_13_dp">13dp</dimen>
+    <dimen name="dimen_14_dp">14dp</dimen>
+    <dimen name="dimen_15_dp">15dp</dimen>
+    <dimen name="dimen_16_dp">16dp</dimen>
+    <dimen name="dimen_188_dp">188dp</dimen>
+    <dimen name="dimen_18_dp">18dp</dimen>
+    <dimen name="dimen_1_dp">1dp</dimen>
+    <dimen name="dimen_20_dp">20dp</dimen>
+    <dimen name="dimen_23_dp">23dp</dimen>
+    <dimen name="dimen_24_dp">24dp</dimen>
+    <dimen name="dimen_25_dp">25dp</dimen>
+    <dimen name="dimen_26_dp">26dp</dimen>
+    <dimen name="dimen_28_dp">28dp</dimen>
+    <dimen name="dimen_32_dp">32dp</dimen>
+    <dimen name="dimen_3_dp">3dp</dimen>
+    <dimen name="dimen_42_dp">42dp</dimen>
+    <dimen name="dimen_46_dp">46dp</dimen>
+    <dimen name="dimen_4_dp">4dp</dimen>
+    <dimen name="dimen_52_dp">52dp</dimen>
+    <dimen name="dimen_55_dp">55dp</dimen>
+    <dimen name="dimen_56_dp">56dp</dimen>
+    <dimen name="dimen_5_dp">5dp</dimen>
+    <dimen name="dimen_60_dp">60dp</dimen>
+    <dimen name="dimen_6_dp">6dp</dimen>
+    <dimen name="dimen_7_dp">7dp</dimen>
+    <dimen name="dimen_8_dp">8dp</dimen>
+    <dimen name="dimen_9_dp">9dp</dimen>
+    <dimen name="image_contact_width_height">36dp</dimen>
+    <dimen name="image_head_width_height">32dp</dimen>
+    <dimen name="image_operate_margin">12dp</dimen>
+    <dimen name="image_operate_width_height">24dp</dimen>
+    <dimen name="page_margin_left_right">20dp</dimen>
+    <dimen name="page_title_bar_height">60dp</dimen>
+    <dimen name="page_title_size">20dp</dimen>
+    <dimen name="text_size_11">11sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_8">8sp</dimen>
+    <dimen name="verify_action_max_len">200dp</dimen>
+    <dimen name="verify_name_max_len">120dp</dimen>
+    <string name="accept_your_friend_apply">同意了你的好友请求</string>
+    <string name="add_black_error">%s加入黑名单失败</string>
+    <string name="add_black_list">加入黑名单</string>
+    <string name="add_friend">添加好友</string>
+    <string name="add_friend_operate_fail">好友申请失败 %s</string>
+    <string name="add_friend_operate_success">好友申请已发送</string>
+    <string name="add_friend_search_empty_tips">该用户不存在</string>
+    <string name="add_friend_search_error">搜索失败</string>
+    <string name="add_friend_search_hint">请输入账号</string>
+    <string name="add_friend_title">添加好友</string>
+    <string name="agree_add_friend_fail">同意好友申请失败</string>
+    <string name="agree_apply_join_team_fail">同意入群申请失败</string>
+    <string name="agree_invite_team_fail">同意入群邀请失败</string>
+    <string name="apply_to_join_group">申请加入%s群</string>
+    <string name="birthday">生日</string>
+    <string name="black_list">黑名单</string>
+    <string name="black_list_tips">你不会收到列表中任何联系人的消息</string>
+    <string name="cancel">取消</string>
+    <string name="chat">聊天</string>
+    <string name="clear_all">清空</string>
+    <string name="comment_name">备注名</string>
+    <string name="contact_black_list_relieve">解除</string>
+    <string name="contact_list_black_list">黑名单</string>
+    <string name="contact_list_my_computer">我的电脑</string>
+    <string name="contact_list_my_group">我的群聊</string>
+    <string name="contact_list_verify_msg">验证消息</string>
+    <string name="contact_selector_max_count">最多选择%s个好友</string>
+    <string name="contact_title">通讯录</string>
+    <string name="contact_user_info_account">账号:%s</string>
+    <string name="contact_user_info_nickname">昵称:%s</string>
+    <string name="contact_verify_agree">同意</string>
+    <string name="contact_verify_agreed">已同意</string>
+    <string name="contact_verify_expired">已过期</string>
+    <string name="contact_verify_reject">拒绝</string>
+    <string name="contact_verify_rejected">已拒绝</string>
+    <string name="delete_contact_account">将联系人“%s”删除</string>
+    <string name="delete_friend">删除好友</string>
+    <string name="direct_add_your_friend_apply">直接添加你为好友</string>
+    <string name="disagree_add_friend_fail">拒绝好友申请失败</string>
+    <string name="disagree_apply_join_team_fail">拒绝入群申请失败</string>
+    <string name="disagree_invite_team_fail">拒绝入群邀请失败</string>
+    <string name="email">邮箱</string>
+    <string name="friend_apply">好友申请</string>
+    <string name="invited_to_join_group">邀请你加入群 %s</string>
+    <string name="my_team">我的群聊</string>
+    <string name="notify_message">消息通知</string>
+    <string name="personal_signature">个性签名</string>
+    <string name="phone">手机</string>
+    <string name="reject_your_friend_apply">拒绝了你的好友请求</string>
+    <string name="remove_black_fail">黑名单移除失败</string>
+    <string name="save">保存</string>
+    <string name="select">选择</string>
+    <string name="selector_sure">确定(%d)</string>
+    <string name="verify_max_count_text">99+</string>
+    <string name="verify_msg">验证消息</string>
+    <style name="SelectorRadioBtn" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/radio_button_selector</item>
+    </style>
+    <declare-styleable name="ContactListView">
+
+        <attr format="color" name="nameTextColor"/>
+        <attr format="dimension" name="nameTextSize"/>
+        <attr format="color" name="indexTextColor"/>
+        <attr format="dimension" name="indexTextSize"/>
+        <attr format="color" name="divideLineColor"/>
+        <attr format="boolean" name="showIndexBar"/>
+        <attr format="boolean" name="showSelector"/>
+        <attr format="dimension" name="avatarCornerRadius"/>
+
+    </declare-styleable>
+    <declare-styleable name="IndexBar">
+        <attr format="dimension" name="indexBarTextSize"/>
+        <attr format="color" name="indexBarTextColor"/>
+        <attr format="color" name="indexBarTextColorPress"/>
+        <attr format="color" name="indexBarPressBackground"/>
+    </declare-styleable>
+    <declare-styleable name="TitleBarView">
+
+        <attr format="integer" name="head_img_src"/>
+        <attr format="enum" name="head_img_visible">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="4"/>
+            <enum name="gone" value="8"/>
+        </attr>
+        <attr format="integer" name="right_img_src"/>
+        <attr format="integer" name="right_img_second_src"/>
+        <attr format="string" name="head_title"/>
+        <attr format="color" name="head_title_color"/>
+
+    </declare-styleable>
+</resources>

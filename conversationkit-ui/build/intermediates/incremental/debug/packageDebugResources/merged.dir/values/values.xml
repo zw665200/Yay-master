@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_333333">#333333</color>
+    <color name="color_337eff">#337eff</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_cccccc">#cccccc</color>
+    <color name="color_e9eff5">#e9eff5</color>
+    <color name="color_ededef">#ededef</color>
+    <color name="color_f24957">#f24957</color>
+    <color name="color_fc596a">#fc596a</color>
+    <color name="color_fee3e6">#fee3e6</color>
+    <color name="color_white">#FFFFFF</color>
+    <dimen name="alert_dialog_width">188dp</dimen>
+    <dimen name="dimen_100_dp">100dp</dimen>
+    <dimen name="dimen_18_dp">18dp</dimen>
+    <dimen name="dimen_38_dp">38dp</dimen>
+    <dimen name="dimen_42_dp">42dp</dimen>
+    <dimen name="dimen_52_dp">52dp</dimen>
+    <dimen name="dimen_5_dp">5dp</dimen>
+    <dimen name="dimen_60_dp">60dp</dimen>
+    <dimen name="dimen_62_dp">62dp</dimen>
+    <dimen name="dimen_74_dp">74dp</dimen>
+    <dimen name="pop_item_height">32dp</dimen>
+    <dimen name="pop_margin_right">-105dp</dimen>
+    <dimen name="pop_text_margin_left">15dp</dimen>
+    <dimen name="pop_text_margin_right_top">8dp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <item name="conversation_rv" type="id"/>
+    <string name="add_friend">添加好友</string>
+    <string name="cancel_stick_title">取消置顶</string>
+    <string name="cancel_title">取消</string>
+    <string name="conversation_network_error_tip">当前网络不可用，请检查你当网络设置。</string>
+    <string name="conversation_title">云信IM</string>
+    <string name="create_advanced_team">创建高级群</string>
+    <string name="create_advanced_team_success">成功创建高级群</string>
+    <string name="create_group_team">创建讨论组</string>
+    <string name="delete_title">删除该聊天</string>
+    <string name="msg_type_audio">[语音消息]</string>
+    <string name="msg_type_custom">[自定义消息]</string>
+    <string name="msg_type_file">[文件消息]</string>
+    <string name="msg_type_image">[图片]</string>
+    <string name="msg_type_location">[地理位置]</string>
+    <string name="msg_type_no_tips">[未知消息体]</string>
+    <string name="msg_type_notification">[通知消息]</string>
+    <string name="msg_type_tip">[提醒消息]</string>
+    <string name="msg_type_video">[视频消息]</string>
+    <string name="recent_title">最近聊天</string>
+    <string name="stick_title">置顶该聊天</string>
+    <string name="sure_count_title">确定(%d)</string>
+    <string name="sure_title">确定</string>
+    <style name="SelectorRadioBtn" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/radio_button_selector</item>
+    </style>
+</resources>

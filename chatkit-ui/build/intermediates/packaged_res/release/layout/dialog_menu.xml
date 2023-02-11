@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_white_10"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_report"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60_dp"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="@string/report_report_commit"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/text_size_16" />
+
+    <TextView
+        android:id="@+id/tv_block"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60_dp"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="@string/report_add_to_blacklist"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/text_size_16" />
+
+</LinearLayout>

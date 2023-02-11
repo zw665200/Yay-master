@@ -1,0 +1,506 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="custom_app_name">Yay</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Match</string>
+    <string name="title_club">Club</string>
+    <string name="title_notifications">Message</string>
+    <string name="title_mine">Mine</string>
+
+    <!--public-->
+    <string name="public_not_enough_coin">没有足够的宝石</string>
+
+    <!--login-->
+    <string name="login_agreement">Please checked \&#034;Privacy Policy\&#034; and \&#034;Terms of User\&#034;</string>
+    <string name="login_failed">login failed</string>
+    <string name="login_success">login success</string>
+    <string name="login_facebook">Log in With Facebook</string>
+    <string name="login_whatsapp">Log in with Test(Demo)</string>
+    <string name="login_google">Log in with Google</string>
+    <string name="login_phone_register">手机注册</string>
+    <string name="login_phone_login">手机登录</string>
+    <string name="login_input_number">请输入手机号码</string>
+    <string name="login_input_code">请输入验证码</string>
+    <string name="login_input_pwd">请输入登录密码</string>
+    <string name="login_input_pwd_again">请再次输入登录密码</string>
+    <string name="login_input_right_number">请输入正确手机号码</string>
+    <string name="login_input_right_code">请输入正确验证码</string>
+    <string name="login_input_right_pwd">请输入正确密码</string>
+    <string name="login_pwd_tip">登录密码由4–20个大小写英文字母、符号、或者数字组成</string>
+    <string name="login_get_message_code">获取验证码</string>
+    <string name="login_sign_up">注册</string>
+    <string name="login_login">登录</string>
+    <string name="login_pwd_forget">忘记密码？</string>
+    <string name="login_pwd_get">找回密码</string>
+    <string name="login_pwd_reset">重设密码</string>
+    <string name="login_next_step">下一步</string>
+    <string name="login_next_submit">提交</string>
+    <string name="login_read">我已阅读并同意</string>
+    <string name="login_user_agreement">《服务条款》</string>
+    <string name="login_and">以及</string>
+    <string name="login_privacy_agreement">《隐私政策》</string>
+
+    <!--region-->
+    <string name="region_title">选择地区</string>
+    <string name="region_search_hint">搜索</string>
+    <string name="region_name">%1$s&#32;%2$s</string>
+
+    <!--guide-->
+    <string name="guide_title_gender">选择性别</string>
+    <string name="guide_title_age">选择年龄</string>
+    <string name="guide_title_nickname">添加昵称</string>
+    <string name="guide_title_avatar">添加头像</string>
+    <string name="guide_title_wallpaper">上传照片墙</string>
+    <string name="guide_title_fun">点亮兴趣标签</string>
+    <string name="guide_next_step">继续</string>
+    <string name="guide_next_jump">跳过</string>
+    <string name="guide_gender_i_am">我是</string>
+    <string name="guide_gender_male">男生</string>
+    <string name="guide_gender_female">女生</string>
+    <string name="guide_gender_looking_for">我想要寻找…</string>
+    <string name="guide_gender_birthday">我的生日</string>
+    <string name="guide_nickname_hint">请输入你的昵称</string>
+    <string name="guide_album_tip">请上传照片</string>
+    <string name="guide_tag_tip">请选择兴趣标签</string>
+    <string name="guide_avatar_setting">设置头像</string>
+    <string name="guide_avatar_upload">上传真人头像，能快速获得异性好感!</string>
+    <string name="guide_notice_limit_age">仅限年满18岁用户使用</string>
+
+    <!--home-->
+    <string name="home_match_video">视频</string>
+    <string name="home_match_audio">语音</string>
+    <string name="home_match_game">游戏</string>
+    <string name="home_match_all_people">所有人</string>
+    <string name="home_match_global">全球</string>
+    <string name="home_sex_ref">性别偏好</string>
+    <string name="home_region_ref">区域偏好</string>
+    <string name="home_male">男</string>
+    <string name="home_female">女</string>
+    <string name="home_all_gender">所有人</string>
+    <string name="home_choose_tip_1">会员筛选享受%1$d折优惠</string>
+    <string name="home_choose_tip_2">每次</string>
+    <string name="home_my_lemon">我的宝石</string>
+    <string name="home_hand_off">免提模式</string>
+    <string name="home_purchase">购买</string>
+    <string name="home_prime">Prime</string>
+    <string name="home_free">免费</string>
+    <string name="home_match_begin">开始匹配</string>
+
+    <!--permission-->
+    <string name="permission_title">获得权限</string>
+    <string name="permission_sub_title">为了带给您更好的服务体验，希望您授权我们访问以下权限</string>
+    <string name="permission_camera_title">相机权限</string>
+    <string name="permission_camera_content">为向别人展示真实有趣的自己</string>
+    <string name="permission_micro_title">麦克风权限</string>
+    <string name="permission_micro_content">便于跟别人通话时可以听到你的声音</string>
+    <string name="permission_location_title">定位权限</string>
+    <string name="permission_location_content">便于根据你的位置推荐附近有趣的人</string>
+    <string name="permission_notice_title">通知权限</string>
+    <string name="permission_notice_content">方便用户向您发送视频或者私信时通知到您</string>
+    <string name="permission_check">勾选即代表您同意授权以上全部权限</string>
+    <string name="permission_auth">继续</string>
+    <string name="permission_jump">跳过</string>
+    <string name="permission_choose">请勾选权限</string>
+    <string name="permission_agree">请勾选同意授权</string>
+
+    <!--app-->
+    <string name="app_foreground">正在前台运行</string>
+
+    <!--match-->
+    <string name="match_follow">关注</string>
+    <string name="match_followed">已关注</string>
+    <string name="match_video">视频匹配</string>
+    <string name="match_audio">语音匹配</string>
+    <string name="match_game">游戏匹配</string>
+    <string name="match_send_single">正在发射匹配信号…</string>
+    <string name="match_chat_hint">请输入聊天信息…</string>
+    <string name="match_chat_send">发送</string>
+    <string name="match_chat_split">:</string>
+    <string name="match_video_apply">同意后才可视频通话，是否同意？</string>
+    <string name="match_audio_apply">同意后才可语音通话，是否同意？</string>
+    <string name="match_video_reject">对方已拒绝</string>
+    <string name="match_video_next">跳过</string>
+    <string name="match_error">匹配失败</string>
+    <string name="match_timeout">匹配超时</string>
+    <string name="match_disconnect">对方已挂断，您将进入下一个匹配</string>
+    <string name="match_connect_timeout">匹配超时，您将进入下一个匹配</string>
+    <string name="match_waiting_to_connect">匹配成功，等待对方接听…</string>
+    <string name="match_offline">对方已离线</string>
+    <string name="match_gone">对方已离开</string>
+    <string name="match_room_banned">房间被封停</string>
+    <string name="match_face_not_found">未检测到人脸</string>
+    <string name="match_connection_disconnected">网络连接断开</string>
+    <string name="match_connection_connecting">建立网络连接中</string>
+    <string name="match_connection_connected">网络已连接</string>
+    <string name="match_connection_reconnecting">重新建立网络连接中</string>
+    <string name="match_connection_failed">网络连接失败</string>
+    <string name="match_failed_invite_title">为你推荐</string>
+    <string name="match_failed_invite">Club有人向你发起了邀请</string>
+    <string name="match_failed_invite_accept">去认识一下</string>
+    <string name="match_finish">聊天结束</string>
+    <string name="match_finish_title">您对刚刚的聊天还满意吗？</string>
+    <string name="match_item_gift_get_more">Get more gems</string>
+    <string name="match_item_gift_send">Send</string>
+    <string name="match_game_matching">匹配仍在进行中，如匹配成功会给您提醒，放心玩游戏吧</string>
+    <string name="match_hand_off_tip">免提模式已开启，若有匹配会自动为您接通</string>
+    <string name="match_add_time">加时间</string>
+    <string name="match_me">我</string>
+    <string name="match_game_reward_get">立即领取</string>
+    <string name="match_game_reward_title">确定</string>
+    <string name="match_game_wait_lottery">抽奖券发送成功，等待对方抽奖</string>
+    <string name="match_game_wait_lottery_tip">对方赠送给您抽奖券，请开始抽奖</string>
+    <string name="match_game_wait_lottery_tip_2">提示：奖品可在"收益页面"查看</string>
+    <string name="match_wait_tip_1">不要羞涩，见面先打个招呼吧~</string>
+    <string name="match_wait_tip_2">一个温暖的微笑，可以给人好印象~</string>
+    <string name="match_wait_tip_3">文明交友，展示您的个人魅力~</string>
+    <string name="match_wait_tip_4">在视频当中您也可以设置不同的美颜特效~</string>
+    <string name="match_wait_tip_5">您也可以在下方选择偏好的性别和区域进行匹配设置~</string>
+    <string name="match_wait_tip_6">等的无聊，先玩玩右下角的趣味小游戏吧~</string>
+    <string name="match_wait_tip_7">玩游戏的过程中，匹配成功会给您提醒的喔~</string>
+    <string name="match_wait_long_time">对方手机不在身边，暂时无法接听…</string>
+    <string name="match_send">发送</string>
+    <string name="match_free">免费</string>
+    <string name="match_add_time_tip">倒计时结束后，不加时通话将会自动挂断</string>
+    <string name="match_ticket_receive">对方赠送您抽奖券，您可以开始抽奖</string>
+    <string name="match_ticket_unused">检测到您还有未使用的票券，请先使用</string>
+
+    <!--match record-->
+    <string name="record_title">匹配记录</string>
+    <string name="record_visitor">谁查看了我的资料</string>
+    <string name="record_game_matcher">刚刚游戏匹配的队友</string>
+    <string name="record_all">全部</string>
+    <string name="record_no_data">你还没有匹配记录</string>
+    <string name="record_to_match">去匹配</string>
+    <string name="record_to_online">已成功发送匹配邀请，等待对方接受</string>
+    <string name="record_to_offline">对方不在线</string>
+    <string name="record_following">我关注的</string>
+    <string name="record_followed">关注我的</string>
+    <string name="record_follow_each_other">互相关注</string>
+    <string name="record_follow_title">为你推荐</string>
+    <string name="record_no_following">还没有你关注的人</string>
+    <string name="record_no_followed">还没有关注你的人</string>
+    <string name="record_no_friends">还没有相互关注的人</string>
+    <string name="record_make_friends">去认识一下新朋友</string>
+
+    <!--club-->
+    <string name="club_title">Club</string>
+    <string name="club_subtitle_01">全部</string>
+    <string name="club_subtitle_02">明星主播</string>
+    <string name="club_subtitle_03">人气主播</string>
+    <string name="club_subtitle_04">网红主播</string>
+    <string name="club_available">在线</string>
+    <string name="club_unavailable">忙碌</string>
+    <string name="club_notice">提示</string>
+    <string name="club_notice_coin_enough">向对方发起视频聊天 ，每分钟将消耗%1$s金币</string>
+    <string name="club_notice_coin_deficient">向对方发起视频聊天需要消耗%1$s金币，您确定要发起吗？</string>
+    <string name="club_unlock_content">解锁需花费%1$s宝石，确定要解锁档案吗？</string>
+    <string name="club_unlock_sure">确定解锁</string>
+    <string name="club_unlock_cancel">取消</string>
+    <string name="club_notice_top_up">充值</string>
+    <string name="club_notice_cancel">取消</string>
+    <string name="club_notice_sure">确认发起</string>
+    <string name="club_score">风度评分:%1$s</string>
+    <string name="club_level">等级:LV%1$d</string>
+
+    <!--notification-->
+    <string name="notification_title">聊天记录</string>
+    <string name="notification_system_notification">Yay Team</string>
+    <string name="notification_item_see">立即查看</string>
+
+    <!--store-->
+    <string name="store_title">宝石商店</string>
+    <string name="store_price">$%1$s</string>
+    <string name="store_question">有什么问题请联系我们</string>
+    <string name="store_pay_free">免费</string>
+    <string name="store_pay_success">支付成功</string>
+
+    <!--mine-->
+    <string name="mine_followed">关注</string>
+    <string name="mine_following">粉丝</string>
+    <string name="mine_member">订阅会员</string>
+    <string name="mine_store">宝石商店</string>
+    <string name="mine_income">我的收益</string>
+    <string name="mine_income_host">主播收益</string>
+    <string name="mine_short_video">短视频</string>
+    <string name="mine_photo_wall">照片墙</string>
+
+    <!--chat-->
+    <string name="chat_video_blur_tip">对方面对镜头模糊效果就会消失</string>
+    <string name="chat_video_blur_remove">移除模糊效果</string>
+
+    <!--beauty-->
+    <string name="beauty_title">美颜</string>
+    <string name="beauty_lightening">美白</string>
+    <string name="beauty_smoothness">磨皮</string>
+    <string name="beauty_redness">红润</string>
+    <string name="beauty_sharpness">锐化</string>
+
+    <!--report-->
+    <string name="report_title">违规举报</string>
+    <string name="report_commit">举报</string>
+    <string name="report_commit_success">举报成功</string>
+
+    <!--addition-->
+    <string name="addition_title">请选择加时套餐</string>
+    <string name="addition_tip">遇到有趣的Ta，就多花点时间去了解一下吧</string>
+    <string name="addition_discount_tip">每次加时会员享8折优惠</string>
+    <string name="addition_my_lemon">我的宝石</string>
+    <string name="addition_prime">Prime</string>
+    <string name="addition_commit">确认加时</string>
+    <string name="addition_item_title">%1$d分钟</string>
+    <string name="addition_item_every_minute">每分钟</string>
+
+    <!--follow-->
+    <string name="follow_title">关系列表</string>
+    <string name="follow_following">关注(%1$d)</string>
+    <string name="follow_followed">粉丝(%1$d)</string>
+
+    <!--profile-->
+    <string name="profile_title">我的资料</string>
+    <string name="profile_avatar">头像</string>
+    <string name="profile_save">保存</string>
+    <string name="profile_nickname">昵称</string>
+    <string name="profile_sex">性别</string>
+    <string name="profile_age">年龄</string>
+    <string name="profile_region">所在地区</string>
+    <string name="profile_tag">兴趣标签</string>
+    <string name="profile_video_upload">上传个人短视频，按住、拖拽可重新排序</string>
+    <string name="profile_image_upload">上传个人照片，按住、拖拽可重新排序</string>
+    <string name="profile_modify_content_hint">输入修改的内容</string>
+    <string name="profile_modify_commit">保存</string>
+    <string name="profile_modify_birthday_hint">*你必须年满18周岁</string>
+
+    <!--setting-->
+    <string name="setting_title">通用设置</string>
+    <string name="setting_blur_title">模糊效果开关</string>
+    <string name="setting_blur_content">视频接通如果对方脸部没有正对摄像头，则屏幕会显示一层罩，可以手动移除、也可等对方脸部面对摄像头时自动移除；默认开启，关闭后则无遮罩效果</string>
+    <string name="setting_notice">通知提醒</string>
+    <string name="setting_share">与朋友分享</string>
+    <string name="setting_feedback">帮助与反馈</string>
+    <string name="setting_invite">电子邮件验证</string>
+    <string name="setting_anchor">主播招募</string>
+    <string name="setting_feedback_feedback">问题反馈</string>
+    <string name="setting_feedback_eq">常见问题</string>
+    <string name="setting_feedback_privacy">隐私政策</string>
+    <string name="setting_feedback_service">服务条款</string>
+    <string name="setting_feedback_delete">注销账号</string>
+    <string name="setting_feedback_logout">退出登录</string>
+
+    <!--notice-->
+    <string name="notice_video_title">视频邀请</string>
+    <string name="notice_video_content">有新的视频通话申请时，会推送提醒</string>
+    <string name="notice_privacy_title">私信消息</string>
+    <string name="notice_privacy_content">有新的私信消息时，会推送提醒</string>
+    <string name="notice_add_follow_title">新增粉丝</string>
+    <string name="notice_add_follow_content">有新增粉丝时，会推送提醒</string>
+    <string name="notice_followed_title">关注的用户上线</string>
+    <string name="notice_followed_content">当关注的用户上线时，会推送提醒</string>
+
+    <!--account delete-->
+    <string name="account_delete_title">注销账号</string>
+    <string name="account_delete_des_00">注销前请您确认</string>
+    <string name="account_delete_des_01">1.注销之后，您当前登录的账号中所有的消费记录、额度、使用权限都会被清空，确认注销后原账号不能恢复。</string>
+    <string name="account_delete_des_02">2.用户请确认已经取消了自动订阅，以免注销本账号之后，产生自动扣费的情况。</string>
+    <string name="account_delete_des_03">3.注销账户最长时间需要等待24小时生效，再此期间，原账号无法登录</string>
+    <string name="account_delete_des_04">4.确认注销提交的24小时之后，原登录方式可以再次登录注册成为我们平台的新账号，可是和已经注销的账号无关。</string>
+    <string name="account_delete_sure">确认注销</string>
+    <string name="account_delete_refuse">我再考虑一下</string>
+
+    <!--not find dialog-->
+    <string name="not_find_title">提示</string>
+    <string name="not_find_content">账户注销之后，您的所有信息都将会抹除，包括您付费记录和您享有的会员权限都将删除，您是否确定要继续操作？</string>
+    <string name="not_find_agree">请勾选同意注销账号</string>
+    <string name="not_find_commit">已提交申请</string>
+
+    <!--feedback-->
+    <string name="feedback">问题反馈</string>
+    <string name="feedback_hint">为了便于排查问题，请您详细描述您遇到的问题及发生过程。</string>
+    <string name="feedback_contact">请输入您遇到的问题：</string>
+    <string name="feedback_submit">提交</string>
+    <string name="feedback_img_content">请上传反馈的图片</string>
+    <string name="feedback_check">请检查输入的内容</string>
+    <string name="feedback_commit_success">提交成功，官方会通过邮件给您回复，请确保你的邮箱已验证通过</string>
+    <string name="feedback_commit_failed">提交失败</string>
+
+    <!--agree-->
+    <string name="agree_user_agreement">服务条款</string>
+    <string name="agree_privacy_agreement">隐私政策</string>
+    <string name="agree_ok">同意</string>
+    <string name="agree_refuse">不同意</string>
+
+    <!--question-->
+    <string name="question_title">常见问题</string>
+    <string name="question_title_1">什么是Prime会员?有什么权益?</string>
+    <string name="question_title_2">什么是宝石?我可以用它来做什么?</string>
+    <string name="question_title_3">我无法订阅会员或者购买宝石，应该怎么做?</string>
+    <string name="question_title_4">我订阅了Prime会员，但权益还没生效怎么办?</string>
+    <string name="question_title_5">我购买了宝石，但还未到账怎么办?</string>
+    <string name="question_title_6">如果其他用户让我不舒服怎么办(如何举报)?</string>
+    <string name="question_title_7">如果您还有其他问题，可以反馈给我们~</string>
+    <string name="question_content_1">订阅 Prime 会员，您可以使用Yay!! 的高级功能，具体权益如下：
+    1、每个月免费赠送1200颗宝石；\n
+    2、每次配对订阅会员仅需花费8颗宝石；\n
+    3、无限制私发消息；\n
+    4、无限制修改性别；\n
+    5、无限制修改地理位置；\n
+    6、使用后置摄像头；\n
+    7、解锁谁查看了你的档案；\n
+    8、解锁聊天背景；\n
+    9、特殊个人资料徽章；\n
+    会员有效期为1个月，您可以在"My Yay!! Prime"页面查看订阅的剩余期限，有效期结束会自动续订，如果您希望取消订阅Prime会员，则必须亲自在Google Play Store / iTunes 中操作。</string>
+    <string name="question_content_2">宝石是可用于高级服务的道具，例如匹配时可通过性别和区域偏好筛选匹配对象、拨打额外的视频通话、玩指定游戏、解锁小游戏、解锁游戏队友档案等。</string>
+    <string name="question_content_3">Android：
+    如果您在订阅会员或者购买宝石时遇到了问题，请尝试执行以下步骤：\n
+    1.添加新的付款方式\n
+    前往"Google Play Store 应用" >点击左上角的"菜单">"付款方式">"更改为所列的付款方式之一">新的付款方式将添加至您的Google账户中（请注意，支持的付款方式可能会因地点而异）。\n
+    2.更新付款信息\n
+    前往"Google Play Store 应用" >点击左上角的"菜单">"付款方式">更新您的付款信息\n
+    3.如果默认付款方式被拒\n
+    请联系您的银行/付款支持中心，确认您的付款账户是否存在问题。如果问题仍未解决，请阅读以下文章、或者直接联系官方，以帮助您解决付款问题：\n
+    (1).[应用内付款的相关问题]\n
+    (2).[解决您账户的付款问题]\n
+    (3).[需要交易失败相关的帮助？]\n
+    (4).[还是没有解决问题？请联系我们]\n
+
+    iOS：\n
+    如果您在订阅会员或者购买宝石时遇到了问题，请点击以下链接，阅读帮助文章 或联系iTunes支持人员 或直接联系官方：\n
+    (1).[支付方式在App Store或iTunes Store中被拒，点此查看]\n
+    (2).联系iTunes支持人员 [iTunes 支持中心]\n
+    (3).[还是没有解决问题？请联系我们]</string>
+    <string name="question_content_4">Android：
+    如果您已成功订阅了Yay VIP，但权益还没生效，请尝试关闭并重新启动应用。如果问题依然存在，请直接联系官方，附上"您的Google Play收据图片"并提交请求，以便我们能够获取所有必要的信息，例如订单编号、购买金额和订单日期以用于参考。\n
+    (1).要查找您的收据，请点击[此处]\n
+    (2).要联系官方，请点击[联系我们]\n
+
+    iOS：
+    如果您已成功订阅了Yay VIP，但权益还没生效，请尝试关闭并重新启动应用。如果问题依然存在，请直接联系官方，附上"您的iTunes收据图片"并提交请求，以便我们能够获取所有必要的信息，例如订单编号、购买金额和订单日期以用于参考。\n
+    (1).要查找您的收据，请点击[此处]\n
+    (2).要联系官方，请点击[联系我们]</string>
+    <string name="question_content_5">Android：
+    如果您已成功购买了宝石，但还未到账，请尝试关闭并重新启动应用。如果问题依然存在，请直接联系官方，附上"您的Google Play收据图片"并提交请求，以便我们能够获取所有必要的信息，例如订单编号、购买金额和订单日期以用于参考。\n
+    (1).要查找您的收据，请点击[此处]\n
+    (2).要联系官方，请点击[联系我们]\n
+
+    iOS：\n
+    如果您已成功购买了宝石，但还未到账，请尝试关闭并重新启动应用。如果问题依然存在，请直接联系官方，附上"您的iTunes收据图片"并提交请求，以便我们能够获取所有必要的信息，例如订单编号、购买金额和订单日期以用于参考。\n
+    (1).要查找您的收据，请点击[此处]\n
+    (2).要联系官方，请点击[联系我们]</string>
+    <string name="question_content_6">安全是我们的首要。对于违反我们社区准则的行为，我们将采取"零容忍"政策，因此如果您发现违反我们政策的行为，请随时向我们报告，以便我们采取行动。如果是匹配成功进入聊天房间，您可以通过点击页面顶部带有"!"的盾牌，向我们举报违反准则的用户。 如果已退出聊天房间，您可以通过"匹配记录"、或"聊天消息"点击用户头像弹出的档案卡片找到带"!"的盾牌，向我们举报违反准则的用户。举报成功后，我们会根据实际情况对该用户做出违规处理，您的举报可以帮助我们建设安全又有趣的Yay社区。</string>
+
+    <!--email-->
+    <string name="email_title">电子邮箱验证</string>
+    <string name="email_edit_hint">请输入您的邮箱</string>
+    <string name="email_edit_code_hint">请输入您的验证码</string>
+    <string name="email_validate_send">点击验证</string>
+    <string name="email_validate_finish">完成验证</string>
+    <string name="email_tip_1">为方便您获取最新的官方活动和优惠，我们建议您验证电子邮箱</string>
+    <string name="email_tip_2">验证电子邮件已发送至%1$s不要忘记检查您的垃圾邮件文件夹，并将验证码输入上方完成验证</string>
+    <string name="email_tip_3">您的电子邮件%1$s，已验证通过，官方的最新活动和优惠，会通过此邮件发送给您</string>
+    <string name="email_btn_validate">已验证通过</string>
+    <string name="email_resend">重新发送</string>
+    <string name="email_change">更改电子邮件</string>
+    <string name="email_wait">请一分钟后再发送</string>
+
+    <!--level-->
+    <string name="level_title">我的等级</string>
+    <string name="level_score">等级:%1$s</string>
+    <string name="level_next_hint">距离升下一级还差%1$s经验值</string>
+    <string name="level_des">送礼物和玩游戏均可增加经验，获得经验越多等级越高，等级越高可解锁更多的专属礼物、和游戏玩法</string>
+    <string name="level_unlock">已解锁</string>
+    <string name="level_item_content">从%1$s获得经验</string>
+
+    <!--score-->
+    <string name="score_title">风度评分</string>
+    <string name="score_score">风度评分:%1$s</string>
+    <string name="score_hint">当前评分还不错，继续加油</string>
+    <string name="score_des_1" formatted="false">根据最近30天的（占比70%）匹配次数、聊天时长、对方的评价，加上过往的评分（占比30%），综合计算得出当前的风度评分</string>
+    <string name="score_des_2">如果最近30天没有任何匹配、或者匹配次数少于10次，则风度评分会很低；风度评分会影响匹配到的的用户质量</string>
+
+    <!--earn-->
+    <string name="earn_title">主播收益</string>
+    <string name="earn_title_2">我的收益</string>
+    <string name="earn_sub_title">充值记录</string>
+    <string name="earn_sub_des">主播获得的价值宝石在扣除平台费用（视频的47%，礼物的30%，游戏的20%）后结算为主播的实际宝石收入。收入可以提现，也可充值到宝石钱包用于消费</string>
+    <string name="earn_sub_des_2">您获得的价值宝石在扣除平台费用（礼物的70%，游戏的20%）后，结算为您的实际宝石收入。收入可以充值到宝石钱包用于消费</string>
+    <string name="earn_gift_count">礼物(%1$s)</string>
+    <string name="earn_video_count">视频(%1$s)</string>
+    <string name="earn_game_count">游戏(%1$s)</string>
+    <string name="earn_gift_item_title_1">项目</string>
+    <string name="earn_gift_item_title_2">价值</string>
+    <string name="earn_gift_item_title_3">收益</string>
+    <string name="earn_gift_item_title_4">用户</string>
+    <string name="earn_video_item_title_1">项目</string>
+    <string name="earn_video_item_title_2">价值</string>
+    <string name="earn_video_item_title_3">收益</string>
+    <string name="earn_video_item_title_4">用户</string>
+    <string name="earn_game_item_title_1">项目</string>
+    <string name="earn_game_item_title_2">价值</string>
+    <string name="earn_game_item_title_3">收益</string>
+    <string name="earn_recharge">充值到宝石钱包</string>
+    <string name="earn_count">X%1$d</string>
+    <string name="earn_cost">价值%1$s</string>
+    <string name="earn_no_record">暂时还没有记录</string>
+    <string name="earn_dialog_recharge_title">充值到钱包</string>
+    <string name="earn_dialog_recharge_input_hint">请输入充值金额</string>
+    <string name="earn_dialog_recharge_input_all">全部充值</string>
+    <string name="earn_dialog_recharge">确认充值</string>
+
+    <!--history-->
+    <string name="history_title">充值记录</string>
+    <string name="history_sub_title">共计充值</string>
+    <string name="history_item_name">充值时间</string>
+
+    <!--prime-->
+    <string name="prime_title">获得Yay Prime</string>
+    <string name="prime_rights_tip">尊享<font color="#FBD930">8大会员权益</font></string>
+    <string name="prime_sub">立即订阅</string>
+    <string name="prime_rights_01">每次配对订阅会员仅需花费%1$d宝石(性别/区域)</string>
+    <string name="prime_rights_02">每个月免费赠送1200颗宝石</string>
+    <string name="prime_rights_03">无限制私发消息</string>
+    <string name="prime_rights_04">无限制修改性别</string>
+    <string name="prime_rights_05">无限制修改地理位置</string>
+    <string name="prime_rights_06">使用后置摄像头</string>
+    <string name="prime_rights_07">解锁谁查看了你的档案</string>
+    <string name="prime_rights_08">特殊个人资料徽章</string>
+    <string name="prime_price">%1$s/月</string>
+    <string name="prime_get_free">免费领取</string>
+    <string name="prime_get">已领取</string>
+    <string name="prime_end_time">会员有效期截止到：%1$s</string>
+
+    <!--game-->
+    <string name="game_title">概率论</string>
+    <string name="game_step_one">第一步：请选择游戏场景</string>
+    <string name="game_step_continue">继续</string>
+    <string name="match_game_find_matcher">查看匹配对象</string>
+    <string name="game_step_finish">结束游戏</string>
+    <string name="game_all_gender">不限性别</string>
+    <string name="game_male">男</string>
+    <string name="game_female">女</string>
+    <string name="game_explain_content_1">让相似的灵魂，遇见彼此</string>
+    <string name="game_explain_content_2">人们总说\n
+    人和人相遇的概率是0.000478\n
+    而总有一场相遇，是互相喜欢\n
+    我们精心准备了3个奇遇场景\n
+    为你开启一场灵魂匹配之旅</string>
+    <string name="game_explain_content_3">* 根据场景做出你的选择，游戏结束后，系统将根据游戏表现匹配与你最契合的游戏好友，同时，你也有可能在游戏中获得奖励</string>
+    <string name="game_explain_content_4">* 如果游戏开始前设置了游戏对象的性别偏好，系统会根据偏好去匹配</string>
+
+    <!--share-->
+    <string name="share_title">与朋友分享</string>
+    <string name="share_sub_title">当他成功注册后你将获得100</string>
+    <string name="share_short_msg">简讯</string>
+    <string name="share_messenger">Messenger</string>
+    <string name="share_whatsapp">WhatsApp</string>
+    <string name="share_facebook">Facebook</string>
+    <string name="share_other">其它</string>
+    <string name="share_copy_link">复制链接</string>
+    <string name="share_friends_title">成功注册的朋友（赠送的宝石已直接充值到宝石余额）</string>
+    <string name="share_copy_success">复制成功</string>
+
+    <!--quit-->
+    <string name="quit_match_video">您确定要退出视频匹配吗？</string>
+    <string name="quit_match_audio">您确定要退出语音匹配吗？</string>
+    <string name="quit_match_game">您确定要退出游戏匹配吗？</string>
+    <string name="quit_ok">确定</string>
+    <string name="quit_cancel">取消</string>
+
+</resources>
