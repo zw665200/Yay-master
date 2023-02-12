@@ -44,7 +44,7 @@ class NotificationsFragment : BaseFragment() {
     private var mList = arrayListOf<UserInfo>()
     private var conversationList = arrayListOf<Conversation>()
     private var waitingDialog: WaitingDialog? = null
-    private var firstLoad = false
+    private var firstLoad = true
     private var mPage = 0
     private var mSize = 20
 
@@ -62,29 +62,34 @@ class NotificationsFragment : BaseFragment() {
     }
 
     override fun initData() {
+        if (firstLoad) {
+            firstLoad = false
+            initConversationList()
+            initFollowList()
+
+            binding!!.refreshLayout.setOnRefreshListener { refreshLayout ->
+                refreshLayout.finishRefresh()
+                initData()
+            }
+
+            binding!!.refreshLayout.setOnLoadMoreListener {
+                mPage++
+                getConversationList()
+            }
+        }
+
         mPage = 0
 
         getUserInfo()
-        initConversationList()
-        initFollowList()
         getFollowingInfoList()
         getNotificationList()
         getConversationList()
-
-        binding!!.refreshLayout.setOnRefreshListener { refreshLayout ->
-            refreshLayout.finishRefresh()
-            initData()
-        }
-
-        binding!!.refreshLayout.setOnLoadMoreListener {
-            mPage++
-            getConversationList()
-        }
     }
 
     private fun getConversationList() {
         NIMClient.getService(MsgService::class.java).queryRecentContacts()
             .setCallback(object : RequestCallbackWrapper<List<RecentContact>>() {
+
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onResult(code: Int, result: List<RecentContact>?, exception: Throwable?) {
                     binding!!.refreshLayout.finishRefresh()

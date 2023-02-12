@@ -37,10 +37,7 @@ import com.ql.recovery.yay.ui.dialog.NoticeDialog
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
 import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.match.VideoActivity
-import com.ql.recovery.yay.util.AppUtil
-import com.ql.recovery.yay.util.DoubleUtils
-import com.ql.recovery.yay.util.GsonUtils
-import com.ql.recovery.yay.util.JLog
+import com.ql.recovery.yay.util.*
 import com.tencent.mmkv.MMKV
 import java.lang.ref.WeakReference
 
@@ -89,6 +86,34 @@ class BaseApp : Application() {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
                 when (msg.what) {
+                    0x999 -> {
+                        val bundle = msg.data
+                        if (bundle != null) {
+                            val code = bundle.getInt("code")
+                            val message = bundle.getString("message")
+                            if (code == 20100 || code == 20101 || code == 20102) {
+                                val mk = MMKV.defaultMMKV()
+                                if (mk != null) {
+                                    mk.remove("user_info")
+                                    mk.remove("access_token")
+                                    mk.remove("login_time")
+                                    Config.CLIENT_TOKEN = ""
+                                    Config.USER_ID = 0
+                                    Config.USER_NAME = ""
+                                }
+
+                                if (code == 20100 || code == 20102) {
+                                    val activity = currentActivity?.get()
+                                    if (activity != null) {
+                                        startActivity(Intent(activity, LoginActivity::class.java))
+                                    }
+                                }
+                            }
+
+                            ToastUtil.showShort(applicationContext, message)
+                        }
+                    }
+
                     0x10000 -> {
                         val bundle = msg.data
                         if (bundle != null) {

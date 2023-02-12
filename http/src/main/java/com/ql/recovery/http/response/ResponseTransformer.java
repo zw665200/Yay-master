@@ -41,8 +41,8 @@ public class ResponseTransformer {
             bundle.putString("message", apiException.getDisplayMessage());
             Message msg = new Message();
             msg.setData(bundle);
-            msg.what = 0x10004;
-            Handler handler = Config.INSTANCE.getMainHandler();
+            msg.what = 0x999;
+            Handler handler = Config.INSTANCE.getMHandler();
             if (handler != null) {
                 handler.sendMessage(msg);
             }
@@ -73,8 +73,8 @@ public class ResponseTransformer {
                 bundle.putString("message", message);
                 Message msg = new Message();
                 msg.setData(bundle);
-                msg.what = 0x10004;
-                Handler handler = Config.INSTANCE.getMainHandler();
+                msg.what = 0x999;
+                Handler handler = Config.INSTANCE.getMHandler();
                 if (handler != null) {
                     handler.sendMessage(msg);
                 }

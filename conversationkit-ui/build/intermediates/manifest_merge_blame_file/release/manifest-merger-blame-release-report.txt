@@ -10,50 +10,50 @@
 10
 11    <uses-sdk
 12        android:minSdkVersion="21"
-12-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+12-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
 13        android:targetSdkVersion="30" />
-13-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+13-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
 14
 15    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-15-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:12:5-79
-15-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:12:22-76
+15-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:12:5-79
+15-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:12:22-76
 16
 17    <application>
-17-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:13:5-25:19
+17-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:13:5-25:19
 18        <provider
-18-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:14:9-22:20
+18-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:14:9-22:20
 19            android:name="com.netease.yunxin.kit.corekit.startup.InitializationProvider"
-19-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:15:13-89
+19-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:15:13-89
 20            android:authorities="${applicationId}.xkit-startup"
-20-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:16:13-64
+20-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:16:13-64
 21            android:exported="false"
-21-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:17:13-37
+21-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:17:13-37
 22            tools:node="merge" >
-22-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:18:13-31
+22-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:18:13-31
 23            <meta-data
-23-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:19:13-21:48
+23-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:19:13-21:48
 24                android:name="com.netease.yunxin.kit.conversationkit.ui.ConversationUIService"
-24-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:20:17-95
+24-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:20:17-95
 25                android:value="xkit.startup" />
-25-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:21:17-45
+25-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:21:17-45
 26        </provider>
 27
 28        <activity
-28-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:9-130
+28-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:9-130
 29            android:name="com.netease.yunxin.kit.conversationkit.ui.page.ConversationSelectActivity"
-29-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:19-66
+29-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:19-66
 30            android:exported="false"
-30-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:104-128
+30-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:104-128
 31            android:screenOrientation="portrait" />
-31-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:67-103
+31-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:67-103
 32        <activity
-32-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:9-124
+32-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:9-124
 33            android:name="com.netease.yunxin.kit.conversationkit.ui.page.ConversationActivity"
-33-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:19-60
+33-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:19-60
 34            android:exported="false"
-34-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:98-122
+34-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:98-122
 35            android:screenOrientation="portrait" />
-35-->C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:61-97
+35-->C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:61-97
 36    </application>
 37
 38</manifest>

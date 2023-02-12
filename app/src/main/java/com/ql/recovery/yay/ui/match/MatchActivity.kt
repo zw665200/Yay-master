@@ -46,9 +46,12 @@ class MatchActivity : BaseActivity() {
     private var mMatcher: User? = null
     private var mHandler = Handler(Looper.getMainLooper())
     private var exoPlayer: ExoPlayer? = null
-    private var videoUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_video.mp4"
-    private var audioUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_audio.mp4"
-    private var gameUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_game.mp4"
+
+    //    private var videoUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_video.mp4"
+//    private var audioUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_audio.mp4"
+//    private var gameUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_game.mp4"
+    private var videoUri = "file:///android_asset/videos/match_video.mp4"
+    private var audioUri = "file:///android_asset/videos/match_video.mp4"
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityMatchBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -117,10 +120,6 @@ class MatchActivity : BaseActivity() {
             }
             "voice" -> {
                 val mediaItem = MediaItem.fromUri(audioUri)
-                exoPlayer?.setMediaItem(mediaItem)
-            }
-            "game" -> {
-                val mediaItem = MediaItem.fromUri(gameUri)
                 exoPlayer?.setMediaItem(mediaItem)
             }
         }
@@ -683,6 +682,9 @@ class MatchActivity : BaseActivity() {
         if (openPreview) {
             closePreview()
         }
+
+        exoPlayer?.stop()
+        exoPlayer?.release()
 
         Config.mainHandler?.sendEmptyMessage(0x10006)
         Config.subscriberHandler?.sendEmptyMessage(0x10001)

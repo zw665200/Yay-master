@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:hide_on_touch="false"
-        app:resize_mode="zoom"
+        app:resize_mode="fixed_width"
         app:keep_content_on_player_reset="true"
         app:surface_type="texture_view"
         app:use_controller="false" />

@@ -187,31 +187,6 @@ class MainActivity : BaseFragmentActivity() {
                         changeFragment(1)
                     }
 
-                    0x10004 -> {
-                        val bundle = msg.data
-                        if (bundle != null) {
-                            val code = bundle.getInt("code")
-                            val message = bundle.getString("message")
-                            if (code == 20100 || code == 20101) {
-                                val mk = MMKV.defaultMMKV()
-                                if (mk != null) {
-                                    mk.remove("user_info")
-                                    mk.remove("access_token")
-                                    mk.remove("login_time")
-                                    Config.CLIENT_TOKEN = ""
-                                    Config.USER_ID = 0
-                                    Config.USER_NAME = ""
-                                }
-
-                                if (code == 20100) {
-                                    startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                                }
-                            }
-
-                            ToastUtil.showShort(applicationContext, message)
-                        }
-                    }
-
                     0x10006 -> {
                         //刷新用户信息
                         flushUserInfo()

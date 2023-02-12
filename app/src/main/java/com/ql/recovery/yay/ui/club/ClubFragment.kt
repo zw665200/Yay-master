@@ -77,6 +77,9 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 .setLoadControl(loadControl)
                 .build()
 
+            exoPlayer.volume = 0f
+            exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+
             exoPlayerList.add(exoPlayer)
         }
 
@@ -134,13 +137,22 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 //                                2 -> itemBinding.ivGender.setImageResource(R.drawable.pp_xbn)
 //                            }
 
+
+                            val exoPlayer = if (position >= exoPlayerList.size) {
+                                exoPlayerList[position % 6]
+                            } else {
+                                exoPlayerList[position]
+                            }
+
+                            exoPlayer.stop()
+
                             if (itemData.cover_url != null) {
                                 if (itemData.isPlaying) {
                                     JLog.i("playing = true, position = $position")
                                     itemBinding.ivPhoto.visibility = View.VISIBLE
                                     loadVideo(itemBinding, itemData, position)
                                 } else {
-                                    JLog.i("playing = false, position = $position")
+//                                    JLog.i("playing = false, position = $position")
                                     itemBinding.ivPhoto.visibility = View.VISIBLE
                                     itemBinding.playerView.visibility = View.GONE
                                 }
@@ -154,6 +166,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 itemBinding.tvName.text = itemData.nickname
                 itemBinding.tvAge.text = itemData.age.toString()
 
+                itemBinding.ivPhoto.setImageResource(R.color.transparent)
                 Glide.with(requireActivity()).load(itemData.cover_url).into(itemBinding.ivPhoto)
 
                 when (itemData.sex) {
@@ -174,14 +187,25 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     isFirstLoad = false
                 }
 
+                val exoPlayer = if (position >= exoPlayerList.size) {
+                    exoPlayerList[position % 6]
+                } else {
+                    exoPlayerList[position]
+                }
+
+                exoPlayer.stop()
+
+                itemBinding.playerView.visibility = View.GONE
+
+
                 JLog.i("isPlaying = ${itemData.isPlaying} , position = $position")
 
                 if (itemData.cover_url != null) {
-                    if (itemData.isPlaying) {
-                        itemBinding.ivPhoto.visibility = View.VISIBLE
-                        itemBinding.playerView.visibility = View.GONE
-                        return@addBindView
-                    }
+//                    if (itemData.isPlaying) {
+//                        itemBinding.ivPhoto.visibility = View.VISIBLE
+//                        itemBinding.playerView.visibility = View.GONE
+//                        return@addBindView
+//                    }
 
                     loadVideo(itemBinding, itemData, position)
                 }
@@ -214,25 +238,27 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     val lastVisiblePosition = manager.findLastVisibleItemPosition()//从0开始
                     val totalItemCount = manager.itemCount
 
-                    JLog.i("first = $firstVisiblePosition")
-                    JLog.i("last = $lastVisiblePosition")
+//                    JLog.i("first = $firstVisiblePosition")
+//                    JLog.i("last = $lastVisiblePosition")
 
                     val tempList = arrayListOf<Anchor>()
                     tempList.addAll(mList)
 
                     for ((position, child) in tempList.withIndex()) {
                         if (position < firstVisiblePosition || position > lastVisiblePosition) {
-                            JLog.i("set ture")
+//                            JLog.i("set false")
                             //隐藏视频
-                            val anchor = Anchor(child.uid, child.avatar, child.country, child.cover_type, child.cover_url, child.uid, child.nickname, child.sex, child.online, true)
+//                            val anchor = Anchor(child.uid, child.avatar, child.country, child.cover_type, child.cover_url, child.uid, child.nickname, child.sex, child.online, false)
 //                            mList.remove(child)
 //                            mList.add(position, anchor)
+//                            mList[position].isPlaying = false
 //                            mAdapter.notifyItemChanged(position, "playing")
                         } else {
-                            JLog.i("set false")
-                            val anchor = Anchor(child.uid, child.avatar, child.country, child.cover_type, child.cover_url, child.uid, child.nickname, child.sex, child.online, false)
+//                            JLog.i("set true")
+//                            val anchor = Anchor(child.uid, child.avatar, child.country, child.cover_type, child.cover_url, child.uid, child.nickname, child.sex, child.online, true)
 //                            mList.remove(child)
 //                            mList.add(position, anchor)
+//                            mList[position].isPlaying = true
 //                            mAdapter.notifyItemChanged(position, "playing")
                         }
                     }
@@ -266,8 +292,14 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 exoPlayerList[position]
             }
 
-//            val mediaItem = exoPlayer.getMediaItemAt(0)
-//            JLog.i("media")
+            val mediaCount = exoPlayer.mediaItemCount
+            if (mediaCount == 1) {
+                val mediaId = exoPlayer.getMediaItemAt(0).mediaId
+                JLog.i("mediaId = $mediaId")
+                if (mediaId == itemData.cover_url) {
+                    return
+                }
+            }
 
             exoPlayer.addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(playbackState: Int) {
@@ -315,10 +347,13 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 //                                }
 
                                 exoPlayer.clearMediaItems()
-                                val mediaItem = MediaItem.fromUri(it)
+
+                                val mediaItem = MediaItem.Builder()
+                                    .setMediaId(itemData.cover_url!!)
+                                    .setUri(it)
+                                    .build()
+
                                 exoPlayer.setMediaItem(mediaItem)
-                                exoPlayer.volume = 0f
-                                exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
                                 exoPlayer.prepare()
 
 
