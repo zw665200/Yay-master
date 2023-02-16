@@ -50,12 +50,12 @@ class ProfileActivity : BaseActivity() {
 
     override fun initView() {
         binding.includeTitle.ivBack.setOnClickListener { finish() }
-        binding.ivAvatar.setOnClickListener { getImageFromAlbum(0x1004) }
+        binding.llAvatar.setOnClickListener { getImageFromAlbum(0x1004) }
         binding.llNickname.setOnClickListener { modifyNickname() }
         binding.llSex.setOnClickListener { modifySex() }
         binding.llBirthday.setOnClickListener { modifyBirthday() }
         binding.llCountry.setOnClickListener { modifyCountry() }
-        binding.llTagsView.setOnClickListener { modifyTags() }
+        binding.flTagsView.setOnClickListener { modifyTags() }
     }
 
     override fun initData() {
@@ -86,11 +86,13 @@ class ProfileActivity : BaseActivity() {
                 binding.llTags.removeAllViews()
                 for (item in userInfo.tags) {
                     if (binding.llTags.childCount > 3) break
-                    val padding = AppUtil.dp2px(this, 5f)
+                    val p3 = AppUtil.dp2px(this, 3f)
+                    val p5 = AppUtil.dp2px(this, 5f)
+                    val p10 = AppUtil.dp2px(this, 10f)
                     val view = TextView(this)
-                    view.setPadding(padding, padding, padding, padding)
+                    view.setPadding(p10, p3, p10, p3)
                     val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    lp.setMargins(AppUtil.dp2px(this, 5f), 0, 0, 0)
+                    lp.setMargins(0, 0, p5, 0)
                     view.layoutParams = lp
                     view.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow, null)
                     view.text = item.name
@@ -168,6 +170,7 @@ class ProfileActivity : BaseActivity() {
         binding.rcPhotoWallList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rcPhotoWallList.adapter = picAdapter
         picAdapter.notifyDataSetChanged()
+        binding.rcPhotoWallList.scrollToPosition(list.size - 1)
 
         val itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(picAdapter, list) {
             val tempList = arrayListOf<String>()
@@ -273,6 +276,7 @@ class ProfileActivity : BaseActivity() {
         binding.rcShortVideoList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rcShortVideoList.adapter = videoAdapter
         videoAdapter.notifyDataSetChanged()
+        binding.rcShortVideoList.scrollToPosition(list.size - 1)
 
         val itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(videoAdapter, list) {
             val tempList = arrayListOf<String>()
@@ -367,9 +371,8 @@ class ProfileActivity : BaseActivity() {
     }
 
     private fun modifyTags() {
-        val useInfo = getLocalStorage().decodeParcelable("user_info", UserInfo::class.java)
-        if (useInfo != null) {
-            ModifyTagDialog(this, useInfo.tags) {
+        getUserInfo { userInfo ->
+            ModifyTagDialog(this, userInfo.tags) {
                 getUserInfo()
             }
         }

@@ -843,7 +843,6 @@ public class AppUtil {
             return;
         }
 
-
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
@@ -878,7 +877,9 @@ public class AppUtil {
             addList = ge.getFromLocation(latitude, longitude, 1);
         } catch (IOException e) {
             e.printStackTrace();
+            locationCallback.onFailed();
         }
+
         if (addList != null && addList.size() > 0) {
             for (int i = 0; i < addList.size(); i++) {
                 Address ad = addList.get(i);
@@ -892,6 +893,8 @@ public class AppUtil {
                     locManager.removeUpdates(locationListener);
                 }
             }
+        } else {
+            locationCallback.onFailed();
         }
     }
 

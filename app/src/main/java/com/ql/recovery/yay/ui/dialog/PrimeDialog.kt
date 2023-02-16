@@ -15,6 +15,9 @@ import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.android.billingclient.api.*
 import com.google.common.collect.ImmutableList
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.netease.yunxin.kit.common.utils.ThreadUtils.runOnUiThread
 import com.ql.recovery.bean.Prime
@@ -26,6 +29,7 @@ import com.ql.recovery.yay.callback.PayCallback
 import com.ql.recovery.yay.databinding.DialogPrimeBinding
 import com.ql.recovery.yay.databinding.ItemPrimeBinding
 import com.ql.recovery.yay.manager.PayManager
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
@@ -36,6 +40,7 @@ class PrimeDialog(
     private val func: () -> Unit
 ) : Dialog(activity, R.style.app_dialog2) {
     private lateinit var binding: DialogPrimeBinding
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var pagerAdapter: DataAdapter<Prime>
     private lateinit var billingClient: BillingClient
     private var handler = Handler(Looper.getMainLooper())
@@ -54,6 +59,8 @@ class PrimeDialog(
         binding = DialogPrimeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setCancelable(true)
+
+        firebaseAnalytics = Firebase.analytics
 
         binding.tvCommit.setOnClickListener { checkPay() }
 
@@ -317,6 +324,10 @@ class PrimeDialog(
                             //刷新用户信息
                             Config.mainHandler?.sendEmptyMessage(0x10006)
                             Config.subscriberHandler?.sendEmptyMessage(0x10001)
+
+                            //上报支付日志
+                            ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency, currentServer!!.price)
+                            ReportManager.facebookPurchaseLog(activity, currentServer!!.currency, currentServer!!.price)
                         }
                     }
 

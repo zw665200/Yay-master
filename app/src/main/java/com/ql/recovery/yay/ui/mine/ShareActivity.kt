@@ -3,6 +3,7 @@ package com.ql.recovery.yay.ui.mine
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -45,9 +46,8 @@ class ShareActivity : BaseActivity() {
         binding.llShareFacebook.setOnClickListener { shareFaceBook() }
     }
 
-    @SuppressLint("SetTextI18n")
     override fun initData() {
-        binding.includeTitle.tvName.text = getString(R.string.share_title)
+//        binding.includeTitle.tvName.text = getString(R.string.share_title)
 
         initInviterList()
         getInviterList()
@@ -71,9 +71,12 @@ class ShareActivity : BaseActivity() {
 
     private fun getInviterList() {
         DataManager.getInviter {
-            mList.clear()
-            mList.addAll(it)
-            adapter.notifyItemRangeChanged(0, mList.size)
+            if (it.isNotEmpty()) {
+                binding.tvInviter.visibility = View.VISIBLE
+                mList.clear()
+                mList.addAll(it)
+                adapter.notifyItemRangeChanged(0, mList.size)
+            }
         }
     }
 

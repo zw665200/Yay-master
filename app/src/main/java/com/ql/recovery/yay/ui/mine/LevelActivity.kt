@@ -88,13 +88,20 @@ class LevelActivity : BaseActivity() {
     private fun getGradeDetail() {
         DataManager.getGrade { grade ->
             binding.tvLevel.text = String.format(getString(R.string.club_level), grade.grade)
-            binding.tvNextExp.text = String.format(getString(R.string.level_next_hint), (grade.end_exp - grade.current_exp))
             binding.tvExpStart.text = grade.start_exp.toString()
-            binding.tvExpEnd.text = grade.end_exp.toString()
 
             //设置进度条
-            binding.progress.max = grade.end_exp
-            binding.progress.progress = grade.current_exp
+            if (grade.grade == 10) {
+                binding.progress.max = grade.start_exp
+                binding.progress.progress = grade.start_exp
+                binding.tvExpEnd.text = grade.start_exp.toString()
+                binding.tvNextExp.text = String.format(getString(R.string.level_next_hint), 0)
+            } else {
+                binding.progress.max = grade.end_exp
+                binding.progress.progress = grade.current_exp
+                binding.tvExpEnd.text = grade.end_exp.toString()
+                binding.tvNextExp.text = String.format(getString(R.string.level_next_hint), (grade.end_exp - grade.current_exp))
+            }
 
             mList.clear()
 

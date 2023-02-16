@@ -20,11 +20,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityLoginBinding
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.auth.AuthActivity
 import com.ql.recovery.yay.ui.base.BaseActivity
@@ -41,6 +45,7 @@ class LoginActivity : BaseActivity() {
     private lateinit var signInRequest: BeginSignInRequest
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var googleSignInOptions: GoogleSignInOptions
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var facebookCallback: FacebookCallback<LoginResult>? = null
     private var facebookManager: CallbackManager? = null
     private var exoPlayer: ExoPlayer? = null
@@ -62,6 +67,7 @@ class LoginActivity : BaseActivity() {
     override fun initData() {
         initGoogleLoginService()
 
+        firebaseAnalytics = Firebase.analytics
         exoPlayer = ExoPlayer.Builder(this).build()
         val mediaItem = MediaItem.fromUri(uri)
         binding.playerView.player = exoPlayer
@@ -70,7 +76,6 @@ class LoginActivity : BaseActivity() {
         exoPlayer!!.prepare()
         exoPlayer!!.playWhenReady = true
     }
-
 
     private fun initGoogleLoginService() {
         googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -354,6 +359,10 @@ class LoginActivity : BaseActivity() {
             //登录IM
             Config.mHandler?.sendEmptyMessage(0x10004)
 
+            //上报日志
+            ReportManager.firebaseLoginLog(firebaseAnalytics, userInfo.uid, userInfo.nickname)
+            ReportManager.facebookLoginLog(this, userInfo.uid, userInfo.nickname)
+
             val guide = getLocalStorage().decodeBool("guide_finish", false)
             if (!guide) {
                 if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()
@@ -368,10 +377,15 @@ class LoginActivity : BaseActivity() {
             val permission = getLocalStorage().decodeBool("show_permission", false)
             if (!permission) {
                 startActivity(Intent(this, AuthActivity::class.java))
+                finish()
             } else {
                 startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
         }
+    }
+
+    override fun onBackPressed() {
     }
 
     override fun onDestroy() {

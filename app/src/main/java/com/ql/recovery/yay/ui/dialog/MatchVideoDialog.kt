@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.netease.yunxin.kit.adapters.DataAdapter
+import com.ql.recovery.bean.Reason
 import com.ql.recovery.bean.Tag
 import com.ql.recovery.bean.User
 import com.ql.recovery.yay.R
@@ -174,8 +175,7 @@ class MatchVideoDialog(
     /**
      * 被拒绝私人视频邀请
      */
-    fun rejectConnectForPersonal() {
-        JLog.i("from = $from")
+    fun rejectConnectForPersonal(reason: Reason) {
         binding.tvTimer.visibility = View.GONE
         binding.ivConnect.visibility = View.GONE
         binding.ivHandOff.visibility = View.VISIBLE
@@ -183,7 +183,19 @@ class MatchVideoDialog(
         binding.llRematch.visibility = View.GONE
 
         if (from == From.MySelf) {
-            binding.tvNotice.text = activity.getString(R.string.match_video_reject)
+            when (reason.reason) {
+                "default" -> {
+                    binding.tvNotice.text = activity.getString(R.string.match_video_reject)
+                }
+
+                "busy" -> {
+                    binding.tvNotice.text = activity.getString(R.string.match_video_reject_busy)
+                }
+
+                "offline" -> {
+                    binding.tvNotice.text = activity.getString(R.string.match_video_reject_offline)
+                }
+            }
         } else {
             //如果是对方挂断取消对话框
             cancel()

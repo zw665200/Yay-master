@@ -3,6 +3,8 @@ package com.ql.recovery.yay.ui.home
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +23,6 @@ import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.BeautyDialog
 import com.ql.recovery.yay.ui.dialog.FilterDialog
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
-import com.ql.recovery.yay.ui.dialog.WaitingDialog
 import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.match.MatchActivity
 import com.ql.recovery.yay.ui.store.StoreActivity
@@ -29,16 +30,16 @@ import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.ToastUtil
 import com.tencent.mmkv.MMKV
-import io.agora.rtc2.*
-import io.agora.rtc2.video.BeautyOptions
-import io.agora.rtc2.video.VideoCanvas
+import io.agora.rtc2.IRtcEngineEventHandler
+import io.agora.rtc2.RtcEngine
+import io.agora.rtc2.RtcEngineConfig
 
 class HomeFragment : BaseFragment() {
     private var binding: FragmentHomeBinding? = null
     private var type = Type.VIDEO
     private var mk = MMKV.defaultMMKV()
     private var mRtcEngine: RtcEngine? = null
-    private var beautyOptions: BeautyOptions? = null
+    private var handler = Handler(Looper.getMainLooper())
     private var openPreview = false
     private var lastClick = 0L
 
@@ -69,10 +70,9 @@ class HomeFragment : BaseFragment() {
     }
 
     override fun initData() {
-        beautyOptions = BeautyOptions()
-
         getUserInfo()
         flushConfig()
+        initRtcManager()
     }
 
     private fun initClubLottie() {
@@ -142,10 +142,6 @@ class HomeFragment : BaseFragment() {
                     binding?.ivVip?.setImageResource(R.drawable.in_vip)
                 } else {
                     binding?.ivVip?.setImageResource(R.drawable.vip_c)
-                }
-
-                if (it.country.isBlank()) {
-                    getLocation()
                 }
             }
         }
@@ -225,10 +221,6 @@ class HomeFragment : BaseFragment() {
         binding?.lottieVideo?.visibility = View.GONE
         binding?.lottieVoice?.visibility = View.VISIBLE
         binding?.lottieGame?.visibility = View.GONE
-
-        if (openPreview) {
-            closePreview()
-        }
     }
 
     private fun checkGameMatch() {
@@ -243,10 +235,6 @@ class HomeFragment : BaseFragment() {
         binding?.lottieVideo?.visibility = View.GONE
         binding?.lottieVoice?.visibility = View.GONE
         binding?.lottieGame?.visibility = View.VISIBLE
-
-        if (openPreview) {
-            closePreview()
-        }
     }
 
     private fun toMatchPage() {
@@ -265,24 +253,35 @@ class HomeFragment : BaseFragment() {
                 return@checkLogin
             }
 
+
             checkPermissions {
-                when (type) {
-                    Type.VIDEO -> {
-                        val intent = Intent(requireActivity(), MatchActivity::class.java)
-                        intent.putExtra("type", "video")
-                        startActivity(intent)
+                if (userInfo.country.isBlank()) {
+                    getLocation {
+                        openMatchPage()
                     }
-                    Type.VOICE -> {
-                        val intent = Intent(requireActivity(), MatchActivity::class.java)
-                        intent.putExtra("type", "voice")
-                        startActivity(intent)
-                    }
-                    Type.GAME -> {
-                        val intent = Intent(requireActivity(), MatchActivity::class.java)
-                        intent.putExtra("type", "game")
-                        startActivity(intent)
-                    }
+                } else {
+                    openMatchPage()
                 }
+            }
+        }
+    }
+
+    private fun openMatchPage() {
+        when (type) {
+            Type.VIDEO -> {
+                val intent = Intent(requireActivity(), MatchActivity::class.java)
+                intent.putExtra("type", "video")
+                startActivity(intent)
+            }
+            Type.VOICE -> {
+                val intent = Intent(requireActivity(), MatchActivity::class.java)
+                intent.putExtra("type", "voice")
+                startActivity(intent)
+            }
+            Type.GAME -> {
+                val intent = Intent(requireActivity(), MatchActivity::class.java)
+                intent.putExtra("type", "game")
+                startActivity(intent)
             }
         }
     }
@@ -312,55 +311,26 @@ class HomeFragment : BaseFragment() {
 
     private fun checkPreview() {
         if (!DoubleUtils.isFastDoubleClick()) {
-            if (!openPreview) {
-                val userInfo = mk.decodeParcelable("user_info", UserInfo::class.java)
-                if (userInfo != null) {
-                    openPreview = true
-                    binding?.surfaceLocal?.visibility = View.VISIBLE
-                    initLocalSurface(userInfo)
-                    BeautyDialog(requireActivity(), mRtcEngine, beautyOptions!!) {
-                        checkPreview()
-                    }
+            getUserInfo { userInfo ->
+                BeautyDialog(requireActivity(), mRtcEngine, userInfo) {
+                    mRtcEngine?.stopPreview()
                 }
-            } else {
-                openPreview = false
-                closePreview()
             }
         }
     }
 
-    private fun closePreview() {
-        binding?.surfaceLocal?.visibility = View.GONE
-        mRtcEngine?.removeHandler(mRtcEventHandler)
-        mRtcEngine?.stopPreview()
-    }
-
-    private fun initLocalSurface(userInfo: UserInfo) {
+    private fun initRtcManager() {
         try {
-            val config = RtcEngineConfig()
-            config.mContext = requireContext()
-            config.mEventHandler = mRtcEventHandler
-            config.mAppId = Config.AGORA_APP_ID
-            mRtcEngine = RtcEngine.create(config)
+            if (mRtcEngine == null) {
+                val config = RtcEngineConfig()
+                config.mContext = requireContext()
+                config.mEventHandler = mRtcEventHandler
+                config.mAppId = Config.AGORA_APP_ID
+                mRtcEngine = RtcEngine.create(config)
 
-            //启用视频流
-            mRtcEngine?.enableVideo()
-
-            //开启本地视频预览
-            mRtcEngine?.startPreview()
-
-            //将SurfaceView对象传入Agora，以渲染本地视频
-            mRtcEngine?.setupLocalVideo(VideoCanvas(binding?.surfaceLocal, VideoCanvas.RENDER_MODE_HIDDEN, userInfo.uid))
-
-            val options = ChannelMediaOptions()
-            //视频通话场景下，设置频道场景为 BROADCASTING
-            options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING
-            //将用户角色设置为 BROADCASTER
-            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER
-
-            //开启美颜
-            mRtcEngine?.setBeautyEffectOptions(true, beautyOptions)
-
+                //启用视频流
+                mRtcEngine?.enableVideo()
+            }
         } catch (ex: Exception) {
             ToastUtil.showShort(requireContext(), ex.message)
         }
@@ -370,6 +340,8 @@ class HomeFragment : BaseFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mRtcEngine?.leaveChannel()
+        mRtcEngine?.removeHandler(mRtcEventHandler)
     }
 
     enum class Type { VIDEO, VOICE, GAME }

@@ -11,7 +11,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class BasePrice(
     val common: Common,
-    val match_filter: MatchFilter
+    val match_filter: MatchFilter,
+    val service_charge: ServiceCharge
 ) : Parcelable
 
 @Parcelize
@@ -25,6 +26,26 @@ data class MatchFilter(
     val country_cost: Int,
     val sex_cost: Int,
     val vip_discounts: Float
+) : Parcelable
+
+@Parcelize
+data class ServiceCharge(
+    val normal: NormalService,
+    val anchor: AnchorService,
+) : Parcelable
+
+@Parcelize
+data class NormalService(
+    val game: Float,
+    val gift: Float,
+    val video: Float
+) : Parcelable
+
+@Parcelize
+data class AnchorService(
+    val game: Float,
+    val gift: Float,
+    val video: Float
 ) : Parcelable
 
 @Parcelize

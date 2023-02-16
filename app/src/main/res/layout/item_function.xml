@@ -55,4 +55,10 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_1"
+        android:layout_gravity="bottom"
+        android:background="@color/color_grey_f5f5f5" />
+
 </FrameLayout>

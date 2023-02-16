@@ -3,8 +3,6 @@ package com.ql.recovery.yay.ui.mine
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +20,6 @@ import com.ql.recovery.yay.databinding.ItemFollowBinding
 import com.ql.recovery.yay.manager.IMManager
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.ProfileDialog
-import com.ql.recovery.yay.ui.dialog.WaitingDialog
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.JLog
@@ -173,7 +170,7 @@ class FollowActivity : BaseActivity() {
                 binding.includeNoData.tvToMatch.text = getString(R.string.record_make_friends)
             }
 
-            userList.forEach { it.follow_status = 1 }
+//            userList.forEach { it.follow_status = 1 }
 
             mList.clear()
             mList.addAll(userList)
@@ -181,8 +178,8 @@ class FollowActivity : BaseActivity() {
 
             //subscribe
             val uidList = userList.map { it.uid.toString() }
-            followingList.clear()
-            followingList.addAll(uidList)
+//            followingList.clear()
+//            followingList.addAll(uidList)
             IMManager.subscribe(this, uidList)
 
             //check online status
@@ -218,19 +215,20 @@ class FollowActivity : BaseActivity() {
 
             binding.includeNoData.root.visibility = View.GONE
 
-            userList.forEach { it.follow_status = 2 }
+//            userList.forEach { it.follow_status = 2 }
 
             mList.clear()
+            mList.addAll(userList)
+            mAdapter.notifyDataSetChanged()
 
             //subscribe
             val uidList = userList.map { it.uid.toString() }
-            for (item in userList) {
-                if (followingList.contains(item.uid.toString())) {
-                    item.follow_status = 3
-                }
-            }
-            mList.addAll(userList)
-            mAdapter.notifyDataSetChanged()
+//            for (item in userList) {
+//                if (followingList.contains(item.uid.toString())) {
+//                    item.follow_status = 3
+//                }
+//            }
+//            mList.addAll(userList)
 
 
             IMManager.subscribe(this, uidList)

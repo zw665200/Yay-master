@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -27,6 +26,7 @@ import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
 import com.ql.recovery.yay.ui.dialog.UnlockDialog
 import com.ql.recovery.yay.ui.self.BlurTransformation
+import com.ql.recovery.yay.ui.self.SelfLinearLayoutManager
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
@@ -42,6 +42,7 @@ class RecordFragment : BaseFragment() {
     private var mSize = 20
     private var isToLast = false
     private var mType = TagType.Visitor
+    private var firstLoad = false
 
 
     override fun initView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -92,8 +93,17 @@ class RecordFragment : BaseFragment() {
 
         binding!!.refreshLayout.setOnRefreshListener { refreshLayout ->
             mPage = 0
-            refreshLayout.finishRefresh()
-            initData()
+            getMatchInfoList(mPage, mSize)
+
+            when (mType) {
+                TagType.Visitor -> {
+                    getVisitorInfoList()
+                }
+
+                TagType.Gamer -> {
+                    getGamerInfoList()
+                }
+            }
         }
 
         binding!!.refreshLayout.setOnLoadMoreListener {
@@ -264,32 +274,8 @@ class RecordFragment : BaseFragment() {
 
         binding?.rcRecordList?.adapter = mAdapter
         binding?.rcRecordList?.layoutManager = LinearLayoutManager(requireContext())
-        binding?.rcRecordList?.isLayoutFrozen = true
-
-        binding?.rcRecordList?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                val manager = recyclerView.layoutManager as LinearLayoutManager
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    //获取最后一个完全显示的ItemPosition
-                    val lastVisibleItem = manager.findLastCompletelyVisibleItemPosition()//从0开始
-                    val totalItemCount = manager.itemCount
-                    // 判断是否滚动到底部，并且是向下滚动
-                    if (lastVisibleItem == (totalItemCount - 1) && isToLast) {
-                        //加载更多功能的代码
-                        getMatchInfoList(mPage++, mSize)
-                    }
-                }
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                isToLast = dy > 0
-            }
-        })
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun changeTag() {
         when (mType) {
             TagType.Visitor -> {
@@ -330,6 +316,8 @@ class RecordFragment : BaseFragment() {
             } else {
                 binding?.tvTitleAll?.visibility = View.VISIBLE
             }
+
+            JLog.i("userList size = ${userList.size}")
 
             mList.addAll(userList)
             mAdapter.notifyDataSetChanged()

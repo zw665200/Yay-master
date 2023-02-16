@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.CountDownTimer
 import com.ql.recovery.bean.Countries
 import com.ql.recovery.bean.UserInfo
+import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityStartBinding
 import com.ql.recovery.yay.ui.base.BaseActivity
@@ -27,6 +28,7 @@ class StartActivity : BaseActivity() {
     override fun initView() {
         initTimer()
         getCountries()
+        getBasePrice()
     }
 
     override fun initData() {
@@ -41,10 +43,9 @@ class StartActivity : BaseActivity() {
     }
 
     private fun initTimer() {
-        timer = object : CountDownTimer(1500L, 1000) {
+        timer = object : CountDownTimer(2000L, 1000L) {
             override fun onFinish() {
                 openMainPage()
-//                initUserInfo()
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -75,37 +76,18 @@ class StartActivity : BaseActivity() {
         }
     }
 
-    private fun initUserInfo() {
-        val userInfo = mk.decodeParcelable("user_info", UserInfo::class.java)
-        if (userInfo != null) {
-            val guide = getLocalStorage().decodeBool("guide_finish", false)
-            if (!guide) {
-                openGuidePage()
-            } else {
-                openMainPage()
+
+    private fun getBasePrice() {
+        getUserInfo {
+            DataManager.getBasePrice { basePrice ->
+                getLocalStorage().encode("base_price", basePrice)
             }
-        } else {
-            openLoginPage()
         }
     }
 
     private fun openMainPage() {
         val intent = Intent()
         intent.setClass(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun openLoginPage() {
-        val intent = Intent()
-        intent.setClass(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun openGuidePage() {
-        val intent = Intent()
-        intent.setClass(this, GuideActivity::class.java)
         startActivity(intent)
         finish()
     }

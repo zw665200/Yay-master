@@ -118,6 +118,8 @@
     <string name="match_video_apply">同意后才可视频通话，是否同意？</string>
     <string name="match_audio_apply">同意后才可语音通话，是否同意？</string>
     <string name="match_video_reject">对方已拒绝</string>
+    <string name="match_video_reject_busy">对方忙线中</string>
+    <string name="match_video_reject_offline">对方已离线</string>
     <string name="match_video_next">跳过</string>
     <string name="match_error">匹配失败</string>
     <string name="match_timeout">匹配超时</string>
@@ -190,8 +192,8 @@
     <string name="club_available">在线</string>
     <string name="club_unavailable">忙碌</string>
     <string name="club_notice">提示</string>
-    <string name="club_notice_coin_enough">向对方发起视频聊天 ，每分钟将消耗%1$s金币</string>
-    <string name="club_notice_coin_deficient">向对方发起视频聊天需要消耗%1$s金币，您确定要发起吗？</string>
+    <string name="club_notice_coin_enough">向对方发起视频聊天 ，每分钟将消耗%1$s宝石</string>
+    <string name="club_notice_coin_deficient">向对方发起视频聊天需要消耗%1$s宝石，您确定要发起吗？</string>
     <string name="club_unlock_content">解锁需花费%1$s宝石，确定要解锁档案吗？</string>
     <string name="club_unlock_sure">确定解锁</string>
     <string name="club_unlock_cancel">取消</string>
@@ -199,7 +201,7 @@
     <string name="club_notice_cancel">取消</string>
     <string name="club_notice_sure">确认发起</string>
     <string name="club_score">风度评分:%1$s</string>
-    <string name="club_level">等级:LV%1$d</string>
+    <string name="club_level">等级:%1$d</string>
 
     <!--notification-->
     <string name="notification_title">聊天记录</string>
@@ -214,8 +216,8 @@
     <string name="store_pay_success">支付成功</string>
 
     <!--mine-->
-    <string name="mine_followed">关注</string>
-    <string name="mine_following">粉丝</string>
+    <string name="mine_followed">粉丝</string>
+    <string name="mine_following">关注</string>
     <string name="mine_member">订阅会员</string>
     <string name="mine_store">宝石商店</string>
     <string name="mine_income">我的收益</string>
@@ -419,8 +421,8 @@
     <string name="earn_title">主播收益</string>
     <string name="earn_title_2">我的收益</string>
     <string name="earn_sub_title">充值记录</string>
-    <string name="earn_sub_des">主播获得的价值宝石在扣除平台费用（视频的47%，礼物的30%，游戏的20%）后结算为主播的实际宝石收入。收入可以提现，也可充值到宝石钱包用于消费</string>
-    <string name="earn_sub_des_2">您获得的价值宝石在扣除平台费用（礼物的70%，游戏的20%）后，结算为您的实际宝石收入。收入可以充值到宝石钱包用于消费</string>
+    <string name="earn_sub_des">价值的宝石在扣除平台成本（视频的%1$s，礼物的%2$s，游戏的%3$s）后结算为主播的实际宝石收入。收入可以提现或充值到宝石钱包用于消费</string>
+    <string name="earn_sub_des_2">价值的宝石在扣除平台成本（礼物的%1$s，游戏的%2$s）后结算为您的实际宝石收入。收入可以充值到宝石钱包用于消费</string>
     <string name="earn_gift_count">礼物(%1$s)</string>
     <string name="earn_video_count">视频(%1$s)</string>
     <string name="earn_game_count">游戏(%1$s)</string>

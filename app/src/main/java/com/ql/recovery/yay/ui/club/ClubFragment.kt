@@ -2,7 +2,6 @@ package com.ql.recovery.yay.ui.club
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
@@ -24,6 +23,7 @@ import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.FileCallback
 import com.ql.recovery.yay.databinding.FragmentClubBinding
 import com.ql.recovery.yay.databinding.ItemFunAnchorBinding
+import com.ql.recovery.yay.databinding.LayoutPlayerBinding
 import com.ql.recovery.yay.manager.IMManager
 import com.ql.recovery.yay.manager.RtcManager
 import com.ql.recovery.yay.ui.base.BaseFragment
@@ -44,7 +44,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     private lateinit var mAdapter: DataAdapter<Anchor>
     private var mainList = mutableListOf<Cate>()
     private var mList = mutableListOf<Anchor>()
-    private var exoPlayerList = arrayListOf<ExoPlayer>()
+    private var exoPlayerList = arrayListOf<ExoPlayer?>()
     private var handler = Handler(Looper.getMainLooper())
 
     private var currentPosition = 0
@@ -52,6 +52,8 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     private var pageCount = 6
     private var isToLast = false
     private var isFirstLoad = true
+    private var firstVisibleViewPosition = 0
+    private var lastVisibleViewPosition = 5
 
     override fun initView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentClubBinding.inflate(inflater, container, false)
@@ -68,19 +70,19 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
         changeTag("all")
 
         for (item in 1..6) {
-            val loadControl = DefaultLoadControl.Builder()
-                .setBufferDurationsMs(1000, 3000, 250, 500)
-                .build()
-
-            val exoPlayer = ExoPlayer.Builder(requireContext())
-                .setRenderersFactory(DefaultRenderersFactory(requireContext()).setEnableDecoderFallback(true))
-                .setLoadControl(loadControl)
-                .build()
-
-            exoPlayer.volume = 0f
-            exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
-
-            exoPlayerList.add(exoPlayer)
+//            val loadControl = DefaultLoadControl.Builder()
+//                .setBufferDurationsMs(1000, 3000, 250, 500)
+//                .build()
+//
+//            val exoPlayer = ExoPlayer.Builder(requireContext())
+//                .setRenderersFactory(DefaultRenderersFactory(requireContext()).setEnableDecoderFallback(true))
+//                .setLoadControl(loadControl)
+//                .build()
+//
+//            exoPlayer.volume = 0f
+//            exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+//
+//            exoPlayerList.add(exoPlayer)
         }
 
         return binding!!.root
@@ -99,6 +101,22 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
         }
     }
 
+    private fun getPlayer(): ExoPlayer {
+        val loadControl = DefaultLoadControl.Builder()
+            .setBufferDurationsMs(1000, 3000, 250, 500)
+            .build()
+
+        val exoPlayer = ExoPlayer.Builder(requireContext())
+            .setRenderersFactory(DefaultRenderersFactory(requireContext()).setEnableDecoderFallback(true))
+            .setLoadControl(loadControl)
+            .build()
+
+        exoPlayer.volume = 0f
+        exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+
+        return exoPlayer
+    }
+
     private fun initPicsShow() {
         val width = AppUtil.getScreenWidth(requireContext())
         val height = AppUtil.getScreenHeight(requireActivity())
@@ -111,9 +129,9 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 lp.height = height / 5
                 itemBinding.ivPhoto.layoutParams = lp
 
-                val l = itemBinding.playerView.layoutParams
+                val l = itemBinding.flPlayView.layoutParams
                 l.height = height / 5
-                itemBinding.playerView.layoutParams = l
+                itemBinding.flPlayView.layoutParams = l
 
                 if (payloads.isNotEmpty()) {
                     when (payloads[0]) {
@@ -136,27 +154,24 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 //                                1 -> itemBinding.ivGender.setImageResource(R.drawable.pp_xbnn)
 //                                2 -> itemBinding.ivGender.setImageResource(R.drawable.pp_xbn)
 //                            }
-
-
-                            val exoPlayer = if (position >= exoPlayerList.size) {
-                                exoPlayerList[position % 6]
-                            } else {
-                                exoPlayerList[position]
-                            }
-
-                            exoPlayer.stop()
-
-                            if (itemData.cover_url != null) {
-                                if (itemData.isPlaying) {
-                                    JLog.i("playing = true, position = $position")
-                                    itemBinding.ivPhoto.visibility = View.VISIBLE
-                                    loadVideo(itemBinding, itemData, position)
-                                } else {
+//
+//                            val exoPlayer = if (position >= exoPlayerList.size) {
+//                                exoPlayerList[position % 6]
+//                            } else {
+//                                exoPlayerList[position]
+//                            }
+//
+//                            if (itemData.cover_url != null) {
+//                                if (itemData.isPlaying) {
+//                                    JLog.i("playing = true, position = $position")
+//                                    itemBinding.ivPhoto.visibility = View.VISIBLE
+//                                    loadVideo(exoPlayer, itemBinding, itemData, position)
+//                                } else {
 //                                    JLog.i("playing = false, position = $position")
-                                    itemBinding.ivPhoto.visibility = View.VISIBLE
-                                    itemBinding.playerView.visibility = View.GONE
-                                }
-                            }
+//                                    itemBinding.ivPhoto.visibility = View.VISIBLE
+//                                    itemBinding.flPlayView.visibility = View.GONE
+//                                }
+//                            }
                         }
                     }
 
@@ -166,7 +181,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 itemBinding.tvName.text = itemData.nickname
                 itemBinding.tvAge.text = itemData.age.toString()
 
-                itemBinding.ivPhoto.setImageResource(R.color.transparent)
+                itemBinding.ivPhoto.setImageResource(R.color.white)
                 Glide.with(requireActivity()).load(itemData.cover_url).into(itemBinding.ivPhoto)
 
                 when (itemData.sex) {
@@ -182,32 +197,33 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     itemBinding.onlineDes.text = getString(R.string.club_unavailable)
                 }
 
-                if (!isFirstLoad) return@addBindView
-                if (position == 5) {
-                    isFirstLoad = false
+                if (position < firstVisibleViewPosition || position > lastVisibleViewPosition) {
+                    itemBinding.flPlayView.removeAllViews()
+                    itemBinding.ivPhoto.visibility = View.VISIBLE
+
+                    if (exoPlayerList.size > position && exoPlayerList[position] != null) {
+                        exoPlayerList[position]?.stop()
+                        exoPlayerList[position] = null
+                    }
+
+                    return@addBindView
                 }
 
-                val exoPlayer = if (position >= exoPlayerList.size) {
-                    exoPlayerList[position % 6]
+                val exoPlayer: ExoPlayer?
+                if (exoPlayerList.size > position) {
+                    if (exoPlayerList[position] == null) {
+                        exoPlayer = getPlayer()
+                        exoPlayerList[position] = exoPlayer
+                    } else {
+                        exoPlayer = exoPlayerList[position]
+                    }
                 } else {
-                    exoPlayerList[position]
+                    exoPlayer = getPlayer()
+                    exoPlayerList.add(exoPlayer)
                 }
 
-                exoPlayer.stop()
-
-                itemBinding.playerView.visibility = View.GONE
-
-
-                JLog.i("isPlaying = ${itemData.isPlaying} , position = $position")
-
-                if (itemData.cover_url != null) {
-//                    if (itemData.isPlaying) {
-//                        itemBinding.ivPhoto.visibility = View.VISIBLE
-//                        itemBinding.playerView.visibility = View.GONE
-//                        return@addBindView
-//                    }
-
-                    loadVideo(itemBinding, itemData, position)
+                if (itemData.cover_url != null && exoPlayer != null) {
+                    loadVideo(exoPlayer, itemBinding, itemData, position)
                 }
 
                 itemView.setOnClickListener {
@@ -238,30 +254,13 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     val lastVisiblePosition = manager.findLastVisibleItemPosition()//从0开始
                     val totalItemCount = manager.itemCount
 
-//                    JLog.i("first = $firstVisiblePosition")
-//                    JLog.i("last = $lastVisiblePosition")
+                    firstVisibleViewPosition = firstVisiblePosition
+                    lastVisibleViewPosition = lastVisiblePosition
 
-                    val tempList = arrayListOf<Anchor>()
-                    tempList.addAll(mList)
+                    JLog.i("first = $firstVisiblePosition")
+                    JLog.i("last = $lastVisiblePosition")
 
-                    for ((position, child) in tempList.withIndex()) {
-                        if (position < firstVisiblePosition || position > lastVisiblePosition) {
-//                            JLog.i("set false")
-                            //隐藏视频
-//                            val anchor = Anchor(child.uid, child.avatar, child.country, child.cover_type, child.cover_url, child.uid, child.nickname, child.sex, child.online, false)
-//                            mList.remove(child)
-//                            mList.add(position, anchor)
-//                            mList[position].isPlaying = false
-//                            mAdapter.notifyItemChanged(position, "playing")
-                        } else {
-//                            JLog.i("set true")
-//                            val anchor = Anchor(child.uid, child.avatar, child.country, child.cover_type, child.cover_url, child.uid, child.nickname, child.sex, child.online, true)
-//                            mList.remove(child)
-//                            mList.add(position, anchor)
-//                            mList[position].isPlaying = true
-//                            mAdapter.notifyItemChanged(position, "playing")
-                        }
-                    }
+//                    mAdapter.notifyDataSetChanged()
                 }
             }
 
@@ -283,32 +282,33 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
         }
     }
 
-    private fun loadVideo(itemBinding: ItemFunAnchorBinding, itemData: Anchor, position: Int) {
+    private fun loadVideo(exoPlayer: ExoPlayer, itemBinding: ItemFunAnchorBinding, itemData: Anchor, position: Int) {
         if (itemData.cover_url!!.contains(".mp4") || itemData.cover_url!!.contains("type=video")) {
-
-            val exoPlayer = if (position >= exoPlayerList.size) {
-                exoPlayerList[position % 6]
-            } else {
-                exoPlayerList[position]
-            }
 
             val mediaCount = exoPlayer.mediaItemCount
             if (mediaCount == 1) {
                 val mediaId = exoPlayer.getMediaItemAt(0).mediaId
-                JLog.i("mediaId = $mediaId")
                 if (mediaId == itemData.cover_url) {
+                    JLog.i("media equal , position = $position")
                     return
+                } else {
+                    exoPlayer.clearMediaItems()
                 }
             }
+
+            JLog.i("22222")
 
             exoPlayer.addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     super.onPlaybackStateChanged(playbackState)
                     when (playbackState) {
                         Player.STATE_READY -> {
-                            itemBinding.playerView.visibility = View.VISIBLE
-                            itemBinding.playerView.setShutterBackgroundColor(Color.TRANSPARENT)
-                            itemBinding.playerView.player = exoPlayer
+                            val view = LayoutPlayerBinding.inflate(layoutInflater)
+                            view.root.player = exoPlayer
+
+                            itemBinding.flPlayView.removeAllViews()
+                            itemBinding.flPlayView.addView(view.root)
+
                             exoPlayer.play()
                         }
                     }
@@ -327,14 +327,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 }
             })
 
-//                        val playerView = PlayerView(requireContext())
-//                        playerView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-//                        playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
-//                        playerView.useController = false
-
-//                        itemBinding.flPlayView.removeAllViews()
-//                        itemBinding.flPlayView.addView(itemBinding.playerView)
-
             launch(Dispatchers.IO) {
                 FileUtil.downloadVideo(requireContext(), itemData.cover_url!!, object : FileCallback {
                     override fun onSuccess(filePath: String) {
@@ -342,12 +334,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 //                            JLog.i("video = $it")
 
                             handler.post {
-//                                if (exoPlayer.isPlaying) {
-//                                    exoPlayer.stop()
-//                                }
-
-                                exoPlayer.clearMediaItems()
-
                                 val mediaItem = MediaItem.Builder()
                                     .setMediaId(itemData.cover_url!!)
                                     .setUri(it)
@@ -355,8 +341,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 
                                 exoPlayer.setMediaItem(mediaItem)
                                 exoPlayer.prepare()
-
-
                             }
 
                         }
@@ -489,12 +473,9 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
             binding!!.refreshLayout.finishRefresh()
             binding!!.refreshLayout.finishLoadMore()
 
-            if (anchorList.isEmpty()) {
-                return@getAnchorList
-            }
-
             if (page == 0) {
                 mList.clear()
+                anchorList.forEach { it.isPlaying = false }
             }
 
             if (anchorList.isEmpty()) {
@@ -502,26 +483,12 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 if (page < 0) {
                     page = 0
                 }
+                return@getAnchorList
             }
 
-            mList.clear()
-
-            val list = arrayListOf<Anchor>()
-            list.addAll(anchorList)
-//            list.addAll(anchorList)
-//            list.addAll(anchorList)
-
-            for ((position, child) in list.withIndex()) {
-                if (position > 5) {
-                    mList.add(Anchor(child.age, child.avatar, child.country, child.cover_type, child.cover_url, child.uid, child.nickname, child.sex, child.online, true))
-                    mAdapter.notifyItemChanged(position)
-                } else {
-                    mList.add(Anchor(child.age, child.avatar, child.country, child.cover_type, child.cover_url, child.uid, child.nickname, child.sex, child.online, false))
-                    mAdapter.notifyItemChanged(position)
-                }
-            }
-
-//            mAdapter.notifyDataSetChanged()
+            mList.addAll(anchorList)
+//            mList.addAll(anchorList)
+            mAdapter.notifyDataSetChanged()
 
             val uidList = mList.map { it.uid.toString() }
             IMManager.subscribe(requireContext(), uidList)
@@ -583,7 +550,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
         binding = null
 
         for (exoplayer in exoPlayerList) {
-            exoplayer.release()
+            exoplayer?.release()
         }
 
         exoPlayerList.clear()

@@ -22,9 +22,9 @@
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:textColor="@color/color_grey_cccccc"
-            android:textSize="@dimen/sp_14" />
+            android:textSize="@dimen/sp_13" />
 
         <ImageView
             android:id="@+id/iv_icon"

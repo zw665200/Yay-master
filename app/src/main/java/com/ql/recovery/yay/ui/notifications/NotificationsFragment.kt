@@ -199,7 +199,6 @@ class NotificationsFragment : BaseFragment() {
 
         binding?.rcConversation?.adapter = conversationAdapter
         binding?.rcConversation?.layoutManager = LinearLayoutManager(requireContext())
-        binding?.rcConversation?.isLayoutFrozen = true
     }
 
     private fun initFollowList() {

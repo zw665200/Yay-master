@@ -16,7 +16,7 @@
         android:layout_marginTop="@dimen/dp_10"
         android:layout_marginEnd="@dimen/dp_20"
         android:layout_marginBottom="@dimen/dp_30"
-        android:background="@drawable/shape_corner_white_80_alpha"
+        android:background="@drawable/shape_corner_white_10_alpha_80"
         android:orientation="vertical">
 
         <LinearLayout
@@ -135,8 +135,9 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/dp_3"
                 android:text="@string/game_step_continue"
+                android:fontFamily="@font/abc"
                 android:textColor="@color/black"
-                android:textSize="@dimen/sp_25"/>
+                android:textSize="@dimen/sp_25" />
 
         </FrameLayout>
 
@@ -150,6 +151,7 @@
             android:orientation="horizontal">
 
             <FrameLayout
+                android:id="@+id/fl_no"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -162,12 +164,14 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="@dimen/dp_3"
                     android:gravity="center"
+                    android:fontFamily="@font/abc"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_25" />
 
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/fl_yes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_20"
@@ -180,6 +184,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="@dimen/dp_3"
+                    android:fontFamily="@font/abc"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_25" />
 
@@ -198,6 +203,7 @@
             android:visibility="gone">
 
             <FrameLayout
+                android:id="@+id/fl_find_matcher"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/game_over_1">
@@ -211,11 +217,12 @@
                     android:gravity="center"
                     android:text="@string/match_game_find_matcher"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/sp_25"/>
+                    android:textSize="@dimen/sp_25" />
 
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/fl_game_over"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_20"
@@ -229,7 +236,7 @@
                     android:layout_marginBottom="@dimen/dp_5"
                     android:text="@string/game_step_finish"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/sp_25"/>
+                    android:textSize="@dimen/sp_25" />
 
             </FrameLayout>
 

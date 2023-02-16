@@ -42,13 +42,15 @@ class GameDialog(
     private lateinit var recordAdapter: MutableDataAdapter<LotteryRecord>
     private var giftList = arrayListOf<LotteryGift>()
     private var recordList = arrayListOf<LotteryRecord>()
-    private var records = arrayListOf<LotteryRecords>()
+    private var giftRecords = mutableSetOf<LotteryRecords>()
+    private var coinRecords = mutableSetOf<LotteryRecords>()
     private var lotteryTicket: LotteryTicket? = null
     private var currentPos = -1
     private var circleTimes = 0
     private var currentCount = 1
     private var currentType = "coin"
     private var gameStart = false
+    private var showType = Type.Game
 
     init {
         initVew()
@@ -210,9 +212,9 @@ class GameDialog(
                         Glide.with(activity).load(itemData.avatar).apply(RequestOptions.bitmapTransform(CircleCrop())).into(itemBinding.ivIcon)
 
                         if (roomId != null) {
-                            if (records.size > position) {
+                            if (coinRecords.size > position) {
                                 var total = 0
-                                val recordList = records[position]
+                                val recordList = coinRecords.elementAt(position)
                                 for (record in recordList.records) {
                                     total += record.coin
                                 }
@@ -227,9 +229,9 @@ class GameDialog(
                         itemBinding.tvName.text = String.format(activity.getString(R.string.match_game_lottery_time), itemData.count)
                         Glide.with(activity).load(itemData.avatar).apply(RequestOptions.bitmapTransform(CircleCrop())).into(itemBinding.ivIcon)
 
-                        if (records.size > position) {
+                        if (giftRecords.size > position) {
                             itemBinding.llGifts.removeAllViews()
-                            for (child in records[position].records) {
+                            for (child in giftRecords.elementAt(position).records) {
                                 val imageView = ImageView(activity)
                                 Glide.with(activity).load(child.icon).into(imageView)
                                 itemBinding.llGifts.addView(imageView)
@@ -308,7 +310,11 @@ class GameDialog(
                 binding.tvDrawTen.text = activity.getString(R.string.match_game_draw_30)
                 binding.tvCoinParadise.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_left_yellow, null)
                 binding.tvGiftParadise.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_right_light_grey, null)
-                getLotteryCoinList()
+
+                when (showType) {
+                    Type.Game -> getLotteryCoinList()
+                    Type.Record -> getLotteryRecord(type)
+                }
             }
 
             "gift" -> {
@@ -317,7 +323,11 @@ class GameDialog(
                 binding.tvDrawTen.text = activity.getString(R.string.match_game_draw_50)
                 binding.tvCoinParadise.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_left_light_grey, null)
                 binding.tvGiftParadise.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_right_yellow, null)
-                getLotteryGiftList()
+
+                when (showType) {
+                    Type.Game -> getLotteryGiftList()
+                    Type.Record -> getLotteryRecord(type)
+                }
             }
         }
     }
@@ -455,10 +465,23 @@ class GameDialog(
         } else {
             //查询房间抽奖记录
             recordList.clear()
-            for (child in records) {
-                val records = child.records
-                recordList.add(LotteryRecord(records[0].id, records[0].coin, records[0].count, records[0].icon, records[0].type, records[0].avatar))
+
+            when (type) {
+                "coin" -> {
+                    for (child in coinRecords) {
+                        val records = child.records
+                        recordList.add(LotteryRecord(records[0].id, records[0].coin, records[0].count, records[0].icon, records[0].type, records[0].avatar))
+                    }
+                }
+
+                "gift" -> {
+                    for (child in giftRecords) {
+                        val records = child.records
+                        recordList.add(LotteryRecord(records[0].id, records[0].coin, records[0].count, records[0].icon, records[0].type, records[0].avatar))
+                    }
+                }
             }
+
             recordAdapter.notifyDataSetChanged()
         }
     }
@@ -572,10 +595,17 @@ class GameDialog(
         //保存房间抽奖记录
         if (isInitiator) {
             list.forEach { it.avatar = userInfo.avatar }
-            records.add(LotteryRecords(list))
         } else {
             list.forEach { it.avatar = avatar }
-            records.add(LotteryRecords(list))
+        }
+
+        //分开添加本地历史记录
+        if (list[0].type == "gift") {
+            JLog.i("gift record add")
+            giftRecords.add(LotteryRecords(list))
+        } else {
+            JLog.i("coin record add")
+            coinRecords.add(LotteryRecords(list))
         }
 
         //全部按钮重置
@@ -594,13 +624,6 @@ class GameDialog(
                     }
                 }
             }
-        } else {
-//            if (isInitiator) {
-//                giftList.forEach { it.insert_or_draw = true }
-//            } else {
-//                giftList.forEach { it.insert_or_draw = false }
-//            }
-//            adapter.notifyDataSetChanged()
         }
 
         //弹出奖励
@@ -609,6 +632,7 @@ class GameDialog(
     }
 
     private fun showGame() {
+        showType = Type.Game
         binding.llGameArea.visibility = View.VISIBLE
         binding.llRecordArea.visibility = View.GONE
         binding.llLottery.visibility = View.VISIBLE
@@ -616,6 +640,7 @@ class GameDialog(
     }
 
     private fun showRecord(type: String) {
+        showType = Type.Record
         binding.llGameArea.visibility = View.GONE
         binding.llRecordArea.visibility = View.VISIBLE
         binding.llLottery.visibility = View.GONE
@@ -642,17 +667,6 @@ class GameDialog(
         super.show()
     }
 
-    /**
-     * 动态设置Activity背景透明度
-     *
-     * @param bgAlpha
-     */
-    fun setWindowAlpha(bgAlpha: Float) {
-        val window: Window = activity.window
-        val lp = window.attributes
-        lp.alpha = bgAlpha
-        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        window.attributes = lp
-    }
+    enum class Type { Game, Record }
 
 }

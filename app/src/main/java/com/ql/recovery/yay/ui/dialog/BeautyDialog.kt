@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.view.Gravity
-import android.view.Window
 import android.view.WindowManager
 import android.widget.SeekBar
 import androidx.recyclerview.widget.GridLayoutManager
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.ql.recovery.bean.BeautyParam
 import com.ql.recovery.bean.BeautyResource
+import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.DialogBeautyBinding
 import com.ql.recovery.yay.databinding.ItemBeautyBinding
@@ -18,14 +18,15 @@ import com.ql.recovery.yay.util.AppUtil
 import com.tencent.mmkv.MMKV
 import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.video.BeautyOptions
+import io.agora.rtc2.video.VideoCanvas
 
 
 class BeautyDialog(
     private val activity: Activity,
     private val mRtcEngine: RtcEngine?,
-    private var options: BeautyOptions,
+    private val userInfo: UserInfo,
     private val func: () -> Unit
-) : Dialog(activity, R.style.app_dialog2) {
+) : Dialog(activity, R.style.app_dialog) {
     private lateinit var binding: DialogBeautyBinding
     private lateinit var adapter: DataAdapter<BeautyResource>
     private var currentType = "lightening"
@@ -39,8 +40,13 @@ class BeautyDialog(
         binding = DialogBeautyBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setCancelable(true)
-        window?.clearFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND or WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
+//        window?.clearFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND or WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+
+        //将SurfaceView对象传入Agora，以渲染本地视频
+        mRtcEngine?.setupLocalVideo(VideoCanvas(binding.surfaceLocal, VideoCanvas.RENDER_MODE_HIDDEN, userInfo.uid))
+
+        val options = BeautyOptions()
         var beautyParam = mk.decodeParcelable("beauty_param", BeautyParam::class.java)
         if (beautyParam == null) {
             beautyParam = BeautyParam(options.lighteningLevel, options.smoothnessLevel, options.rednessLevel, options.sharpnessLevel)
@@ -52,6 +58,14 @@ class BeautyDialog(
             options.rednessLevel = beautyParam.rednessLevel
             options.sharpnessLevel = beautyParam.sharpnessLevel
         }
+
+        //开启美颜
+        mRtcEngine?.setBeautyEffectOptions(true, options)
+
+        //开启本地视频预览
+        mRtcEngine?.startPreview()
+
+        binding.ivCancel.setOnClickListener { cancel() }
 
         binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -85,12 +99,12 @@ class BeautyDialog(
             }
         })
 
-        initRegionList()
+        initRegionList(options)
         show()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun initRegionList() {
+    private fun initRegionList(options: BeautyOptions) {
         val list = mutableListOf<BeautyResource>()
         list.add(BeautyResource("lightening", R.drawable.lj_mb_c, R.drawable.lj_mb_n, activity.getString(R.string.beauty_lightening)))
         list.add(BeautyResource("smoothness", R.drawable.lj_mp_c, R.drawable.lj_mp_n, activity.getString(R.string.beauty_smoothness)))
@@ -148,53 +162,17 @@ class BeautyDialog(
     override fun show() {
         window!!.decorView.setPadding(0, 0, 0, 0)
         window!!.attributes = window!!.attributes.apply {
-            gravity = Gravity.BOTTOM
-            width = AppUtil.getScreenWidth(context)
-            height = WindowManager.LayoutParams.WRAP_CONTENT
+            gravity = Gravity.CENTER
+            width = WindowManager.LayoutParams.MATCH_PARENT
+            height = WindowManager.LayoutParams.MATCH_PARENT
         }
 
-//        setWindowAlpha(1.0f)
         super.show()
     }
 
     override fun cancel() {
         super.cancel()
         func()
-    }
-
-
-    /**
-     * 显示PopupWindow
-     */
-//    private fun show(v: View) {
-//        if (mPopupWindow != null && !mPopupWindow.isShowing()) {
-//            mPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0)
-//        }
-//        setWindowAlpa(0.5f)
-//    }
-
-
-    /**
-     * 消失PopupWindow
-     */
-//    override fun dismiss() {
-//        if (mPopupWindow != null && mPopupWindow.isShowing()) {
-//            mPopupWindow.dismiss()
-//        }
-//        setWindowAlpa(1.0f)
-//    }
-
-    /**
-     * 动态设置Activity背景透明度
-     *
-     * @param bgAlpha
-     */
-    fun setWindowAlpha(bgAlpha: Float) {
-        val window: Window = activity.window
-        val lp = window.attributes
-        lp.alpha = bgAlpha
-        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        window.attributes = lp
     }
 
 }

@@ -1,9 +1,8 @@
 package com.ql.recovery.yay.ui.notifications
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ql.recovery.bean.Notification
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
@@ -36,6 +35,16 @@ class NotificationActivity : BaseActivity() {
     override fun initData() {
         initNotification()
         getNotificationList()
+
+        binding.refreshLayout.setOnRefreshListener {
+            page = 0
+            getNotificationList()
+        }
+
+        binding.refreshLayout.setOnLoadMoreListener {
+            page++
+            getNotificationList()
+        }
     }
 
     private fun initNotification() {
@@ -61,34 +70,14 @@ class NotificationActivity : BaseActivity() {
 
         binding.rcNotification.adapter = adapter
         binding.rcNotification.layoutManager = LinearLayoutManager(this)
-
-        binding.rcNotification.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                val manager = recyclerView.layoutManager as LinearLayoutManager
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    //获取最后一个完全显示的ItemPosition
-                    val lastVisibleItem = manager.findLastCompletelyVisibleItemPosition()//从0开始
-                    val totalItemCount = manager.itemCount
-                    // 判断是否滚动到底部，并且是向下滚动
-                    if (lastVisibleItem == (totalItemCount - 1) && isToLast) {
-                        //加载更多功能的代码
-                        page++
-
-                        getNotificationList()
-                    }
-                }
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                isToLast = dy > 0
-            }
-        })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getNotificationList() {
         DataManager.getMessages(page, size) {
+            binding.refreshLayout.finishRefresh()
+            binding.refreshLayout.finishLoadMore()
+
             if (page == 0) {
                 mList.clear()
             }
@@ -101,7 +90,7 @@ class NotificationActivity : BaseActivity() {
             }
 
             mList.addAll(it)
-            adapter.notifyItemRangeChanged(0, mList.size)
+            adapter.notifyDataSetChanged()
         }
     }
 

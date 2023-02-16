@@ -148,7 +148,6 @@ class SosWebSocketClientService : Service() {
     private fun connect() {
         thread {
             try {
-                JLog.i("connect client is $client")
                 client?.addHeader("Authorization", Config.CLIENT_TOKEN)
                 //connectBlocking多出一个等待操作，会先连接再发送，否则未连接发送会报错
                 client?.connectBlocking()

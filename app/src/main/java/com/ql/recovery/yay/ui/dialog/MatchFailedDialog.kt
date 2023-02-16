@@ -56,6 +56,11 @@ class MatchFailedDialog(
                 lp.width = w / 4
                 lp.height = w / 4
                 itemView.layoutParams = lp
+
+                itemView.setOnClickListener {
+                    cancel()
+                    func()
+                }
             }
             .create()
 

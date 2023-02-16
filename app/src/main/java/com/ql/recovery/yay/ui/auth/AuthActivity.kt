@@ -2,11 +2,15 @@ package com.ql.recovery.yay.ui.auth
 
 import android.Manifest
 import android.content.Intent
+import android.location.Address
+import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
+import com.ql.recovery.yay.callback.LocationCallback
 import com.ql.recovery.yay.databinding.ActivityAuthBinding
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseActivity
+import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.ToastUtil
 
 class AuthActivity : BaseActivity() {
@@ -57,6 +61,23 @@ class AuthActivity : BaseActivity() {
         requestPermission(list.toTypedArray()) {
             getLocalStorage().encode("show_permission", true)
             toMainPage()
+
+            getUserInfo { userInfo ->
+                if (userInfo.country.isBlank()) {
+                    //定位设置国家和地区
+                    AppUtil.getLocation(this, object : LocationCallback {
+                        override fun onSuccess(address: Address) {
+                            DataManager.updateCountry(address.countryCode) {}
+                        }
+
+                        override fun onFailed() {
+                            runOnUiThread {
+                                ToastUtil.showShort(this@AuthActivity, "get location failed, please check your network")
+                            }
+                        }
+                    })
+                }
+            }
         }
     }
 

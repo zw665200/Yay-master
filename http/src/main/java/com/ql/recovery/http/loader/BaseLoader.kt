@@ -448,10 +448,11 @@ object BaseLoader {
     /**
      * 接受或者拒绝视频私聊邀请
      */
-    fun handlerVideoInvite(uid: Int, isAccept: Boolean): Observable<Response<Room?>> {
+    fun handlerVideoInvite(uid: Int, isAccept: Boolean, reason: String): Observable<Response<Room?>> {
         val map = ArrayMap<String, Any>()
         map["target_uid"] = uid
         map["is_accept"] = isAccept
+        map["reason"] = reason
         val json = GsonUtils.toJson(map)
         val request = json.toRequestBody("application/json; charset=utf-8".toMediaType())
         return RetrofitServiceManager.get().baseService.handlerVideoInvite(Config.CLIENT_TOKEN, request)

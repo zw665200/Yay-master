@@ -48,6 +48,10 @@ data class Tag(
     val name: String
 ) : Parcelable
 
+@Parcelize
+data class Reason(
+    val reason: String
+) : Parcelable
 
 data class Attachment(
     val type: String,

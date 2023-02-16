@@ -107,6 +107,8 @@ class ModifyTagDialog(
             gravity = Gravity.BOTTOM
             width = AppUtil.getScreenWidth(context)
             height = AppUtil.getScreenHeight(context) / 2
+            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
+            dimAmount = 0.5f
         }
 
         super.show()

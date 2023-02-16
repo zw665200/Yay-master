@@ -719,9 +719,9 @@ object DataManager {
      * 发起视频私聊邀请
      */
     @SuppressLint("CheckResult")
-    fun handlerVideoInvite(uid: Int, isAccept: Boolean, result: (Room?) -> Unit) {
+    fun handlerVideoInvite(uid: Int, isAccept: Boolean, reason: String, result: (Room?) -> Unit) {
         thread {
-            BaseLoader.handlerVideoInvite(uid, isAccept)
+            BaseLoader.handlerVideoInvite(uid, isAccept, reason)
                 .compose(ResponseTransformer.handleResult())
                 .compose(SchedulerProvider.getInstance().applySchedulers())
                 .subscribe({

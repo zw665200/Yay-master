@@ -127,6 +127,8 @@
     <string name="match_video_apply">S/he invites you to a Video Call, Accept?</string>
     <string name="match_audio_apply">S/he invites you to a Voice Call, Accept?</string>
     <string name="match_video_reject">The other party has declined</string>
+    <string name="match_video_reject_busy">The other party is busy</string>
+    <string name="match_video_reject_offline">The other party is offline</string>
     <string name="match_video_next">Skip</string>
     <string name="match_error">Match failed</string>
     <string name="match_timeout">Match timeout</string>
@@ -152,8 +154,8 @@
     <string name="match_item_gift_send">Send</string>
     <string name="match_game_matching">The matching is still in progress. you will be reminded if the match is successful, so feel free to play the game~</string>
     <string name="match_game_tip_1">Rules: Start the lottery after coin insertion</string>
-    <string name="match_game_tip_2">Rules: One party inserts coins and the other gets a chance to draw</string>
-    <string name="match_game_tap_1">Coin Paradise</string>
+    <string name="match_game_tip_2">Rules: One party pays gems to give the other a chance to win prizes.</string>
+    <string name="match_game_tap_1">Gem Paradise</string>
     <string name="match_game_tap_2">Gift paradise</string>
     <string name="match_game_record">Winning record</string>
     <string name="match_game_win">Winning</string>
@@ -165,7 +167,7 @@
     <string name="match_game_draw_8">Draw Once 8</string>
     <string name="match_game_draw_30">Ten Times 30</string>
     <string name="match_game_draw_50">Ten Times 50</string>
-    <string name="match_game_reward_get">Get</string>
+    <string name="match_game_reward_get">Claim</string>
     <string name="match_game_reward_title">OK</string>
     <string name="match_hand_off_tip">Hands-free mode is on. It will automatically connect if matched</string>
     <string name="match_add_time">Recharge Duration</string>
@@ -173,7 +175,8 @@
     <string name="match_hand_free_toast">Hands-free mode is on. It will automatically connect if matched</string>
     <string name="match_game_wait_lottery">Wait for the other party to start the draw</string>
     <string name="match_game_wait_lottery_tip">Rules: One party inserts coins, the other gets a chance to draw and win the prizes</string>
-    <string name="match_game_wait_lottery_tip_2">Tip: Prizes can be viewed on the <font color="#ECA23D">"Revenue Page"</font></string>
+    <string name="match_game_wait_lottery_tip_2">Tip: Prizes can be viewed on the <font color="#ECA23D">"Income Page"</font></string>
+    <string name="match_game_wait_lottery_tip_3">*The prizes won in the draw belong to the winner, not the party paying the gems.</string>
     <string name="match_wait_tip_1">Don\'t be shy, go say hi~~</string>
     <string name="match_wait_tip_2">A warm smile can make a good impression~~</string>
     <string name="match_wait_tip_3">Make friends in a civilized way, show your personal charm~</string>
@@ -189,7 +192,7 @@
     <string name="match_ticket_unused">It is detected that you still have unused tickets, please use first</string>
 
     <!--match record-->
-    <string name="record_title">Match record</string>
+    <string name="record_title">History</string>
     <string name="record_visitor">Who viewed my profile</string>
     <string name="record_game_matcher">Recent game teammates</string>
     <string name="record_all">All</string>
@@ -224,12 +227,12 @@
     <string name="club_notice_cancel">Cancel</string>
     <string name="club_notice_sure">Initiate</string>
     <string name="club_score">Score:%1$s</string>
-    <string name="club_level">Level:LV%1$d</string>
+    <string name="club_level">Level:%1$d</string>
 
     <!--notification-->
     <string name="notification_title">Message</string>
     <string name="notification_system_notification">Yay Team</string>
-    <string name="notification_item_see">click</string>
+    <string name="notification_item_see">view more</string>
 
     <!--store-->
     <string name="store_title">Gem shop</string>
@@ -427,7 +430,7 @@
     <!--level-->
     <string name="level_title">My level</string>
     <string name="level_score">Level:%1$s</string>
-    <string name="level_next_hint">You need %i more experience points to reach the next level..</string>
+    <string name="level_next_hint">You need %1$s more experience points to reach the next level..</string>
     <string name="level_des">Both giving gifts and playing games can increase experience. The more experience you gain, the higher your level, and the higher the level, you can unlock more exclusive gifts and gameplay</string>
     <string name="level_unlock">Unlocked</string>
     <string name="level_item_content">get EXP from %1$s</string>
@@ -442,9 +445,9 @@
     <!--earn-->
     <string name="earn_title">Host Income</string>
     <string name="earn_title_2">My Income</string>
-    <string name="earn_sub_title">Recharge Record</string>
-    <string name="earn_sub_des">The value diamonds are settled as actual diamonds income after deducting the costs(Calls 47% &amp; Gifts 30% &amp; Game 20%) of the platform. The income can be withdraw or recharged to the gem wallet for consumption</string>
-    <string name="earn_sub_des_2">The value diamonds are settled as actual diamonds income after deducting the costs(Gifts 70% &amp; Game 20%) of the platform. The income can be  recharged to the gem wallet for consumption</string>
+    <string name="earn_sub_title">Record</string>
+    <string name="earn_sub_des">* Value gems are settled as actual gem income after deducting platform costs(Calls %1$s &amp; Gifts %2$s &amp; Game %3$s) of the platform. The income can be withdraw or recharged to the gem wallet for consumption</string>
+    <string name="earn_sub_des_2">The value gems are settled as actual gems income after deducting the costs(Gifts %1$s &amp; Game %2$s) of the platform. The income can be  recharged to the gem wallet for consumption</string>
     <string name="earn_gift_count">Gifts(%1$s)</string>
     <string name="earn_video_count">Videos(%1$s)</string>
     <string name="earn_game_count">Games(%1$s)</string>
@@ -464,13 +467,13 @@
     <string name="earn_duration">%1$ds</string>
     <string name="earn_cost">value %1$s</string>
     <string name="earn_no_record">There is no record yet</string>
-    <string name="earn_dialog_recharge_title">Recharge To Wallet</string>
+    <string name="earn_dialog_recharge_title">Recharge To Gem Wallet</string>
     <string name="earn_dialog_recharge_input_hint">input recharge amount</string>
     <string name="earn_dialog_recharge_input_all">recharge all</string>
     <string name="earn_dialog_recharge">Recharge</string>
 
     <!--history-->
-    <string name="history_title">Recharge Record</string>
+    <string name="history_title">Record</string>
     <string name="history_sub_title">Total Recharge</string>
     <string name="history_item_name">Recharge Time</string>
 

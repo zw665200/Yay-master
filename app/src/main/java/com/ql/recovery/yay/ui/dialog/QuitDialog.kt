@@ -55,6 +55,8 @@ class QuitDialog(
             gravity = Gravity.CENTER
             width = AppUtil.getScreenWidth(context) * 9 / 10
             height = WindowManager.LayoutParams.WRAP_CONTENT
+            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
+            dimAmount = 0.5f
         }
         super.show()
     }

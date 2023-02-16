@@ -21,6 +21,7 @@ import com.ql.recovery.yay.databinding.ActivityStoreBinding
 import com.ql.recovery.yay.databinding.ItemStoreBinding
 import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.manager.PayManager
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.mine.FeedbackActivity
@@ -190,6 +191,7 @@ class StoreActivity : BaseActivity() {
                                                 if (server != null) {
                                                     val position = mList.indexOf(server)
                                                     mList[position].price = item.formattedPrice
+                                                    mList[position].currency = item.priceCurrencyCode
                                                     mAdapter.notifyItemChanged(position)
                                                 }
                                             }
@@ -220,6 +222,7 @@ class StoreActivity : BaseActivity() {
                                         if (server != null) {
                                             val position = mList.indexOf(server)
                                             mList[position].price = details.formattedPrice
+                                            mList[position].currency = details.priceCurrencyCode
                                             mAdapter.notifyItemChanged(position)
                                         }
                                     }
@@ -356,11 +359,8 @@ class StoreActivity : BaseActivity() {
         loadServerList()
 
         //firebase pay import
-//        val bundle = Bundle()
-//        bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD")
-//        bundle.putFloat(FirebaseAnalytics.Param.VALUE, currentServer!!.price.toFloat())
-//        bundle.putString(FirebaseAnalytics.Param.AFFILIATION, "Google Play")
-//        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle)
+        ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency, currentServer!!.price)
+        ReportManager.facebookPurchaseLog(this, currentServer!!.currency, currentServer!!.price)
 
 //        LogReportManager.logReport("支付", LogReportManager.LogType.PURCHASED)
 

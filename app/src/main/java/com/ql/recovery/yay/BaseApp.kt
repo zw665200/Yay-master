@@ -158,7 +158,9 @@ class BaseApp : Application() {
                             Config.USER_NAME = ""
                             val activity = currentActivity?.get()
                             if (activity != null) {
-                                startActivity(Intent(activity, LoginActivity::class.java))
+                                val intent = Intent(activity, LoginActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
                             }
                         }
                     }
@@ -244,12 +246,6 @@ class BaseApp : Application() {
                 //注册订阅状态
                 registerUserOnlineStatus()
 
-                //注册多端登录监听
-//                registerOtherClientStatus()
-
-                //注册在线状态监听
-//                registerOnlineClientStatus()
-
                 //更新未读消息
                 if (Config.mainHandler != null) {
                     Config.mainHandler!!.sendEmptyMessage(0x10001)
@@ -314,7 +310,7 @@ class BaseApp : Application() {
                 JLog.i("statusCode = $statusCode")
                 if (statusCode.wontAutoLogin()) {
                     //被踢出、账号被禁用、密码错误等情况，自动登录失败，需要返回到登录界面进行重新登录操作
-                    Config.mHandler?.sendEmptyMessage(0x10004)
+                    Config.mHandler?.sendEmptyMessage(0x10003)
                 }
             }, true
         )
@@ -400,7 +396,7 @@ class BaseApp : Application() {
                 when (status) {
                     MatchStatus.Accept -> {
                         dialog?.waitConnectForPersonal()
-                        DataManager.handlerVideoInvite(user.uid, true) { room ->
+                        DataManager.handlerVideoInvite(user.uid, true, "default") { room ->
                             dialog?.cancel()
 
                             if (room != null) {
@@ -410,7 +406,7 @@ class BaseApp : Application() {
                     }
 
                     MatchStatus.Reject -> {
-                        DataManager.handlerVideoInvite(user.uid, false) {}
+                        DataManager.handlerVideoInvite(user.uid, false, "default") {}
                     }
 
                     MatchStatus.Cancel -> {
@@ -512,7 +508,7 @@ class BaseApp : Application() {
                                 showVideoChat(info.content)
                             } else {
                                 //自动拒绝对方的邀请
-                                DataManager.handlerVideoInvite(info.content.uid, false) {}
+                                DataManager.handlerVideoInvite(info.content.uid, false, "busy") {}
                             }
                         }
                     }
@@ -536,10 +532,18 @@ class BaseApp : Application() {
 
                     "invite_reject" -> {
                         //拒绝私聊邀请
-                        if (dialog != null) {
-                            dialog?.rejectConnectForPersonal()
-                            //3秒后关闭对话框
-                            handler.postDelayed({ dialog?.cancel() }, 3000L)
+                        val typeToken = object : TypeToken<MessageInfo<Reason>>() {}
+                        val info = GsonUtils.fromJson<MessageInfo<Reason>>(json, typeToken.type)
+                        if (info != null) {
+                            if (dialog != null) {
+                                dialog?.rejectConnectForPersonal(info.content)
+
+                                //2秒后关闭对话框
+                                handler.postDelayed({ dialog?.cancel() }, 2000L)
+
+                                //如果进入房间则通知房间取消视频
+                                Config.roomHandler?.sendEmptyMessage(0x10005)
+                            }
                         }
                     }
 

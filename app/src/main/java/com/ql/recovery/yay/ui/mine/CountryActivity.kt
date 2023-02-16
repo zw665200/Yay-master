@@ -22,6 +22,7 @@ import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.ProfileDialog
 import com.ql.recovery.yay.util.AppUtil
+import com.ql.recovery.yay.util.JLog
 
 class CountryActivity : BaseActivity() {
     private lateinit var binding: ActivityCountryBinding
@@ -65,11 +66,14 @@ class CountryActivity : BaseActivity() {
                 //设置icon的宽高
                 val iconLp = itemBinding.ivCountryIcon.layoutParams
                 iconLp.width = width / 11
+                iconLp.height = width / 12
                 itemBinding.ivCountryIcon.layoutParams = iconLp
 
                 val flag = World.getFlagOf(itemData.iso)
                 itemBinding.ivCountryIcon.setImageResource(flag)
                 itemBinding.tvCountryName.text = itemData.name
+
+                JLog.i("name = ${itemData.name}")
 
                 if (itemData.iso == currentCountry) {
                     itemBinding.ivCheck.visibility = View.VISIBLE

@@ -1,6 +1,5 @@
 package com.ql.recovery.yay.ui.match
 
-import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import com.bumptech.glide.Glide
@@ -17,10 +16,7 @@ import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.QuitDialog
 import com.ql.recovery.yay.util.AppUtil
-import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.GsonUtils
-import com.ql.recovery.yay.util.JLog
-import com.ql.recovery.yay.util.ToastUtil
 
 class GameActivity : BaseActivity() {
     private lateinit var binding: ActivityGameBinding
@@ -28,7 +24,6 @@ class GameActivity : BaseActivity() {
     private var dialogIdList = arrayListOf<Int>()
     private var currentStory: Story? = null
     private var currentSelect = -1
-    private var lastClickTime = 0L
     private lateinit var exoPlayer: ExoPlayer
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
@@ -36,15 +31,12 @@ class GameActivity : BaseActivity() {
     }
 
     override fun initView() {
-        binding.tvYes.typeface = Typeface.createFromAsset(assets, "fonts/abc.ttf")
-        binding.tvNo.typeface = Typeface.createFromAsset(assets, "fonts/abc.ttf")
-        binding.tvNext.typeface = Typeface.createFromAsset(assets, "fonts/abc.ttf")
         binding.includeTitle.ivBack.setOnClickListener { onBackPressed() }
-        binding.tvNo.setOnClickListener { checkStep(Type.No) }
-        binding.tvYes.setOnClickListener { checkStep(Type.Yes) }
+        binding.flNo.setOnClickListener { checkStep(Type.No) }
+        binding.flYes.setOnClickListener { checkStep(Type.Yes) }
         binding.tvNext.setOnClickListener { checkStep(Type.Continue) }
-        binding.tvFindMatcher.setOnClickListener { gameOver(true) }
-        binding.tvGameOver.setOnClickListener { gameOver(false) }
+        binding.flFindMatcher.setOnClickListener { gameOver(true) }
+        binding.flGameOver.setOnClickListener { gameOver(false) }
         binding.ivImageFirst.setOnClickListener { chooseFirst() }
         binding.ivImageSecond.setOnClickListener { chooseSecond() }
     }
@@ -229,9 +221,7 @@ class GameActivity : BaseActivity() {
             getLocalStorage().encode("recent_record", "game")
             val config = getMatchConfig()
             DataManager.gameOver(id, config.target_sex, dialogIdList) {
-                if (it == true) {
-                    finish()
-                }
+                finish()
 
                 if (toMatch) {
                     Config.mainHandler?.sendEmptyMessage(0x10003)

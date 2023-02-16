@@ -2,6 +2,7 @@ package com.ql.recovery.bean
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.Currency
 
 @Parcelize
 data class Server(
@@ -13,5 +14,6 @@ data class Server(
     val name: String,
     var price: String,
     val icon: String,
-    val type: String
+    val type: String,
+    var currency: String = "USD"
 ) : Parcelable

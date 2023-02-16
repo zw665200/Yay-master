@@ -19,6 +19,7 @@ import com.ql.recovery.yay.databinding.DialogAdditionBinding
 import com.ql.recovery.yay.databinding.ItemAdditionBinding
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
+import com.tencent.mmkv.MMKV
 
 
 class AdditionDialog(
@@ -30,6 +31,7 @@ class AdditionDialog(
     private lateinit var binding: DialogAdditionBinding
     private lateinit var adapter: DataAdapter<Addition>
     private val list = mutableListOf<Addition>()
+    private val mk = MMKV.defaultMMKV()
     private var currentAddition: Addition? = null
     private var currentPos = -1
 
@@ -45,6 +47,7 @@ class AdditionDialog(
         binding.tvCoin.text = userInfo.coin.toString()
 
         binding.tvPurchase.setOnClickListener { toStorePage() }
+        binding.tvMember.setOnClickListener { openPrimeDialog() }
         binding.tvCommit.setOnClickListener { commit() }
 
         initRegionList()
@@ -110,6 +113,12 @@ class AdditionDialog(
     private fun toStorePage() {
         cancel()
         activity.startActivity(Intent(activity, StoreActivity::class.java))
+    }
+
+    private fun openPrimeDialog() {
+        cancel()
+        val userInfo = mk.decodeParcelable("user_info", UserInfo::class.java) ?: return
+        PrimeDialog(activity, userInfo.is_vip) {}
     }
 
     override fun show() {

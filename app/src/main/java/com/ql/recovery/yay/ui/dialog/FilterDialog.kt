@@ -102,7 +102,6 @@ class FilterDialog(
         binding.includeGender.llFemale.setOnClickListener { chooseGender(GenderType.Female) }
         binding.includeGender.llAllGender.setOnClickListener { chooseGender(GenderType.All) }
         binding.includeGender.tvMember.setOnClickListener { showPrimeDialog() }
-        binding.includeRegion.tvMember.setOnClickListener { showPrimeDialog() }
         binding.includeGender.tvPurchase.setOnClickListener { toPayPage() }
         binding.includeGender.ivHandFree.setOnClickListener { changeHandFree() }
 

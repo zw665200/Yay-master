@@ -1,7 +1,6 @@
 package com.ql.recovery.yay.ui.mine
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -174,13 +173,14 @@ class MineFragment : BaseFragment() {
             if (userInfo.tags.isNotEmpty()) {
                 binding?.llTags?.removeAllViews()
                 for (item in userInfo.tags) {
-                    val padding = AppUtil.dp2px(requireContext(), 5f)
+                    val p5 = AppUtil.dp2px(requireContext(), 5f)
+                    val p10 = AppUtil.dp2px(requireContext(), 10f)
                     val view = TextView(requireContext())
-                    view.setPadding(padding, padding, padding, padding)
+                    view.setPadding(p10, p5, p10, p5)
                     val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    lp.setMargins(AppUtil.dp2px(requireContext(), 5f), 0, 0, 0)
+                    lp.setMargins(0, 0, p10, 0)
                     view.layoutParams = lp
-                    view.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_light_yellow_30, null)
+                    view.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_white_30_alpha_50, null)
                     view.text = item.name
                     view.textSize = 12f
                     view.setTextColor(ResourcesCompat.getColor(resources, R.color.color_black, null))
@@ -203,15 +203,15 @@ class MineFragment : BaseFragment() {
             list.addAll(userInfo.photos)
         }
 
-        val width = AppUtil.getScreenWidth(requireContext())
+        val width = AppUtil.getScreenWidth(requireContext()) / 3
         val adapter = DataAdapter.Builder<String>()
             .setData(list)
             .setLayoutId(R.layout.item_wallpaper)
             .addBindView { itemView, itemData, position ->
                 //限制item的宽高
                 val lp = itemView.layoutParams
-                lp.width = width / 3
-                lp.height = width / 2
+                lp.width = width
+                lp.height = width * 152 / 123
                 itemView.layoutParams = lp
 
                 val itemBinding = ItemWallpaperBinding.bind(itemView)
@@ -247,15 +247,15 @@ class MineFragment : BaseFragment() {
             list.addAll(userInfo.videos)
         }
 
-        val width = AppUtil.getScreenWidth(requireContext())
+        val width = (AppUtil.getScreenWidth(requireContext()) / 3.5).toInt()
         val mAdapter = DataAdapter.Builder<String>()
             .setData(list)
             .setLayoutId(R.layout.item_video)
             .addBindView { itemView, itemData, position ->
                 //限制item的宽高
                 val lp = itemView.layoutParams
-                lp.width = width / 4
-                lp.height = width / 3
+                lp.width = width
+                lp.height = width * 118 / 105
                 itemView.layoutParams = lp
 
                 val itemBinding = ItemVideoBinding.bind(itemView)

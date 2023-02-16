@@ -142,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_5"
                         android:fontFamily="sans-serif-medium"
-                        android:text="@string/mine_followed"
+                        android:text="@string/mine_following"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_14" />
 
@@ -176,7 +176,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_5"
                         android:fontFamily="sans-serif-medium"
-                        android:text="@string/mine_following"
+                        android:text="@string/mine_followed"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sp_14" />
 
@@ -187,6 +187,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dp_5"
                 android:background="@drawable/shape_corner_white_top"
                 android:orientation="vertical">
 

@@ -94,10 +94,10 @@ public class AutoTextView extends TextSwitcher implements
     @Override
     public View makeView() {
         t = new TextView(mContext);
-        t.setGravity(Gravity.START);
+        t.setGravity(Gravity.CENTER_VERTICAL);
         t.setTextSize(mHeight);
         t.setTextColor(mColor);
-        t.setMaxLines(2);
+        t.setMaxLines(3);
         return t;
     }
 
@@ -112,6 +112,7 @@ public class AutoTextView extends TextSwitcher implements
         final TextView t = (TextView) getNextView();
         t.setText(text);
         t.setTextColor(color);
+        t.setGravity(Gravity.CENTER_VERTICAL);
         showNext();
     }
 
@@ -121,6 +122,7 @@ public class AutoTextView extends TextSwitcher implements
         t.setText(text);
         t.setTypeface(tf);
         t.setTextColor(color);
+        t.setGravity(Gravity.CENTER_VERTICAL);
         showNext();
     }
 

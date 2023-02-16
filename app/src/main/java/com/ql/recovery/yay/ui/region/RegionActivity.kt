@@ -89,6 +89,7 @@ class RegionActivity : BaseActivity() {
                 itemView.setOnClickListener {
                     val intent = Intent()
                     intent.putExtra("phone_code", itemData.phone_code)
+                    intent.putExtra("phone_iso", itemData.iso)
                     setResult(0x1, intent)
                     finish()
                 }

@@ -7,11 +7,15 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityPhoneLoginBinding
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.auth.AuthActivity
 import com.ql.recovery.yay.ui.base.BaseActivity
@@ -24,12 +28,14 @@ import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 class PhoneLoginActivity : BaseActivity() {
     private lateinit var binding: ActivityPhoneLoginBinding
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var timer: CountDownTimer
     private var viewModel: PhoneLoginViewModel? = null
     private var phoneUtil: PhoneNumberUtil? = null
     private var type = Type.Login
     private var pwdVisibility = PwdVisibility.Invisible
     private var isSent = false
+    private var countryCode: String? = null
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityPhoneLoginBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -74,6 +80,7 @@ class PhoneLoginActivity : BaseActivity() {
     override fun initData() {
         initEdit()
         initTimer()
+        firebaseAnalytics = Firebase.analytics
     }
 
     private fun initTimer() {
@@ -276,6 +283,15 @@ class PhoneLoginActivity : BaseActivity() {
             //登录IM
             Config.mHandler?.sendEmptyMessage(0x10004)
 
+            //更新国家信息
+            if (countryCode != null) {
+                DataManager.updateCountry(countryCode!!) {}
+            }
+
+            //上报日志
+            ReportManager.firebaseLoginLog(firebaseAnalytics, userInfo.uid, userInfo.nickname)
+            ReportManager.facebookLoginLog(this, userInfo.uid, userInfo.nickname)
+
             val guide = getLocalStorage().decodeBool("guide_finish", false)
             if (!guide) {
                 if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()
@@ -332,8 +348,10 @@ class PhoneLoginActivity : BaseActivity() {
         if (requestCode == 0x1 && resultCode == 0x1) {
             if (data != null) {
                 val phoneCode = data.getStringExtra("phone_code")
-                if (phoneCode != null) {
+                val phoneISO = data.getStringExtra("phone_iso")
+                if (phoneCode != null && phoneISO != null) {
                     binding.tvPhoneCode.text = phoneCode
+                    countryCode = phoneISO
                 }
             }
         }

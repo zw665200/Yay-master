@@ -119,12 +119,18 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    protected fun getLocation() {
+    protected fun getLocation(success: () -> Unit) {
         //定位拿到当前的国家编码
         AppUtil.getLocation(requireContext(), object : LocationCallback {
             override fun onSuccess(address: Address) {
-                JLog.i("address = $address")
+                success()
                 DataManager.updateCountry(address.countryCode) {}
+            }
+
+            override fun onFailed() {
+                requireActivity().runOnUiThread {
+                    ToastUtil.showShort(requireContext(), "get location failed, please check your network")
+                }
             }
         })
     }

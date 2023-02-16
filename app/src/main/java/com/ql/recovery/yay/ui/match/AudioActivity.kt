@@ -64,6 +64,7 @@ class AudioActivity : BaseActivity() {
     private var mRtcEventHandler = object : IRtcEngineEventHandler() {
         override fun onUserJoined(uid: Int, elapsed: Int) {
             runOnUiThread {
+                JLog.i("onUserJoined")
                 timer?.start()
 
                 if (mRtcEngine?.isSpeakerphoneEnabled == true) {
@@ -76,17 +77,20 @@ class AudioActivity : BaseActivity() {
 
         override fun onUserOffline(uid: Int, reason: Int) {
             runOnUiThread {
+                JLog.i("onUserOffline")
                 toFinishPage()
             }
         }
 
         override fun onLeaveChannel(stats: RtcStats?) {
             runOnUiThread {
+                JLog.i("onLeaveChannel")
                 toFinishPage()
             }
         }
 
         override fun onConnectionLost() {
+            JLog.i("onConnectionLost")
             //丢失连接10秒
         }
 
@@ -280,6 +284,7 @@ class AudioActivity : BaseActivity() {
             mRtcEngine = RtcEngine.create(config)
         } catch (ex: Exception) {
             ToastUtil.showShort(this, ex.message)
+            JLog.i(ex.message)
         }
 
         mRtcEngine?.setClientRole(Constants.CLIENT_ROLE_BROADCASTER)
@@ -291,7 +296,6 @@ class AudioActivity : BaseActivity() {
         options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER
 
         options.autoSubscribeAudio = true
-        options.autoSubscribeVideo = true
 
         //加入频道
         mRtcEngine?.joinChannel(room.token, room.room_id, userInfo.uid, options)

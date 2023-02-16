@@ -58,10 +58,10 @@ class VideoActivity : BaseActivity() {
     private var mRoom: Room? = null
     private var mType: String? = null
     private var mRtcEngine: RtcEngine? = null
-    private var beautyOptions: BeautyOptions? = null
     private var observerReceive: Observer<List<IMMessage>>? = null
     private var gameDialog: GameDialog? = null
     private var timerDialog: TimerDialog? = null
+    private var waitingDialog: WaitingDialog? = null
     private var requestPayCode = 0x1
     private var isEnough = true
     private var isFinish = false
@@ -178,9 +178,7 @@ class VideoActivity : BaseActivity() {
         mUser = intent.getParcelableExtra("user")
         mType = intent.getStringExtra("type")
         if (mRoom != null && mUser != null && mType != null) {
-
-            beautyOptions = BeautyOptions()
-
+            waitingDialog = WaitingDialog(this)
             initUserInfo(mUser!!)
             initHandler()
             initGameDialog()
@@ -288,6 +286,11 @@ class VideoActivity : BaseActivity() {
 
                     0x10004 -> {
                         mRoom?.`package` = null
+                    }
+
+                    0x10005 -> {
+                        mRtcEngine?.stopPreview()
+                        mRtcEngine?.leaveChannel()
                     }
                 }
             }
@@ -600,6 +603,15 @@ class VideoActivity : BaseActivity() {
         }
 
         //开启美颜
+        val beautyOptions = BeautyOptions()
+        val beautyParam = getLocalStorage().decodeParcelable("beauty_param", BeautyParam::class.java)
+        if (beautyParam != null) {
+            //历史设置填充
+            beautyOptions.lighteningLevel = beautyParam.lighteningLevel
+            beautyOptions.smoothnessLevel = beautyParam.smoothnessLevel
+            beautyOptions.rednessLevel = beautyParam.rednessLevel
+            beautyOptions.sharpnessLevel = beautyParam.sharpnessLevel
+        }
         mRtcEngine?.setBeautyEffectOptions(true, beautyOptions)
 
         //开启人脸检测
@@ -645,7 +657,11 @@ class VideoActivity : BaseActivity() {
 
     private fun showOrHideBeauty() {
         if (!DoubleUtils.isFastDoubleClick()) {
-            BeautyDialog(this, mRtcEngine, beautyOptions!!) {}
+            getUserInfo { userInfo ->
+                BeautyDialog(this, mRtcEngine, userInfo) {
+                    mRtcEngine?.setupLocalVideo(VideoCanvas(binding.surfaceLocal, RENDER_MODE_HIDDEN, userInfo.uid))
+                }
+            }
         }
     }
 
@@ -812,7 +828,9 @@ class VideoActivity : BaseActivity() {
         if (!DoubleUtils.isFastDoubleClick()) {
             //如果是金币抽奖就加载金币
             if (ticket == null || ticket.type == "coin") {
+                waitingDialog?.show()
                 DataManager.getLotteryCoin { list ->
+                    waitingDialog?.cancel()
                     gameDialog?.setLotteryGiftList(list, "coin")
                     gameDialog?.setLotteryTicket(ticket)
                     gameDialog?.show()
@@ -823,6 +841,7 @@ class VideoActivity : BaseActivity() {
             //如果是礼物抽奖则加载礼物
             if (ticket.type == "gift") {
                 DataManager.getLotteryGift { list ->
+                    waitingDialog?.cancel()
                     gameDialog?.setLotteryGiftList(list, "gift")
                     gameDialog?.setLotteryTicket(ticket)
                     gameDialog?.show()

@@ -11,9 +11,11 @@ import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import com.ql.recovery.bean.*
-import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
@@ -21,6 +23,7 @@ import com.ql.recovery.yay.config.ChooseType
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityMatchBinding
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.service.SosWebSocketClientService
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.*
@@ -28,12 +31,13 @@ import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.GsonUtils
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
-import io.agora.rtc2.*
-import io.agora.rtc2.video.BeautyOptions
-import io.agora.rtc2.video.VideoCanvas
+import io.agora.rtc2.IRtcEngineEventHandler
+import io.agora.rtc2.RtcEngine
+import io.agora.rtc2.RtcEngineConfig
 
 class MatchActivity : BaseActivity() {
     private lateinit var binding: ActivityMatchBinding
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var timer: CountDownTimer? = null
     private var mWebSocketService: SosWebSocketClientService? = null
     private var bindIntent: Intent? = null
@@ -41,17 +45,17 @@ class MatchActivity : BaseActivity() {
     private var matchAudioDialog: MatchAudioDialog? = null
     private var matchFailedDialog: MatchFailedDialog? = null
     private var mRtcEngine: RtcEngine? = null
-    private var beautyOptions: BeautyOptions? = null
-    private var openPreview = false
     private var mMatcher: User? = null
     private var mHandler = Handler(Looper.getMainLooper())
     private var exoPlayer: ExoPlayer? = null
+    private var mWaitingDialog: WaitingDialog? = null
+    private var mRtcEventHandler = object : IRtcEngineEventHandler() {}
 
     //    private var videoUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_video.mp4"
 //    private var audioUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_audio.mp4"
 //    private var gameUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_game.mp4"
     private var videoUri = "file:///android_asset/videos/match_video.mp4"
-    private var audioUri = "file:///android_asset/videos/match_video.mp4"
+    private var audioUri = "file:///android_asset/videos/match_audio.mp4"
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityMatchBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -69,8 +73,10 @@ class MatchActivity : BaseActivity() {
 
     override fun initData() {
         exoPlayer = ExoPlayer.Builder(this).build()
-        beautyOptions = BeautyOptions()
+        firebaseAnalytics = Firebase.analytics
+        mWaitingDialog = WaitingDialog(this)
         flushConfig()
+        initLocalSurface()
 
         val type = intent.getStringExtra("type")
         if (type != null) {
@@ -106,6 +112,7 @@ class MatchActivity : BaseActivity() {
                     initMatchServer(type)
                     initTimer(type)
                     initNotice(type)
+                    initReport(userInfo)
 //                    }
                 }
             }
@@ -440,6 +447,18 @@ class MatchActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 匹配上报，一个用户上报一次
+     */
+    private fun initReport(userInfo: UserInfo) {
+        val matchReport = getLocalStorage().decodeBool("match_report", false)
+        if (!matchReport) {
+            getLocalStorage().encode("match_report", true)
+            ReportManager.firebaseItemLog(firebaseAnalytics, userInfo.uid.toString(), userInfo.nickname, "match")
+            ReportManager.facebookItemLog(this, userInfo.uid.toString(), userInfo.nickname, "open", "match")
+        }
+    }
+
     private fun acceptInvite(type: String) {
         val msg = MsgInfo("match_accept_invite")
         val json = GsonUtils.toJson(msg)
@@ -514,19 +533,18 @@ class MatchActivity : BaseActivity() {
     }
 
     private fun matchTimeout() {
-        if (matchFailedDialog != null && !matchFailedDialog!!.isShowing) {
+        if (matchFailedDialog == null) {
+            matchFailedDialog = MatchFailedDialog(this) {
+                val msg = Message()
+                msg.what = 0x10000
+                Config.mainHandler?.sendMessage(msg)
+                finish()
+            }
+        }
+
+        if (matchFailedDialog?.isShowing == false) {
             matchFailedDialog?.show()
-            return
         }
-
-        matchFailedDialog = MatchFailedDialog(this) {
-            val msg = Message()
-            msg.what = 0x10000
-            Config.mainHandler?.sendMessage(msg)
-            finish()
-        }
-
-        matchFailedDialog?.show()
     }
 
     private fun startWebSocketService(id: Int, type: String, config: MatchConfig) {
@@ -600,9 +618,11 @@ class MatchActivity : BaseActivity() {
     }
 
     private fun showGameDialog() {
+        mWaitingDialog?.show()
         if (!DoubleUtils.isFastDoubleClick()) {
             getUserInfo { userInfo ->
                 DataManager.getLotteryCoin { list ->
+                    mWaitingDialog?.cancel()
                     GameDialog(this, userInfo, null, userInfo.avatar, true).apply {
                         setLotteryGiftList(list, "coin")
                         show()
@@ -614,30 +634,16 @@ class MatchActivity : BaseActivity() {
 
     private fun checkPreview() {
         if (!DoubleUtils.isFastDoubleClick()) {
-            if (!openPreview) {
-                val userInfo = getLocalStorage().decodeParcelable("user_info", UserInfo::class.java)
-                if (userInfo != null) {
-                    openPreview = true
-                    binding.surfaceLocal.visibility = View.VISIBLE
-                    initLocalSurface(userInfo)
-                    BeautyDialog(this, mRtcEngine, beautyOptions!!) {
-                        checkPreview()
-                    }
+            getUserInfo { userInfo ->
+                binding.surfaceLocal.visibility = View.VISIBLE
+                BeautyDialog(this, mRtcEngine, userInfo) {
+                    mRtcEngine?.stopPreview()
                 }
-            } else {
-                openPreview = false
-                closePreview()
             }
         }
     }
 
-    private fun closePreview() {
-        binding.surfaceLocal.visibility = View.GONE
-        mRtcEngine?.removeHandler(mRtcEventHandler)
-        mRtcEngine?.stopPreview()
-    }
-
-    private fun initLocalSurface(userInfo: UserInfo) {
+    private fun initLocalSurface() {
         try {
             val config = RtcEngineConfig()
             config.mContext = this
@@ -648,27 +654,10 @@ class MatchActivity : BaseActivity() {
             //启用视频流
             mRtcEngine?.enableVideo()
 
-            //开启本地视频预览
-            mRtcEngine?.startPreview()
-
-            //将SurfaceView对象传入Agora，以渲染本地视频
-            mRtcEngine?.setupLocalVideo(VideoCanvas(binding.surfaceLocal, VideoCanvas.RENDER_MODE_HIDDEN, userInfo.uid))
-
-            val options = ChannelMediaOptions()
-            //视频通话场景下，设置频道场景为 BROADCASTING
-            options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING
-            //将用户角色设置为 BROADCASTER
-            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER
-
-            //开启美颜
-            mRtcEngine?.setBeautyEffectOptions(true, beautyOptions)
-
         } catch (ex: Exception) {
             ToastUtil.showShort(this, ex.message)
         }
     }
-
-    private var mRtcEventHandler = object : IRtcEngineEventHandler() {}
 
     override fun onStop() {
         super.onStop()
@@ -679,15 +668,16 @@ class MatchActivity : BaseActivity() {
 
         closeService()
 
-        if (openPreview) {
-            closePreview()
-        }
-
         exoPlayer?.stop()
         exoPlayer?.release()
 
         Config.mainHandler?.sendEmptyMessage(0x10006)
         Config.subscriberHandler?.sendEmptyMessage(0x10001)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        mRtcEngine?.leaveChannel()
     }
 
     private fun closeService() {

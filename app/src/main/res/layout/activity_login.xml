@@ -30,7 +30,7 @@
             android:background="@drawable/shape_corner_blue"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="wrap_content"

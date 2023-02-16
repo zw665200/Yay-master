@@ -62,7 +62,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/dp_5"
-                    android:background="@drawable/shape_corner_light_yellow"
+                    android:background="@drawable/shape_corner_pink"
                     android:fontFamily="sans-serif-medium"
                     android:paddingStart="@dimen/dp_20"
                     android:paddingTop="@dimen/dp_3"

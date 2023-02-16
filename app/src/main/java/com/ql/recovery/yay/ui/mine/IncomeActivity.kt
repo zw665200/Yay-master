@@ -335,12 +335,26 @@ class IncomeActivity : BaseActivity() {
     }
 
     private fun showQuestionPop(view: View) {
-        if (mRole == "anchor") {
-            QuestionPop(this, getString(R.string.earn_sub_des)).showAsDropDown(view, -20, 0)
-        } else {
-            QuestionPop(this, getString(R.string.earn_sub_des_2)).showAsDropDown(view, -20, 0)
+        getBasePrice { basePrice ->
+            if (mRole == "anchor") {
+                val anchorPrice = basePrice.service_charge.anchor
+                val content = String.format(
+                    getString(R.string.earn_sub_des),
+                    (anchorPrice.video * 100).toInt().toString() + "%",
+                    (anchorPrice.gift * 100).toInt().toString() + "%",
+                    (anchorPrice.game * 100).toInt().toString() + "%"
+                )
+                QuestionPop(this, content).showAsDropDown(view, -20, 0)
+            } else {
+                val normalPrice = basePrice.service_charge.normal
+                val content = String.format(
+                    getString(R.string.earn_sub_des_2),
+                    (normalPrice.gift * 100).toInt().toString() + "%",
+                    (normalPrice.game * 100).toInt().toString() + "%"
+                )
+                QuestionPop(this, content).showAsDropDown(view, -20, 0)
+            }
         }
-
     }
 
 }
