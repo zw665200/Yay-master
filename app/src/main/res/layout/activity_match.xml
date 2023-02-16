@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:hide_on_touch="false"
-        app:resize_mode="fixed_width"
         app:keep_content_on_player_reset="true"
+        app:resize_mode="fixed_width"
         app:surface_type="texture_view"
         app:use_controller="false" />
 
@@ -72,8 +72,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/match_mask"
             android:layout_gravity="center_vertical"
+            android:background="@drawable/match_mask"
             android:orientation="horizontal">
 
             <ImageView
@@ -113,7 +113,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:src="@drawable/in_game" />
+                android:src="@drawable/in_game"
+                android:visibility="gone" />
 
         </FrameLayout>
 

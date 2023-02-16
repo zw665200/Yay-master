@@ -85,7 +85,7 @@
     <string name="home_male">Male</string>
     <string name="home_female">Female</string>
     <string name="home_all_gender">Everyone</string>
-    <string name="home_choose_tip_1">Members enjoy %1$d off</string>
+    <string name="home_choose_tip_1">Members enjoy %1s off</string>
     <string name="home_choose_tip_2">per filter</string>
     <string name="home_my_lemon">My gems</string>
     <string name="home_hand_off">Hands-free mode</string>
@@ -220,7 +220,7 @@
     <string name="club_notice">Tips</string>
     <string name="club_notice_coin_enough">You will be charged %1$s gems/minute.</string>
     <string name="club_notice_coin_deficient">You will be charged %1$s gems/minute.</string>
-    <string name="club_unlock_content">Unlock will cost %1ds</string>
+    <string name="club_unlock_content">Unlock will costs %1d gems</string>
     <string name="club_unlock_sure">Confirm</string>
     <string name="club_unlock_cancel">Cancel</string>
     <string name="club_notice_top_up">Recharge</string>

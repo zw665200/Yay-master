@@ -42,6 +42,7 @@ class FilterDialog(
         initVew()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initVew() {
         binding = DialogFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -67,9 +68,10 @@ class FilterDialog(
                     binding.includeGender.tvAmountFemale.text = count.toString()
                 }
 
-                val discount = (basePrice.match_filter.vip_discounts * 10).toInt()
+                val discount = (basePrice.match_filter.vip_discounts * 100).toInt()
+                val content = String.format(activity.getString(R.string.home_choose_tip_1), "${100 - discount}%")
 
-                binding.includeGender.tvVipDiscount1.text = String.format(activity.getString(R.string.home_choose_tip_1), discount)
+                binding.includeGender.tvVipDiscount1.text = content
 
                 when (matchConfig.target_sex) {
                     0 -> chooseGender(GenderType.All)
@@ -89,10 +91,9 @@ class FilterDialog(
                 binding.includeRegion.root.visibility = View.VISIBLE
                 binding.tvFilterTitle.text = activity.getString(R.string.home_region_ref)
 
-                val discount = (basePrice.match_filter.vip_discounts * 10).toInt()
+                val discount = (basePrice.match_filter.vip_discounts * 100).toInt()
 
-                val countVip = (basePrice.match_filter.sex_cost * basePrice.match_filter.vip_discounts).toInt()
-                binding.includeRegion.tvMemberDiscount1.text = String.format(activity.getString(R.string.home_choose_tip_1), discount)
+                binding.includeRegion.tvMemberDiscount1.text = String.format(activity.getString(R.string.home_choose_tip_1), "${100 - discount}%")
 
                 initRegionList()
             }

@@ -456,6 +456,7 @@ class MatchActivity : BaseActivity() {
             getLocalStorage().encode("match_report", true)
             ReportManager.firebaseItemLog(firebaseAnalytics, userInfo.uid.toString(), userInfo.nickname, "match")
             ReportManager.facebookItemLog(this, userInfo.uid.toString(), userInfo.nickname, "open", "match")
+            ReportManager.branchItemLog(this, userInfo.uid.toString(), userInfo.nickname, "open", "match")
         }
     }
 

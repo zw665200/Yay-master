@@ -239,6 +239,7 @@ class PrimeDialog(
                                             JLog.i("code = ${item.priceCurrencyCode}")
                                             runOnUiThread {
                                                 binding.tvPrice.text = item.formattedPrice
+                                                currentServer!!.currency = item.priceCurrencyCode
                                             }
                                         }
                                     }
@@ -326,8 +327,15 @@ class PrimeDialog(
                             Config.subscriberHandler?.sendEmptyMessage(0x10001)
 
                             //上报支付日志
-                            ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency, currentServer!!.price)
-                            ReportManager.facebookPurchaseLog(activity, currentServer!!.currency, currentServer!!.price)
+                            if (currentServer!!.currency != null) {
+                                ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency!!, currentServer!!.price)
+                                ReportManager.facebookPurchaseLog(activity, currentServer!!.currency!!, currentServer!!.price)
+                                ReportManager.branchPurchaseLog(activity, currentServer!!.name, currentServer!!.currency!!, currentServer!!.price)
+                            } else {
+                                ReportManager.firebasePurchaseLog(firebaseAnalytics, "USD", currentServer!!.price)
+                                ReportManager.facebookPurchaseLog(activity, "USD", currentServer!!.price)
+                                ReportManager.branchPurchaseLog(activity, currentServer!!.name, "USD", currentServer!!.price)
+                            }
                         }
                     }
 

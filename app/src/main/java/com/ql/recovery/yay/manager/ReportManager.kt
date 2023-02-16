@@ -5,9 +5,10 @@ import android.os.Bundle
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
+import io.branch.indexing.BranchUniversalObject
+import io.branch.referral.util.*
 import java.math.BigDecimal
 import java.util.*
-import kotlin.math.log
 
 /**
  * @author Herr_Z
@@ -49,6 +50,7 @@ object ReportManager {
         logger.logEvent(type, bundle)
     }
 
+
     fun facebookLoginLog(context: Context, uid: Int, name: String) {
         val logger = AppEventsLogger.newLogger(context)
         val bundle = Bundle()
@@ -64,5 +66,40 @@ object ReportManager {
         bundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currencyCode)
         bundle.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "Google Play")
         logger.logPurchase(BigDecimal(value), currency, bundle)
+    }
+
+    fun branchItemLog(context: Context, itemId: String, itemName: String, itemType: String, type: String) {
+        BranchEvent(BRANCH_STANDARD_EVENT.VIEW_ITEM)
+            .setCustomerEventAlias(type)
+            .setDescription(itemId + itemName)
+            .addCustomDataProperty("item_type", itemType)
+            .addCustomDataProperty("type", type)
+            .logEvent(context)
+    }
+
+    fun branchLoginLog(context: Context, uid: Int, name: String) {
+        BranchEvent(BRANCH_STANDARD_EVENT.LOGIN)
+            .setCustomerEventAlias(name)
+            .setTransactionID(uid.toString())
+            .logEvent(context)
+    }
+
+    fun branchPurchaseLog(context: Context, productId: String, currencyCode: String, value: String) {
+        val buo = BranchUniversalObject()
+            .setTitle("Google Play")
+            .setContentMetadata(
+                ContentMetadata()
+                    .setPrice(value.toDouble(), CurrencyType.USD)
+                    .setQuantity(1.0)
+                    .setProductName(productId)
+                    .setContentSchema(BranchContentSchema.COMMERCE_PRODUCT)
+            )
+            .addKeyWord(currencyCode)
+            .addKeyWord(value)
+
+        BranchEvent(BRANCH_STANDARD_EVENT.PURCHASE)
+            .setCurrency(CurrencyType.USD)
+            .addContentItems(buo)
+            .logEvent(context)
     }
 }

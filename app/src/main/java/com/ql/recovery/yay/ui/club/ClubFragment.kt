@@ -203,6 +203,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 
                     if (exoPlayerList.size > position && exoPlayerList[position] != null) {
                         exoPlayerList[position]?.stop()
+                        exoPlayerList[position]?.release()
                         exoPlayerList[position] = null
                     }
 
@@ -285,16 +286,16 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     private fun loadVideo(exoPlayer: ExoPlayer, itemBinding: ItemFunAnchorBinding, itemData: Anchor, position: Int) {
         if (itemData.cover_url!!.contains(".mp4") || itemData.cover_url!!.contains("type=video")) {
 
-            val mediaCount = exoPlayer.mediaItemCount
-            if (mediaCount == 1) {
-                val mediaId = exoPlayer.getMediaItemAt(0).mediaId
-                if (mediaId == itemData.cover_url) {
-                    JLog.i("media equal , position = $position")
-                    return
-                } else {
-                    exoPlayer.clearMediaItems()
-                }
-            }
+//            val mediaCount = exoPlayer.mediaItemCount
+//            if (mediaCount == 1) {
+//                val mediaId = exoPlayer.getMediaItemAt(0).mediaId
+//                if (mediaId == itemData.cover_url) {
+//                    JLog.i("media equal , position = $position")
+//                    return
+//                } else {
+//                    exoPlayer.clearMediaItems()
+//                }
+//            }
 
             JLog.i("22222")
 

@@ -31,6 +31,10 @@
         <provider
             android:authorities="com.facebook.orca.provider.PlatformProvider"
             android:exported="false" />
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="text/plain" />
+        </intent>
     </queries>
 
     <application
@@ -78,6 +82,11 @@
             android:name="com.netease.nim.appKey"
             android:value="db7ef9b2ee547446080d64c2dd65f387" />
 
+        <!-- Branch init -->
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_oBlglksnRU69bZzdw0BFFimhCqaDswu6" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_live_oBlglksnRU69bZzdw0BFFimhCqaDswu6" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
+
         <activity
             android:name=".ui.StartActivity"
             android:exported="true">
@@ -85,6 +94,25 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Branch URI Scheme -->
+            <intent-filter>
+                <!-- If utilizing $deeplink_path please explicitly declare your hosts, or utilize a wildcard(*) -->
+                <data android:scheme="yay" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+            <!-- Branch App Links - Live App -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="yay.app.link" />
+                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+                <data android:scheme="https" android:host="yay-alternate.app.link" />
             </intent-filter>
         </activity>
 

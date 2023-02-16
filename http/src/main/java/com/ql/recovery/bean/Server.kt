@@ -15,5 +15,5 @@ data class Server(
     var price: String,
     val icon: String,
     val type: String,
-    var currency: String = "USD"
+    var currency: String?
 ) : Parcelable

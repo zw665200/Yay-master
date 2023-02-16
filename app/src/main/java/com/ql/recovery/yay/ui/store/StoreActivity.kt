@@ -358,9 +358,16 @@ class StoreActivity : BaseActivity() {
         //load server
         loadServerList()
 
-        //firebase pay import
-        ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency, currentServer!!.price)
-        ReportManager.facebookPurchaseLog(this, currentServer!!.currency, currentServer!!.price)
+        //上报支付日志
+        if (currentServer!!.currency != null) {
+            ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency!!, currentServer!!.price)
+            ReportManager.facebookPurchaseLog(this, currentServer!!.currency!!, currentServer!!.price)
+            ReportManager.branchPurchaseLog(this, currentServer!!.name, currentServer!!.currency!!, currentServer!!.price)
+        } else {
+            ReportManager.firebasePurchaseLog(firebaseAnalytics, "USD", currentServer!!.price)
+            ReportManager.facebookPurchaseLog(this, "USD", currentServer!!.price)
+            ReportManager.branchPurchaseLog(this, currentServer!!.name, "USD", currentServer!!.price)
+        }
 
 //        LogReportManager.logReport("支付", LogReportManager.LogType.PURCHASED)
 

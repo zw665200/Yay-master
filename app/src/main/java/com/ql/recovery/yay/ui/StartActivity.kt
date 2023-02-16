@@ -12,7 +12,9 @@ import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.mine.AgreementActivity
 import com.ql.recovery.yay.util.GsonUtils
+import com.ql.recovery.yay.util.JLog
 import com.tencent.mmkv.MMKV
+import io.branch.referral.Branch
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
@@ -31,6 +33,11 @@ class StartActivity : BaseActivity() {
         getBasePrice()
     }
 
+    override fun onStart() {
+        super.onStart()
+        initBranch()
+    }
+
     override fun initData() {
         val agree = mk.decodeBool("service_agree", false)
         if (agree) {
@@ -40,6 +47,17 @@ class StartActivity : BaseActivity() {
         } else {
             timer.start()
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Branch.sessionBuilder(this).withCallback { referringParams, error ->
+            if (error != null) {
+                JLog.e("BranchSDK_Tester", error.message)
+            } else if (referringParams != null) {
+                JLog.e("BranchSDK_Tester", referringParams.toString())
+            }
+        }.reInit()
     }
 
     private fun initTimer() {
@@ -74,6 +92,25 @@ class StartActivity : BaseActivity() {
         } catch (ex: Exception) {
 
         }
+    }
+
+    private fun initBranch() {
+        Branch.sessionBuilder(this).withCallback { branchUniversalObject, linkProperties, error ->
+            if (error != null) {
+                JLog.e("BranchSDK_Tester", "branch init failed. Caused by -" + error.message)
+            } else {
+                JLog.e("BranchSDK_Tester", "branch init complete!")
+                if (branchUniversalObject != null) {
+                    JLog.e("BranchSDK_Tester", "title " + branchUniversalObject.title)
+                    JLog.e("BranchSDK_Tester", "CanonicalIdentifier " + branchUniversalObject.canonicalIdentifier)
+                    JLog.e("BranchSDK_Tester", "metadata " + branchUniversalObject.contentMetadata.convertToJson())
+                }
+                if (linkProperties != null) {
+                    JLog.e("BranchSDK_Tester", "Channel " + linkProperties.channel)
+                    JLog.e("BranchSDK_Tester", "control params " + linkProperties.controlParams)
+                }
+            }
+        }.withData(this.intent.data).init()
     }
 
 

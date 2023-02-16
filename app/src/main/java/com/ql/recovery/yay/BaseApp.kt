@@ -39,6 +39,7 @@ import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.match.VideoActivity
 import com.ql.recovery.yay.util.*
 import com.tencent.mmkv.MMKV
+import io.branch.referral.Branch
 import java.lang.ref.WeakReference
 
 
@@ -72,6 +73,11 @@ class BaseApp : Application() {
 
             initUserInfo()
             initLifecycle()
+
+            // Branch logging for debugging
+            Branch.enableTestMode()
+            // Branch object initialization
+            Branch.getAutoInstance(this)
         }
     }
 

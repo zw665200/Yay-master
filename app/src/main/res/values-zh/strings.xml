@@ -76,7 +76,7 @@
     <string name="home_male">男</string>
     <string name="home_female">女</string>
     <string name="home_all_gender">所有人</string>
-    <string name="home_choose_tip_1">会员筛选享受%1$d折优惠</string>
+    <string name="home_choose_tip_1">会员筛选价格减少%1s</string>
     <string name="home_choose_tip_2">每次</string>
     <string name="home_my_lemon">我的宝石</string>
     <string name="home_hand_off">免提模式</string>
