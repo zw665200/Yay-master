@@ -173,7 +173,7 @@
     <string name="match_add_time">Recharge Duration</string>
     <string name="match_me">Me</string>
     <string name="match_hand_free_toast">Hands-free mode is on. It will automatically connect if matched</string>
-    <string name="match_game_wait_lottery">Wait for the other party to start the draw</string>
+    <string name="match_game_wait_lottery">Wait for the other party to draw</string>
     <string name="match_game_wait_lottery_tip">Rules: One party inserts coins, the other gets a chance to draw and win the prizes</string>
     <string name="match_game_wait_lottery_tip_2">Tip: Prizes can be viewed on the <font color="#ECA23D">"Income Page"</font></string>
     <string name="match_game_wait_lottery_tip_3">*The prizes won in the draw belong to the winner, not the party paying the gems.</string>
@@ -188,8 +188,8 @@
     <string name="match_send">Send</string>
     <string name="match_free">Free</string>
     <string name="match_add_time_tip">The call will be hung up if there\'s no duration recharge</string>
-    <string name="match_ticket_receive">The other party gives you a raffle ticket, you can start the draw</string>
-    <string name="match_ticket_unused">It is detected that you still have unused tickets, please use first</string>
+    <string name="match_ticket_receive">The other party gives you a raffle ticket, click "start"</string>
+    <string name="match_ticket_unused">tickets unused, please draw first</string>
 
     <!--match record-->
     <string name="record_title">History</string>

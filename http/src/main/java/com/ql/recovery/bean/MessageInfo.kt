@@ -30,7 +30,7 @@ data class User(
     val date: Long,
     val country: String,
     var follow_status: Int,
-    var cover_url: String
+    var cover_url: String?
 ) : Parcelable
 
 @Parcelize

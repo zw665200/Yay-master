@@ -23,7 +23,6 @@ import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.FileCallback
 import com.ql.recovery.yay.databinding.FragmentClubBinding
 import com.ql.recovery.yay.databinding.ItemFunAnchorBinding
-import com.ql.recovery.yay.databinding.LayoutPlayerBinding
 import com.ql.recovery.yay.manager.IMManager
 import com.ql.recovery.yay.manager.RtcManager
 import com.ql.recovery.yay.ui.base.BaseFragment
@@ -129,9 +128,9 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 lp.height = height / 5
                 itemBinding.ivPhoto.layoutParams = lp
 
-                val l = itemBinding.flPlayView.layoutParams
+                val l = itemBinding.playerView.layoutParams
                 l.height = height / 5
-                itemBinding.flPlayView.layoutParams = l
+                itemBinding.playerView.layoutParams = l
 
                 if (payloads.isNotEmpty()) {
                     when (payloads[0]) {
@@ -198,7 +197,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 }
 
                 if (position < firstVisibleViewPosition || position > lastVisibleViewPosition) {
-                    itemBinding.flPlayView.removeAllViews()
+                    itemBinding.playerView.player = null
                     itemBinding.ivPhoto.visibility = View.VISIBLE
 
                     if (exoPlayerList.size > position && exoPlayerList[position] != null) {
@@ -210,20 +209,27 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     return@addBindView
                 }
 
-                val exoPlayer: ExoPlayer?
+                var exoPlayer: ExoPlayer?
                 if (exoPlayerList.size > position) {
                     if (exoPlayerList[position] == null) {
                         exoPlayer = getPlayer()
                         exoPlayerList[position] = exoPlayer
                     } else {
+                        JLog.i("33333 - position = $position")
+                        itemBinding.playerView.player = null
+                        itemBinding.ivPhoto.visibility = View.VISIBLE
                         exoPlayer = exoPlayerList[position]
+                        exoPlayer?.stop()
+                        exoPlayer?.release()
+                        exoPlayer = getPlayer()
+                        exoPlayerList[position] = exoPlayer
                     }
                 } else {
                     exoPlayer = getPlayer()
                     exoPlayerList.add(exoPlayer)
                 }
 
-                if (itemData.cover_url != null && exoPlayer != null) {
+                if (itemData.cover_url != null) {
                     loadVideo(exoPlayer, itemBinding, itemData, position)
                 }
 
@@ -297,19 +303,21 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 //                }
 //            }
 
-            JLog.i("22222")
+//            JLog.i("22222")
 
             exoPlayer.addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     super.onPlaybackStateChanged(playbackState)
                     when (playbackState) {
                         Player.STATE_READY -> {
-                            val view = LayoutPlayerBinding.inflate(layoutInflater)
-                            view.root.player = exoPlayer
+//                            val view = LayoutPlayerBinding.inflate(layoutInflater)
+//                            view.root.player = exoPlayer
 
-                            itemBinding.flPlayView.removeAllViews()
-                            itemBinding.flPlayView.addView(view.root)
+//                            itemBinding.flPlayView.removeAllViews()
+//                            itemBinding.flPlayView.addView(view.root)
 
+                            itemBinding.playerView.visibility = View.VISIBLE
+                            itemBinding.playerView.player = exoPlayer
                             exoPlayer.play()
                         }
                     }
@@ -324,6 +332,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 override fun onPlayerError(error: PlaybackException) {
                     super.onPlayerError(error)
                     JLog.i("onPlayerError")
+                    itemBinding.ivPhoto.visibility = View.VISIBLE
 //                    exoPlayer.prepare()
                 }
             })

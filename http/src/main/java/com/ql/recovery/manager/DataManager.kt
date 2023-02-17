@@ -790,7 +790,7 @@ object DataManager {
                 }
 
                 override fun onFailed(msg: String) {
-                    result(msg)
+//                    result(msg)
                 }
             })
         }

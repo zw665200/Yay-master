@@ -269,4 +269,9 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Config.subscriberHandler = null
+    }
+
 }

@@ -1,14 +1,16 @@
 package com.ql.recovery.yay.ui.mine
 
 import android.content.Intent
+import android.net.Uri
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivitySettingBinding
 import com.ql.recovery.yay.ui.base.BaseActivity
-import com.ql.recovery.yay.util.AppUtil
+import com.ql.recovery.yay.util.JLog
 
 class SettingActivity : BaseActivity() {
     private lateinit var binding: ActivitySettingBinding
+    private val anchorUrl = "https://yay.social/anchor"
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivitySettingBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -22,6 +24,7 @@ class SettingActivity : BaseActivity() {
         binding.ivBlurChoose.setOnClickListener { changeBlur() }
         binding.flEmail.setOnClickListener { toEmailPage() }
         binding.flShare.setOnClickListener { toSharePage() }
+        binding.flAnchor.setOnClickListener { toAnchorPage() }
     }
 
     override fun initData() {
@@ -61,6 +64,24 @@ class SettingActivity : BaseActivity() {
     private fun toEmailPage() {
         val intent = Intent(this, EmailActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun toAnchorPage() {
+//        val intent = Intent(this, AnchorWebActivity::class.java)
+//        startActivity(intent)
+
+        val token = getLocalStorage().decodeString("access_token") ?: return
+        val intent = Intent()
+        intent.action = Intent.ACTION_VIEW
+        intent.data = Uri.parse("$anchorUrl?token=$token")
+        JLog.i("$anchorUrl?token=$token")
+
+        if (intent.resolveActivity(packageManager) != null) {
+            val componentName = intent.resolveActivity(packageManager)
+            startActivity(Intent.createChooser(intent, "choose chrome first"))
+        }else{
+            startActivity(intent)
+        }
     }
 
 }

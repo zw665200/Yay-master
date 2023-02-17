@@ -338,14 +338,12 @@ class BaseApp : Application() {
                 //save to db
                 DBManager.update(this, subscriber)
 
-                if (Config.subscriberHandler != null) {
-                    val bundle = Bundle()
-                    bundle.putParcelable("subscriber", subscriber)
-                    val msg = Message()
-                    msg.what = 0x10000
-                    msg.data = bundle
-                    Config.subscriberHandler!!.sendMessage(msg)
-                }
+                val bundle = Bundle()
+                bundle.putParcelable("subscriber", subscriber)
+                val msg = Message()
+                msg.what = 0x10000
+                msg.data = bundle
+                Config.subscriberHandler?.sendMessage(msg)
             }
 
         }, true)
@@ -617,7 +615,6 @@ class BaseApp : Application() {
         super.onTerminate()
         unRegisterUserOnlineStatus()
         unregisterOnlineClientStatus()
-        unRegisterUserOnlineStatus()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

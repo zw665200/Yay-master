@@ -197,9 +197,9 @@ class VideoActivity : BaseActivity() {
         Glide.with(this).load(user.avatar).apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.includeTitle.ivAvatar)
 
         //设置蒙版
-        Glide.with(this).load(user.cover_url)
-            .apply(RequestOptions.bitmapTransform(BlurTransformation(this, 15, 8)))
-            .into(binding.ivBlur)
+//        Glide.with(this).load(user.cover_url)
+//            .apply(RequestOptions.bitmapTransform(BlurTransformation(this, 15, 8)))
+//            .into(binding.ivBlur)
 
         //设置名字
         binding.includeTitle.tvName.text = user.nickname

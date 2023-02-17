@@ -50,8 +50,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YAY"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31"
-        tools:replace="android:label">
+        tools:replace="android:label"
+        tools:targetApi="31">
 
         <!--最大宽高比-->
         <meta-data
@@ -83,9 +83,15 @@
             android:value="db7ef9b2ee547446080d64c2dd65f387" />
 
         <!-- Branch init -->
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_oBlglksnRU69bZzdw0BFFimhCqaDswu6" />
-        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_live_oBlglksnRU69bZzdw0BFFimhCqaDswu6" />
-        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
+        <meta-data
+            android:name="io.branch.sdk.BranchKey"
+            android:value="key_live_oBlglksnRU69bZzdw0BFFimhCqaDswu6" />
+        <meta-data
+            android:name="io.branch.sdk.BranchKey.test"
+            android:value="key_live_oBlglksnRU69bZzdw0BFFimhCqaDswu6" />
+        <meta-data
+            android:name="io.branch.sdk.TestMode"
+            android:value="false" />
 
         <activity
             android:name=".ui.StartActivity"
@@ -99,8 +105,11 @@
             <!-- Branch URI Scheme -->
             <intent-filter>
                 <!-- If utilizing $deeplink_path please explicitly declare your hosts, or utilize a wildcard(*) -->
-                <data android:scheme="yay" android:host="open" />
+                <data
+                    android:host="open"
+                    android:scheme="yay" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
@@ -108,11 +117,17 @@
             <!-- Branch App Links - Live App -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="yay.app.link" />
+
+                <data
+                    android:host="yay.app.link"
+                    android:scheme="https" />
                 <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
-                <data android:scheme="https" android:host="yay-alternate.app.link" />
+                <data
+                    android:host="yay-alternate.app.link"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -247,6 +262,10 @@
 
         <activity
             android:name=".ui.mine.VideoPreviewActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.mine.AnchorWebActivity"
             android:screenOrientation="portrait" />
 
 

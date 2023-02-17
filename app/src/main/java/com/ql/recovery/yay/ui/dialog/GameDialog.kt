@@ -362,7 +362,7 @@ class GameDialog(
 
             //检查是否是自己的票据
             if (ticket.target_uid == userInfo.uid) {
-                ToastUtil.showShort(activity, activity.getString(R.string.match_ticket_unused))
+                ToastUtil.showLong(activity, activity.getString(R.string.match_ticket_unused))
                 this.lotteryTicket = ticket
                 if (ticket.count == 1) {
                     changeDrawType("once")
