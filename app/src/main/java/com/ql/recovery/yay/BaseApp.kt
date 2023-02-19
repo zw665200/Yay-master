@@ -22,6 +22,8 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.netease.nimlib.sdk.uinfo.UserService
+import com.netease.nimlib.sdk.uinfo.constant.UserInfoFieldEnum
 import com.netease.yunxin.kit.chatkit.ui.ChatKitClient
 import com.netease.yunxin.kit.corekit.im.IMKitClient
 import com.netease.yunxin.kit.corekit.im.login.LoginCallback
@@ -41,6 +43,7 @@ import com.ql.recovery.yay.util.*
 import com.tencent.mmkv.MMKV
 import io.branch.referral.Branch
 import java.lang.ref.WeakReference
+import java.util.HashMap
 
 
 /**
@@ -251,6 +254,14 @@ class BaseApp : Application() {
 
                 //注册订阅状态
                 registerUserOnlineStatus()
+
+                //更新用户资料
+                val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
+                if (userInfo != null) {
+                    val fields = HashMap<UserInfoFieldEnum, Any>()
+                    fields[UserInfoFieldEnum.Name] = userInfo.nickname
+                    NIMClient.getService(UserService::class.java).updateUserInfo(fields)
+                }
 
                 //更新未读消息
                 if (Config.mainHandler != null) {

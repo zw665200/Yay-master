@@ -20,6 +20,7 @@ import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.DialogMatchVideoBinding
 import com.ql.recovery.yay.databinding.ItemTagBinding
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.self.BreatheInterpolator
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.JLog
@@ -114,8 +115,10 @@ class MatchVideoDialog(
 
         //设置国家
         if (user.country.isNotBlank()) {
-            val flag = World.getFlagOf(user.country)
-            binding.ivNation.setImageResource(flag)
+            val res = "file:///android_asset/images/${user.country}.png"
+            ImageManager.getBitmap(activity, res) { bitmap ->
+                binding.ivNation.setImageBitmap(bitmap)
+            }
         }
 
         val tags = user.tags

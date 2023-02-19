@@ -53,7 +53,10 @@ class GiftPlayDialog(
             Glide.with(activity).asGif()
                 .load(gift.animation_url)
                 .addListener(object : RequestListener<GifDrawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<GifDrawable>?, isFirstResource: Boolean): Boolean {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?, target: Target<GifDrawable>?, isFirstResource: Boolean
+                    ): Boolean {
                         e?.printStackTrace()
                         return true
                     }
@@ -141,7 +144,8 @@ class GiftPlayDialog(
             gravity = Gravity.CENTER
             width = AppUtil.getScreenWidth(context)
             height = WindowManager.LayoutParams.WRAP_CONTENT
-            dimAmount = 0f
+            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
+            dimAmount = 0.1f
         }
         super.show()
     }
@@ -149,21 +153,6 @@ class GiftPlayDialog(
     override fun cancel() {
         if (activity.isFinishing || activity.isDestroyed) return
         super.cancel()
-//        setWindowAlpha(1.0f)
     }
-
-    /**
-     * 动态设置Activity背景透明度
-     *
-     * @param bgAlpha
-     */
-    fun setWindowAlpha(bgAlpha: Float) {
-        val window: Window = activity.window
-        val lp = window.attributes
-        lp.alpha = bgAlpha
-        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        window.attributes = lp
-    }
-
 
 }

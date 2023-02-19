@@ -3,6 +3,7 @@ package com.ql.recovery.yay.ui.dialog
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.graphics.BitmapFactory
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -22,7 +23,10 @@ import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.DialogProfileBinding
 import com.ql.recovery.yay.databinding.ItemProfilePicBinding
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.util.AppUtil
+import com.ql.recovery.yay.util.JLog
+import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -67,8 +71,12 @@ class ProfileDialog(
 
         //设置国家
         if (userInfo.country.isNotBlank()) {
-            val flag = World.getFlagOf(userInfo.country)
-            binding.includeUser.ivNation.setImageResource(flag)
+            val res = "file:///android_asset/images/${userInfo.country}.png"
+            ImageManager.getBitmap(activity, res) { bitmap ->
+                JLog.i("width = ${bitmap.width}")
+                JLog.i("height = ${bitmap.height}")
+                binding.includeUser.ivNation.setImageBitmap(bitmap)
+            }
         }
 
         //设置性别
@@ -91,13 +99,14 @@ class ProfileDialog(
         }
 
         //如果是本人的资料则不显示关注状态
-//        val user = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
-//        if (user != null) {
-//            if (user.uid == userInfo.uid) {
-//                binding.onlineStatus.setImageResource(R.drawable.pp_zx)
-//                binding.includeUser.tvFollow.visibility = View.GONE
-//            }
-//        }
+        val user = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
+        if (user != null) {
+            if (user.uid == userInfo.uid) {
+                binding.ivIm.visibility = View.GONE
+                binding.ivVideo.visibility = View.GONE
+                binding.includeUser.tvFollow.visibility = View.GONE
+            }
+        }
 
         //设置风度评分
         val score = String.format("%.1f", userInfo.grace_score)
@@ -265,20 +274,6 @@ class ProfileDialog(
             dimAmount = 0.5f
         }
         super.show()
-    }
-
-
-    /**
-     * 动态设置Activity背景透明度
-     *
-     * @param bgAlpha
-     */
-    fun setWindowAlpha(bgAlpha: Float) {
-        val window: Window = activity.window
-        val lp = window.attributes
-        lp.alpha = bgAlpha
-        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        window.attributes = lp
     }
 
 }

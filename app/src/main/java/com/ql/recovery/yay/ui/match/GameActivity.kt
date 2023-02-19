@@ -34,7 +34,7 @@ class GameActivity : BaseActivity() {
         binding.includeTitle.ivBack.setOnClickListener { onBackPressed() }
         binding.flNo.setOnClickListener { checkStep(Type.No) }
         binding.flYes.setOnClickListener { checkStep(Type.Yes) }
-        binding.tvNext.setOnClickListener { checkStep(Type.Continue) }
+        binding.flNext.setOnClickListener { checkStep(Type.Continue) }
         binding.flFindMatcher.setOnClickListener { gameOver(true) }
         binding.flGameOver.setOnClickListener { gameOver(false) }
         binding.ivImageFirst.setOnClickListener { chooseFirst() }

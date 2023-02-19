@@ -6,7 +6,6 @@ import android.content.ServiceConnection
 import android.graphics.Color
 import android.os.*
 import android.view.View
-import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -23,6 +22,7 @@ import com.ql.recovery.yay.config.ChooseType
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityMatchBinding
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.service.SosWebSocketClientService
 import com.ql.recovery.yay.ui.base.BaseActivity
@@ -169,11 +169,16 @@ class MatchActivity : BaseActivity() {
             binding.tvRegion.text = config.country_name
         }
 
-        if (config.country_locale.isBlank()) {
-            Glide.with(this).load("file:///android_asset/images/GLOBAL.png").into(binding.ivRegion)
+        if (config.country_locale.isNotBlank()) {
+            val res = "file:///android_asset/images/${config.country_locale}.png"
+            ImageManager.getBitmap(this, res) { bitmap ->
+                binding.ivRegion.setImageBitmap(bitmap)
+            }
         } else {
-            val flag = World.getFlagOf(config.country_locale)
-            binding.ivRegion.setImageResource(flag)
+            val res = "file:///android_asset/images/GLOBAL.png"
+            ImageManager.getBitmap(this, res) { bitmap ->
+                binding.ivRegion.setImageBitmap(bitmap)
+            }
         }
     }
 

@@ -70,10 +70,17 @@ class RewardDialog(
             .addBindView { itemView, itemData ->
                 val itemBinding = ItemRewardBinding.bind(itemView)
 
-                val lp = itemBinding.ivImg.layoutParams
-                lp.width = width / 6
-                lp.height = width / 6
-                itemBinding.ivImg.layoutParams = lp
+                if (resultList.size == 1) {
+                    val lp = itemBinding.ivImg.layoutParams
+                    lp.width = width / 3
+                    lp.height = width / 3
+                    itemBinding.ivImg.layoutParams = lp
+                } else {
+                    val lp = itemBinding.ivImg.layoutParams
+                    lp.width = width / 6
+                    lp.height = width / 6
+                    itemBinding.ivImg.layoutParams = lp
+                }
 
                 itemBinding.tvCoin.text = itemData.coin.toString()
                 Glide.with(activity).load(itemData.icon).into(itemBinding.ivImg)

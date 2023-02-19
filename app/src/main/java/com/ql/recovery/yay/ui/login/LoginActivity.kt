@@ -227,7 +227,6 @@ class LoginActivity : BaseActivity() {
         }
 
         LoginManager.getInstance().registerCallback(facebookManager, facebookCallback)
-        LoginManager.getInstance().loginBehavior = LoginBehavior.NATIVE_WITH_FALLBACK
         LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))
     }
 

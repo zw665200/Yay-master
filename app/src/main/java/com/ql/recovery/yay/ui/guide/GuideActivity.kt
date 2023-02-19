@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.uinfo.UserService
+import com.netease.nimlib.sdk.uinfo.constant.UserInfoFieldEnum
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.ql.recovery.bean.Tag
 import com.ql.recovery.bean.UserInfo
@@ -31,6 +34,7 @@ import com.ql.recovery.yay.util.FileUtil
 import com.ql.recovery.yay.util.ToastUtil
 import com.weigan.loopview.LoopView
 import com.weigan.loopview.OnItemScrollListener
+import java.util.HashMap
 
 class GuideActivity : BaseActivity() {
     private lateinit var binding: ActivityGuideBinding
@@ -39,7 +43,7 @@ class GuideActivity : BaseActivity() {
     private var mIsMale: Int? = null
     private var mFindIsMale: Int? = null
     private var mBirthday: String? = null
-    private var mNickName: String? = null
+    private var mNickname: String? = null
     private var mAvatar: String? = null
     private var mAlbumList = arrayListOf<String>()
     private var mTargetList = arrayListOf<Int>()
@@ -214,14 +218,19 @@ class GuideActivity : BaseActivity() {
             }
 
             Step.NickName -> {
-                if (mNickName.isNullOrBlank()) {
-                    val nickName = binding.includeNickname.etPhoneInput.editableText.toString()
-                    if (nickName.isBlank()) {
+                if (mNickname.isNullOrBlank()) {
+                    val nickname = binding.includeNickname.etPhoneInput.editableText.toString()
+                    if (nickname.isBlank()) {
                         ToastUtil.showShort(this, getString(R.string.guide_nickname_hint))
                         return
                     }
-                    mNickName = nickName
-                    updateUserInfo(null, null, nickName, null, null, null, null)
+                    mNickname = nickname
+                    updateUserInfo(null, null, nickname, null, null, null, null)
+
+                    //更新用户资料
+                    val fields = HashMap<UserInfoFieldEnum, Any>()
+                    fields[UserInfoFieldEnum.Name] = nickname
+                    NIMClient.getService(UserService::class.java).updateUserInfo(fields)
                 }
             }
 

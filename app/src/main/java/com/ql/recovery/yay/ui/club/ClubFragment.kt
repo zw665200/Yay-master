@@ -36,6 +36,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 
 class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
@@ -67,22 +68,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
         initPicsShow()
         getTitleList()
         changeTag("all")
-
-        for (item in 1..6) {
-//            val loadControl = DefaultLoadControl.Builder()
-//                .setBufferDurationsMs(1000, 3000, 250, 500)
-//                .build()
-//
-//            val exoPlayer = ExoPlayer.Builder(requireContext())
-//                .setRenderersFactory(DefaultRenderersFactory(requireContext()).setEnableDecoderFallback(true))
-//                .setLoadControl(loadControl)
-//                .build()
-//
-//            exoPlayer.volume = 0f
-//            exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
-//
-//            exoPlayerList.add(exoPlayer)
-        }
 
         return binding!!.root
     }
@@ -143,35 +128,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                                 itemBinding.onlineDes.text = getString(R.string.club_unavailable)
                             }
                         }
-
-                        "playing" -> {
-//                            itemBinding.tvName.text = itemData.nickname
-//                            itemBinding.tvAge.text = itemData.age.toString()
-//                            Glide.with(requireActivity()).load(itemData.cover_url).into(itemBinding.ivPhoto)
-//
-//                            when (itemData.sex) {
-//                                1 -> itemBinding.ivGender.setImageResource(R.drawable.pp_xbnn)
-//                                2 -> itemBinding.ivGender.setImageResource(R.drawable.pp_xbn)
-//                            }
-//
-//                            val exoPlayer = if (position >= exoPlayerList.size) {
-//                                exoPlayerList[position % 6]
-//                            } else {
-//                                exoPlayerList[position]
-//                            }
-//
-//                            if (itemData.cover_url != null) {
-//                                if (itemData.isPlaying) {
-//                                    JLog.i("playing = true, position = $position")
-//                                    itemBinding.ivPhoto.visibility = View.VISIBLE
-//                                    loadVideo(exoPlayer, itemBinding, itemData, position)
-//                                } else {
-//                                    JLog.i("playing = false, position = $position")
-//                                    itemBinding.ivPhoto.visibility = View.VISIBLE
-//                                    itemBinding.flPlayView.visibility = View.GONE
-//                                }
-//                            }
-                        }
                     }
 
                     return@addBindView
@@ -215,7 +171,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                         exoPlayer = getPlayer()
                         exoPlayerList[position] = exoPlayer
                     } else {
-                        JLog.i("33333 - position = $position")
                         itemBinding.playerView.player = null
                         itemBinding.ivPhoto.visibility = View.VISIBLE
                         exoPlayer = exoPlayerList[position]
@@ -259,15 +214,23 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     //获取最后一个完全显示的ItemPosition
                     val firstVisiblePosition = manager.findFirstVisibleItemPosition()//从0开始
                     val lastVisiblePosition = manager.findLastVisibleItemPosition()//从0开始
-                    val totalItemCount = manager.itemCount
-
-                    firstVisibleViewPosition = firstVisiblePosition
-                    lastVisibleViewPosition = lastVisiblePosition
+                    val count = manager.itemCount
 
                     JLog.i("first = $firstVisiblePosition")
                     JLog.i("last = $lastVisiblePosition")
 
-//                    mAdapter.notifyDataSetChanged()
+                    if (firstVisibleViewPosition != firstVisiblePosition) {
+                        mAdapter.notifyItemRangeChanged(0, abs(firstVisibleViewPosition - firstVisiblePosition))
+                    }
+
+                    if (lastVisibleViewPosition != lastVisiblePosition) {
+                        if (lastVisibleViewPosition < count) {
+                            mAdapter.notifyItemRangeChanged(lastVisibleViewPosition + 1, abs(lastVisibleViewPosition - lastVisiblePosition))
+                        }
+                    }
+
+                    firstVisibleViewPosition = firstVisiblePosition
+                    lastVisibleViewPosition = lastVisiblePosition
                 }
             }
 
@@ -292,30 +255,11 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     private fun loadVideo(exoPlayer: ExoPlayer, itemBinding: ItemFunAnchorBinding, itemData: Anchor, position: Int) {
         if (itemData.cover_url!!.contains(".mp4") || itemData.cover_url!!.contains("type=video")) {
 
-//            val mediaCount = exoPlayer.mediaItemCount
-//            if (mediaCount == 1) {
-//                val mediaId = exoPlayer.getMediaItemAt(0).mediaId
-//                if (mediaId == itemData.cover_url) {
-//                    JLog.i("media equal , position = $position")
-//                    return
-//                } else {
-//                    exoPlayer.clearMediaItems()
-//                }
-//            }
-
-//            JLog.i("22222")
-
             exoPlayer.addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     super.onPlaybackStateChanged(playbackState)
                     when (playbackState) {
                         Player.STATE_READY -> {
-//                            val view = LayoutPlayerBinding.inflate(layoutInflater)
-//                            view.root.player = exoPlayer
-
-//                            itemBinding.flPlayView.removeAllViews()
-//                            itemBinding.flPlayView.addView(view.root)
-
                             itemBinding.playerView.visibility = View.VISIBLE
                             itemBinding.playerView.player = exoPlayer
                             exoPlayer.play()
@@ -333,7 +277,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     super.onPlayerError(error)
                     JLog.i("onPlayerError")
                     itemBinding.ivPhoto.visibility = View.VISIBLE
-//                    exoPlayer.prepare()
                 }
             })
 
@@ -341,8 +284,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 FileUtil.downloadVideo(requireContext(), itemData.cover_url!!, object : FileCallback {
                     override fun onSuccess(filePath: String) {
                         RtcManager.cutVideo(requireActivity(), filePath) {
-//                            JLog.i("video = $it")
-
                             handler.post {
                                 val mediaItem = MediaItem.Builder()
                                     .setMediaId(itemData.cover_url!!)
@@ -497,7 +438,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
             }
 
             mList.addAll(anchorList)
-//            mList.addAll(anchorList)
             mAdapter.notifyDataSetChanged()
 
             val uidList = mList.map { it.uid.toString() }

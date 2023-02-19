@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
@@ -26,6 +25,7 @@ import com.ql.recovery.yay.databinding.ItemFunctionBinding
 import com.ql.recovery.yay.databinding.ItemVideoBinding
 import com.ql.recovery.yay.databinding.ItemWallpaperBinding
 import com.ql.recovery.yay.manager.CManager
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
 import com.ql.recovery.yay.ui.dialog.WaitingDialog
@@ -34,6 +34,7 @@ import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.FileUtil
+import com.ql.recovery.yay.util.JLog
 
 class MineFragment : BaseFragment() {
     private var binding: FragmentMineBinding? = null
@@ -154,8 +155,12 @@ class MineFragment : BaseFragment() {
 
             //设置国家
             if (userInfo.country.isNotBlank()) {
-                val flag = World.getFlagOf(userInfo.country)
-                binding!!.includeUser.ivNation.setImageResource(flag)
+                val res = "file:///android_asset/images/${userInfo.country}.png"
+                ImageManager.getBitmap(requireContext(), res) { bitmap ->
+                    JLog.i("width = ${bitmap.width}")
+                    JLog.i("height = ${bitmap.height}")
+                    binding!!.includeUser.ivNation.setImageBitmap(bitmap)
+                }
             }
 
             //设置风度评分

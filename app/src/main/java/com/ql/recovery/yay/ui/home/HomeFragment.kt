@@ -18,6 +18,7 @@ import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.ChooseType
 import com.ql.recovery.yay.databinding.FragmentHomeBinding
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.BeautyDialog
@@ -178,11 +179,16 @@ class HomeFragment : BaseFragment() {
             binding?.tvRegion?.text = config.country_name
         }
 
-        if (config.country_locale.isBlank()) {
-            Glide.with(requireActivity()).load("file:///android_asset/images/GLOBAL.png").into(binding?.ivRegion!!)
+        if (config.country_locale.isNotBlank()) {
+            val res = "file:///android_asset/images/${config.country_locale}.png"
+            ImageManager.getBitmap(requireContext(), res) { bitmap ->
+                binding?.ivRegion?.setImageBitmap(bitmap)
+            }
         } else {
-            val flag = World.getFlagOf(config.country_locale)
-            binding?.ivRegion?.setImageResource(flag)
+            val res = "file:///android_asset/images/GLOBAL.png"
+            ImageManager.getBitmap(requireContext(), res) { bitmap ->
+                binding?.ivRegion?.setImageBitmap(bitmap)
+            }
         }
     }
 

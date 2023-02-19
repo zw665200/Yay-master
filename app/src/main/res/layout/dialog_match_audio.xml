@@ -9,7 +9,7 @@
         android:id="@+id/ll_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_50"
+        android:layout_marginTop="@dimen/dp_80"
         android:orientation="vertical">
 
         <FrameLayout
@@ -72,10 +72,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/dp_30"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/gilland"
             android:gravity="center"
             android:textColor="@color/color_timer"
-            android:textSize="@dimen/sp_80" />
+            android:textSize="@dimen/sp_100" />
 
     </LinearLayout>
 

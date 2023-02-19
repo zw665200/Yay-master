@@ -21,6 +21,7 @@ import com.ql.recovery.yay.databinding.FragmentDashboardBinding
 import com.ql.recovery.yay.databinding.ItemMatchRecordListBinding
 import com.ql.recovery.yay.databinding.ItemMatchVisitListBinding
 import com.ql.recovery.yay.manager.IMManager
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
@@ -151,8 +152,10 @@ class RecordFragment : BaseFragment() {
 
                 //设置国家
                 if (itemData.country.isNotBlank()) {
-                    val flag = World.getFlagOf(itemData.country)
-                    itemBinding.ivNation.setImageResource(flag)
+                    val res = "file:///android_asset/images/${itemData.country}.png"
+                    ImageManager.getBitmap(requireContext(), res) { bitmap ->
+                        itemBinding.ivNation.setImageBitmap(bitmap)
+                    }
                 }
 
                 //设置性别

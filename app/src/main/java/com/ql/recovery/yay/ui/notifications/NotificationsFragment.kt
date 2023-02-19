@@ -27,6 +27,7 @@ import com.ql.recovery.yay.databinding.FragmentNotificationsBinding
 import com.ql.recovery.yay.databinding.ItemConversationBinding
 import com.ql.recovery.yay.databinding.ItemMatchVisitListBinding
 import com.ql.recovery.yay.manager.IMManager
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
@@ -241,8 +242,10 @@ class NotificationsFragment : BaseFragment() {
 
                 //设置国家
                 if (itemData.country.isNotBlank()) {
-                    val flag = World.getFlagOf(itemData.country)
-                    itemBinding.ivNation.setImageResource(flag)
+                    val res = "file:///android_asset/images/${itemData.country}.png"
+                    ImageManager.getBitmap(requireContext(), res) { bitmap ->
+                        itemBinding.ivNation.setImageBitmap(bitmap)
+                    }
                 } else {
                     itemBinding.ivNation.visibility = View.GONE
                 }
@@ -316,28 +319,17 @@ class NotificationsFragment : BaseFragment() {
 
             list.forEach { it.follow_status = 2 }
 
-//            mList.clear()
-//            mList.addAll(list)
-//            mAdapter.notifyDataSetChanged()
-
+            mList.addAll(list)
+            mList.toSet().toList()
+            mAdapter.notifyDataSetChanged()
 
             val uidList = list.map { it.uid.toString() }
-            val cList = mList.map { it.uid.toString() }
-            for (item in list) {
-                if (!cList.contains(item.uid.toString())) {
-                    mList.add(item)
-                }
-
-                mAdapter.notifyDataSetChanged()
-            }
 
             //subscribe
             IMManager.subscribe(requireContext(), uidList)
 
             //check online status
             checkFollowOnlineStatus(uidList)
-
-//            getFollowingInfoList()
         }
     }
 
@@ -346,10 +338,7 @@ class NotificationsFragment : BaseFragment() {
      */
     @SuppressLint("NotifyDataSetChanged")
     private fun getFollowingInfoList() {
-//        waitingDialog?.show()
         DataManager.getFollowingList(mPage, mSize) { list ->
-//            waitingDialog?.cancel()
-
             if (list.isEmpty()) {
                 binding?.includeNoData?.root?.visibility = View.VISIBLE
                 binding?.includeNoData?.tvContent?.text = getString(R.string.record_no_following)
@@ -362,7 +351,6 @@ class NotificationsFragment : BaseFragment() {
 
             mList.clear()
             mList.addAll(list)
-            mAdapter.notifyDataSetChanged()
 
             //subscribe
             val uidList = list.map { it.uid.toString() }
@@ -372,35 +360,6 @@ class NotificationsFragment : BaseFragment() {
             checkFollowOnlineStatus(uidList)
 
             getFollowedInfoList()
-        }
-    }
-
-    /**
-     * 检查相互关注的用户记录
-     */
-    @SuppressLint("NotifyDataSetChanged")
-    private fun getFriendsInfoList() {
-        DataManager.getFriendList(mPage, mSize) { list ->
-            if (list.isEmpty()) {
-                binding?.includeNoData?.root?.visibility = View.VISIBLE
-                binding?.includeNoData?.tvContent?.text = getString(R.string.record_no_friends)
-                binding?.includeNoData?.tvToMatch?.text = getString(R.string.record_make_friends)
-            } else {
-                binding?.includeNoData?.root?.visibility = View.GONE
-            }
-
-            list.forEach { it.follow_status = 3 }
-
-//            mList.clear()
-            mList.addAll(list)
-            mAdapter.notifyDataSetChanged()
-
-            //subscribe
-            val uidList = list.map { it.uid.toString() }
-            IMManager.subscribe(requireContext(), uidList)
-
-            //check online status
-            checkFollowOnlineStatus(uidList)
         }
     }
 

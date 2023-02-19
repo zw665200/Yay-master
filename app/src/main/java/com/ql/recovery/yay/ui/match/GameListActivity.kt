@@ -29,7 +29,7 @@ class GameListActivity : BaseActivity() {
     override fun initView() {
         binding.tvContinue.typeface = Typeface.createFromAsset(assets, "fonts/abc.ttf")
         binding.includeTitle.ivBack.setOnClickListener { finish() }
-        binding.tvContinue.setOnClickListener { gameBegin() }
+        binding.flContinue.setOnClickListener { gameBegin() }
     }
 
     override fun initData() {

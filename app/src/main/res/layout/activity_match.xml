@@ -178,8 +178,8 @@
 
                 <ImageView
                     android:id="@+id/iv_region"
-                    android:layout_width="@dimen/dp_25"
-                    android:layout_height="@dimen/dp_20"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_15"
                     android:src="@drawable/in_qq" />
 
                 <View

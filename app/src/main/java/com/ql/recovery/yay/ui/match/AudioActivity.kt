@@ -10,7 +10,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
@@ -35,6 +34,7 @@ import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityAudioBinding
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ItemChatBinding
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.*
 import com.ql.recovery.yay.util.*
@@ -236,9 +236,11 @@ class AudioActivity : BaseActivity() {
         binding.tvYourNickname.text = user.nickname
 
         //设置国家
-        if (mUser!!.country.isNotBlank()) {
-            val flag = World.getFlagOf(mUser!!.country)
-            binding.ivNation.setImageResource(flag)
+        if (user.country.isNotBlank()) {
+            val res = "file:///android_asset/images/${user.country}.png"
+            ImageManager.getBitmap(this, res) { bitmap ->
+                binding.ivNation.setImageBitmap(bitmap)
+            }
         }
 
         //设置关注状态
@@ -369,9 +371,6 @@ class AudioActivity : BaseActivity() {
 
         observerReceive = Observer<List<IMMessage>> {
             for (message in it) {
-                JLog.i("message type = ${message.msgType}")
-                JLog.i("message sessionId = ${message.sessionId}")
-
                 //从数据库删除这条消息
                 NIMClient.getService(MsgService::class.java).deleteChattingHistory(message, false)
 
@@ -389,6 +388,7 @@ class AudioActivity : BaseActivity() {
                         val chat = Chat(sessionId, nick, content, time, true)
                         chatList.add(chat)
                         mAdapter.notifyItemInserted(chatList.size)
+                        binding.rcChatList.smoothScrollToPosition(chatList.size)
                         binding.includeBottom.etMessage.setText("")
                     }
 
@@ -646,7 +646,24 @@ class AudioActivity : BaseActivity() {
             }
         } else {
             DataManager.getUserInfoById(mUser!!.uid) { userInfo ->
-                ProfileDialog(this, userInfo, true, showChat = false) {}
+                ProfileDialog(this, userInfo, true, showChat = false) {
+                    DataManager.getUserInfoById(mUser!!.uid) { user ->
+                        //设置关注状态
+                        when (user.follow_status) {
+                            1, 3 -> {
+                                binding.tvFollow.text = getString(R.string.match_followed)
+                                binding.tvFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_grey_30, null)
+                                binding.tvFollow.setTextColor(Color.WHITE)
+                            }
+
+                            else -> {
+                                binding.tvFollow.text = getString(R.string.match_follow)
+                                binding.tvFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow, null)
+                                binding.tvFollow.setTextColor(Color.BLACK)
+                            }
+                        }
+                    }
+                }
             }
         }
     }

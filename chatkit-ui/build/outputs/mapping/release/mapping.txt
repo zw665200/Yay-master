@@ -2,8 +2,8 @@
 # compiler_version: 3.2.60
 # common_typos_disable
 # {"id":"com.android.tools.r8.mapping","version":"2.0"}
-# pg_map_id: ebbc15f
-# pg_map_hash: SHA-256 ebbc15fad825ac5d325e2ac8a30faf5c8d9c5a76979cc3e49cb482eb76febce6
+# pg_map_id: cbfd279
+# pg_map_hash: SHA-256 cbfd27924fdaec942f4eb3c44dd4173a28f4d9ac1291097a3d14f4aebe456331
 com.netease.yunxin.kit.adapters.DataAdapter -> a.a:
     java.util.List mDataList -> a
     kotlin.jvm.functions.Function3 addBindView2 -> c
@@ -1510,82 +1510,78 @@ com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$2 -> k.a$b:
     1:1:void onSuccess(java.lang.Object):0 -> onSuccess
 com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$3 -> k.a$c:
     com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment this$0 -> a
-    void audioCall() -> a
-    kotlin.Unit lambda$audioCall$8(com.ql.recovery.bean.UserInfo) -> a
-    1:1:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0:0 -> a
-      # {"id":"com.android.tools.r8.outlineCallsite","positions":{"1":4,"2":5,"3":6}}
-    4:4:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.sendAudioMessage(java.io.File,long):0:0 -> a
-    4:4:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0 -> a
-    5:5:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.sendAudioMessage(java.io.File,long):0:0 -> a
-    5:5:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0 -> a
+    void captureVideo() -> a
+    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.access$400(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment):0:0 -> a
+    1:1:kotlin.Unit lambda$captureVideo$3(com.ql.recovery.bean.UserInfo):0 -> a
+    2:2:kotlin.Unit lambda$captureVideo$3(com.ql.recovery.bean.UserInfo):0:0 -> a
+    3:3:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0:0 -> a
+      # {"id":"com.android.tools.r8.outlineCallsite","positions":{"1":6,"2":7,"3":8}}
     6:6:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.sendAudioMessage(java.io.File,long):0:0 -> a
     6:6:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0 -> a
-    2:2:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.sendAudioMessage(java.io.File,long):0:0 -> a
-    2:2:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0 -> a
-    3:3:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0:0 -> a
-    7:7:java.util.List com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.getAitTeamMember():0:0 -> a
-    7:7:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
-      # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
-    8:8:java.util.List com.netease.yunxin.kit.chatkit.ui.model.ait.AitContactsModel.getAitTeamMember():0:0 -> a
-    8:8:java.util.List com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.getAitTeamMember():0 -> a
-    8:8:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
-      # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(2)"]}
+    7:7:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.sendAudioMessage(java.io.File,long):0:0 -> a
+    7:7:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0 -> a
+    8:8:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.sendAudioMessage(java.io.File,long):0:0 -> a
+    8:8:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0 -> a
+    4:4:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.sendAudioMessage(java.io.File,long):0:0 -> a
+    4:4:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0 -> a
+    5:5:kotlin.Unit lambda$sendAudio$5(java.io.File,long,com.ql.recovery.bean.UserInfo):0:0 -> a
     9:9:java.util.List com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.getAitTeamMember():0:0 -> a
     9:9:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
-    10:10:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0:0 -> a
-    11:11:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.sendTextMessage(java.lang.String,java.util.List):0:0 -> a
+    10:10:java.util.List com.netease.yunxin.kit.chatkit.ui.model.ait.AitContactsModel.getAitTeamMember():0:0 -> a
+    10:10:java.util.List com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.getAitTeamMember():0 -> a
+    10:10:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
+      # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(2)"]}
+    11:11:java.util.List com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.getAitTeamMember():0:0 -> a
     11:11:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
+      # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
     12:12:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0:0 -> a
-    13:13:com.netease.yunxin.kit.chatkit.model.IMMessageInfo com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean.getMessageData():0:0 -> a
+    13:13:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.sendTextMessage(java.lang.String,java.util.List):0:0 -> a
     13:13:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
     14:14:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0:0 -> a
-    15:15:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.replyTextMessage(java.lang.String,com.netease.nimlib.sdk.msg.model.IMMessage,java.util.List):0:0 -> a
+    15:15:com.netease.yunxin.kit.chatkit.model.IMMessageInfo com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean.getMessageData():0:0 -> a
     15:15:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
-    16:16:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.replyMessage(com.netease.nimlib.sdk.msg.model.IMMessage,com.netease.nimlib.sdk.msg.model.IMMessage,boolean):0:0 -> a
-    16:16:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.replyTextMessage(java.lang.String,com.netease.nimlib.sdk.msg.model.IMMessage,java.util.List):0 -> a
-    16:16:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
-    17:17:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0:0 -> a
-    18:18:void com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.reset():0:0 -> a
+    16:16:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0:0 -> a
+    17:17:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.replyTextMessage(java.lang.String,com.netease.nimlib.sdk.msg.model.IMMessage,java.util.List):0:0 -> a
+    17:17:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
+    18:18:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.replyMessage(com.netease.nimlib.sdk.msg.model.IMMessage,com.netease.nimlib.sdk.msg.model.IMMessage,boolean):0:0 -> a
+    18:18:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.replyTextMessage(java.lang.String,com.netease.nimlib.sdk.msg.model.IMMessage,java.util.List):0 -> a
     18:18:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
-      # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
-    19:19:void com.netease.yunxin.kit.chatkit.ui.model.ait.AitContactsModel.reset():0:0 -> a
-    19:19:void com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.reset():0 -> a
-    19:19:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
-      # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(2)"]}
+    19:19:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0:0 -> a
     20:20:void com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.reset():0:0 -> a
     20:20:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
-    21:21:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0:0 -> a
-    22:22:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel.sendInputNotification(boolean):0:0 -> a
-    22:22:void onTypeStateChange(boolean):0 -> a
-    23:23:java.lang.String com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.getSessionId():0:0 -> a
-    23:23:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel.sendInputNotification(boolean):0 -> a
-    23:23:void onTypeStateChange(boolean):0 -> a
+    21:21:void com.netease.yunxin.kit.chatkit.ui.model.ait.AitContactsModel.reset():0:0 -> a
+    21:21:void com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.reset():0 -> a
+    21:21:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
+      # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(2)"]}
+    22:22:void com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager.reset():0:0 -> a
+    22:22:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0 -> a
+      # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
+    23:23:kotlin.Unit lambda$sendTextMessage$0(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean,java.lang.String,com.ql.recovery.bean.UserInfo):0:0 -> a
     24:24:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel.sendInputNotification(boolean):0:0 -> a
     24:24:void onTypeStateChange(boolean):0 -> a
+    25:25:java.lang.String com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.getSessionId():0:0 -> a
+    25:25:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel.sendInputNotification(boolean):0 -> a
+    25:25:void onTypeStateChange(boolean):0 -> a
+    26:26:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel.sendInputNotification(boolean):0:0 -> a
+    26:26:void onTypeStateChange(boolean):0 -> a
     boolean sendAudio(java.io.File,long,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean) -> a
     boolean sendTextMessage(java.lang.String,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean) -> a
-    void captureVideo() -> b
-    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.access$400(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment):0:0 -> b
-    1:1:kotlin.Unit lambda$captureVideo$3(com.ql.recovery.bean.UserInfo):0 -> b
-    2:2:kotlin.Unit lambda$captureVideo$3(com.ql.recovery.bean.UserInfo):0:0 -> b
-    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.startPickMedia():0:0 -> c
-    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.access$600(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment):0 -> c
-    1:1:kotlin.Unit lambda$pickMedia$1(com.ql.recovery.bean.UserInfo):0 -> c
-    2:2:kotlin.Unit lambda$pickMedia$1(com.ql.recovery.bean.UserInfo):0:0 -> c
-    void pickMedia() -> c
-    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.startPickFile():0:0 -> d
-    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.access$300(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment):0 -> d
-    1:1:kotlin.Unit lambda$sendFile$4(com.ql.recovery.bean.UserInfo):0 -> d
-    2:2:kotlin.Unit lambda$sendFile$4(com.ql.recovery.bean.UserInfo):0:0 -> d
-    boolean sendFile() -> d
-    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.access$500(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment):0:0 -> e
-    1:1:kotlin.Unit lambda$takePicture$2(com.ql.recovery.bean.UserInfo):0 -> e
-    2:2:kotlin.Unit lambda$takePicture$2(com.ql.recovery.bean.UserInfo):0:0 -> e
-    void takePicture() -> e
-    kotlin.Unit lambda$videoCall$7(com.ql.recovery.bean.UserInfo) -> f
-    void videoCall() -> f
+    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.startPickMedia():0:0 -> b
+    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.access$600(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment):0 -> b
+    1:1:kotlin.Unit lambda$pickMedia$1(com.ql.recovery.bean.UserInfo):0 -> b
+    2:2:kotlin.Unit lambda$pickMedia$1(com.ql.recovery.bean.UserInfo):0:0 -> b
+    void pickMedia() -> b
+    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.startPickFile():0:0 -> c
+    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.access$300(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment):0 -> c
+    1:1:kotlin.Unit lambda$sendFile$4(com.ql.recovery.bean.UserInfo):0 -> c
+    2:2:kotlin.Unit lambda$sendFile$4(com.ql.recovery.bean.UserInfo):0:0 -> c
+    boolean sendFile() -> c
+    1:1:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.access$500(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment):0:0 -> d
+    1:1:kotlin.Unit lambda$takePicture$2(com.ql.recovery.bean.UserInfo):0 -> d
+    2:2:kotlin.Unit lambda$takePicture$2(com.ql.recovery.bean.UserInfo):0:0 -> d
+    void takePicture() -> d
 com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$4 -> k.a$d:
     com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment this$0 -> a
     1:1:com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageItemClickListener com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment.access$700(com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment):0:0 -> a
@@ -2645,7 +2641,9 @@ com.netease.yunxin.kit.chatkit.ui.page.viewmodel.WatchImageVideoViewModel$2 -> l
     com.netease.yunxin.kit.chatkit.ui.page.viewmodel.WatchImageVideoViewModel this$0 -> b
     1:1:void com.netease.yunxin.kit.chatkit.ui.page.viewmodel.WatchImageVideoViewModel$2.onSuccess(java.lang.Void):0:0 -> onSuccess
     1:1:void onSuccess(java.lang.Object):0 -> onSuccess
-com.netease.yunxin.kit.chatkit.ui.util.ToastUtil -> m.a:
+com.netease.yunxin.kit.chatkit.ui.util.DoubleUtils -> m.a:
+    long lastClickTime -> a
+com.netease.yunxin.kit.chatkit.ui.util.ToastUtil -> m.b:
     void showShort(android.content.Context,java.lang.CharSequence) -> a
 com.netease.yunxin.kit.chatkit.ui.view.ChatView -> com.netease.yunxin.kit.chatkit.ui.view.ChatView:
     com.netease.yunxin.kit.chatkit.ui.databinding.ChatViewLayoutBinding binding -> a
@@ -3123,10 +3121,10 @@ com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout -> com.netease.
     boolean lambda$initView$4(android.widget.TextView,int,android.view.KeyEvent) -> a
     void lambda$setReplyMessage$10(android.view.View) -> a
     9:9:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0:0 -> a
-      # {"id":"com.android.tools.r8.outlineCallsite","positions":{"1":29,"2":30,"3":31}}
-    29:29:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0:0 -> a
-    30:30:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0:0 -> a
+      # {"id":"com.android.tools.r8.outlineCallsite","positions":{"1":31,"2":32,"3":33}}
     31:31:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0:0 -> a
+    32:32:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0:0 -> a
+    33:33:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0:0 -> a
     10:10:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0:0 -> a
     11:11:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$3.onCustomAction(android.view.View,java.lang.String):0:0 -> a
     11:11:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0 -> a
@@ -3164,13 +3162,21 @@ com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout -> com.netease.
     24:24:void switchEmoji():0:0 -> a
     24:24:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0 -> a
     25:25:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0:0 -> a
-    26:26:void onVideoClick():0:0 -> a
+    26:26:boolean com.netease.yunxin.kit.chatkit.ui.util.DoubleUtils.isFastDoubleClick():0:0 -> a
+    26:26:void onVideoClick():0 -> a
     26:26:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0 -> a
-    27:27:java.util.ArrayList com.netease.yunxin.kit.chatkit.ui.view.input.ActionFactory.assembleVideoCallActions():0:0 -> a
-    27:27:void onVideoClick():0 -> a
+    27:27:void onVideoClick():0:0 -> a
     27:27:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0 -> a
-    28:28:void onVideoClick():0:0 -> a
+    28:28:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$3.videoCall():0:0 -> a
+    28:28:void onVideoClick():0 -> a
     28:28:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0 -> a
+    29:29:java.lang.String com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel.getSessionId():0:0 -> a
+    29:29:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$3.videoCall():0 -> a
+    29:29:void onVideoClick():0 -> a
+    29:29:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0 -> a
+    30:30:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$3.videoCall():0:0 -> a
+    30:30:void onVideoClick():0 -> a
+    30:30:void onClick(android.view.View,int,com.netease.yunxin.kit.common.ui.action.ActionItem):0 -> a
     void onTextAdd(java.lang.String,int,int) -> a
     void onTextDelete(int,int) -> a
     void sendText(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean) -> a
@@ -3306,14 +3312,6 @@ com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout$5 -> q.g:
     4:4:void onGranted(java.util.List):0 -> onGranted
     5:5:void com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$3.sendLocationLaunch():0:0 -> onGranted
     5:5:void onGranted(java.util.List):0 -> onGranted
-com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout$6 -> q.h:
-    com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout this$0 -> a
-    1:1:com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageProxy com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout.access$100(com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout):0:0 -> onChoice
-    1:1:void onChoice(java.lang.String):0 -> onChoice
-    2:2:void onChoice(java.lang.String):0:0 -> onChoice
-    3:3:com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageProxy com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout.access$100(com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout):0:0 -> onChoice
-    3:3:void onChoice(java.lang.String):0 -> onChoice
-    4:4:void onChoice(java.lang.String):0:0 -> onChoice
 com.netease.yunxin.kit.chatkit.ui.view.input.RecordView -> com.netease.yunxin.kit.chatkit.ui.view.input.RecordView:
     com.netease.yunxin.kit.chatkit.ui.view.input.IPermissionRequest permissionRequest -> d
     com.netease.yunxin.kit.chatkit.ui.databinding.ChatMessageRecordViewBinding mBinding -> a

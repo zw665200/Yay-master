@@ -100,7 +100,8 @@ class ShareActivity : BaseActivity() {
 
             //注册分享监听
             messageDialog.registerCallback(CallbackManager.Factory.create(), object : FacebookCallback<Sharer.Result> {
-                override fun onSuccess(result: Sharer.Result?) {
+
+                override fun onSuccess(result: Sharer.Result) {
                     JLog.i("share success")
                 }
 
@@ -108,7 +109,7 @@ class ShareActivity : BaseActivity() {
                     JLog.i("share cancel")
                 }
 
-                override fun onError(error: FacebookException?) {
+                override fun onError(error: FacebookException) {
                     JLog.i("share error")
                 }
             })
@@ -132,7 +133,7 @@ class ShareActivity : BaseActivity() {
 
             //注册分享监听
             shareDialog.registerCallback(CallbackManager.Factory.create(), object : FacebookCallback<Sharer.Result> {
-                override fun onSuccess(result: Sharer.Result?) {
+                override fun onSuccess(result: Sharer.Result) {
                     JLog.i("share success")
                 }
 
@@ -140,7 +141,7 @@ class ShareActivity : BaseActivity() {
                     JLog.i("share cancel")
                 }
 
-                override fun onError(error: FacebookException?) {
+                override fun onError(error: FacebookException) {
                     JLog.i("share error")
                 }
             })

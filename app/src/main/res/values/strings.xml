@@ -163,10 +163,10 @@
     <string name="match_game_start">Start</string>
     <string name="match_game_insert">Insert</string>
     <string name="match_broadcast_content">%1$s gets %2$s %3$s</string>
-    <string name="match_game_draw_5">Draw Once 5</string>
-    <string name="match_game_draw_8">Draw Once 8</string>
-    <string name="match_game_draw_30">Ten Times 30</string>
-    <string name="match_game_draw_50">Ten Times 50</string>
+    <string name="match_game_draw_5">Draw Once %1d</string>
+    <string name="match_game_draw_8">Draw Once %1d</string>
+    <string name="match_game_draw_30">Ten Times %1d</string>
+    <string name="match_game_draw_50">Ten Times %1d</string>
     <string name="match_game_reward_get">Claim</string>
     <string name="match_game_reward_title">OK</string>
     <string name="match_hand_off_tip">Hands-free mode is on. It will automatically connect if matched</string>
@@ -272,7 +272,7 @@
     <!--addition-->
     <string name="addition_title">Please select a package</string>
     <string name="addition_tip">Take some time to get to know them well</string>
-    <string name="addition_discount_tip">Yay VIP can enjoy 20% discount each time</string>
+    <string name="addition_discount_tip">Yay VIP can enjoy 20% off each time</string>
     <string name="addition_my_lemon">My gem</string>
     <string name="addition_prime">Yay VIP</string>
     <string name="addition_commit">Confirm</string>

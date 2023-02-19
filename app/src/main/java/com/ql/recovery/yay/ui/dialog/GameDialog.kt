@@ -9,7 +9,6 @@ import android.graphics.Typeface
 import android.os.Looper
 import android.view.Gravity
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
@@ -28,6 +27,7 @@ import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
+import com.tencent.mmkv.MMKV
 
 class GameDialog(
     private val activity: Activity,
@@ -40,6 +40,7 @@ class GameDialog(
     private var handler = android.os.Handler(Looper.getMainLooper())
     private lateinit var adapter: MutableDataAdapter<LotteryGift>
     private lateinit var recordAdapter: MutableDataAdapter<LotteryRecord>
+    private var waitingDialog: WaitingDialog? = null
     private var giftList = arrayListOf<LotteryGift>()
     private var recordList = arrayListOf<LotteryRecord>()
     private var giftRecords = mutableSetOf<LotteryRecords>()
@@ -61,6 +62,8 @@ class GameDialog(
         setContentView(binding.root)
         setCancelable(true)
 
+        waitingDialog = WaitingDialog(activity)
+
         binding.ivClose.setOnClickListener { cancel() }
         binding.llDrawOnce.setOnClickListener { changeDrawType("once") }
         binding.llDrawTen.setOnClickListener { changeDrawType("ten") }
@@ -81,6 +84,8 @@ class GameDialog(
         getLotteryBroadcastList()
         initGift()
         initLotteryRecord()
+
+        changeParadise("coin")
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -96,6 +101,11 @@ class GameDialog(
                 when (itemData.type) {
                     "coin" -> {
                         val itemBinding = ItemAward1Binding.bind(itemView)
+
+                        val param = itemBinding.root.layoutParams
+                        param.height = width / 4
+                        itemBinding.root.layoutParams = param
+
                         itemBinding.tvCoin.text = itemData.coin.toString()
 
                         if (itemData.check) {
@@ -108,6 +118,7 @@ class GameDialog(
                             itemView.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.game_start, null)
                             itemBinding.tvCoin.textSize = 22f
                             itemBinding.tvCoin.text = activity.getString(R.string.match_game_start)
+                            itemBinding.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/abc.ttf")
                             itemBinding.tvCoin.gravity = Gravity.CENTER
                             itemBinding.tvCoin.setTextColor(Color.WHITE)
                             itemBinding.ivDemon.visibility = View.GONE
@@ -125,7 +136,7 @@ class GameDialog(
 //                            }
 
                         } else {
-                            itemBinding.tvCoin.typeface = Typeface.SANS_SERIF
+                            itemBinding.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/DINPro-Bold.otf")
                             itemBinding.tvCoin.setTextColor(Color.BLACK)
                             itemBinding.tvCoin.text = itemData.coin.toString()
                             itemBinding.ivDemon.visibility = View.VISIBLE
@@ -136,9 +147,13 @@ class GameDialog(
                         val itemBinding = ItemAward2Binding.bind(itemView)
                         itemBinding.tvCoin.text = itemData.coin.toString()
 
+                        val param = itemBinding.root.layoutParams
+                        param.height = width / 4
+                        itemBinding.root.layoutParams = param
+
                         val lp = itemBinding.ivGift.layoutParams
-                        lp.width = width / 6
-                        lp.height = width / 6
+                        lp.width = width / 7
+                        lp.height = width / 7
                         itemBinding.ivGift.layoutParams = lp
                         Glide.with(activity).load(itemData.icon).into(itemBinding.ivGift)
 
@@ -153,6 +168,7 @@ class GameDialog(
                             itemBinding.ivGift.visibility = View.GONE
                             itemBinding.ivDemon.visibility = View.GONE
                             itemBinding.tvCoin.textSize = 22f
+                            itemBinding.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/abc.ttf")
                             itemBinding.tvCoin.gravity = Gravity.CENTER
                             itemBinding.tvCoin.setTextColor(Color.WHITE)
                             itemBinding.ivDemon.visibility = View.GONE
@@ -165,6 +181,7 @@ class GameDialog(
 //                            }
 
                         } else {
+                            itemBinding.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/DINPro-Bold.otf")
                             itemBinding.ivGift.visibility = View.VISIBLE
                             itemBinding.tvCoin.textSize = 13f
                             itemBinding.tvCoin.setTextColor(Color.BLACK)
@@ -185,7 +202,6 @@ class GameDialog(
                             }
                         }
                     }
-
                 }
             }
             .create()
@@ -303,11 +319,12 @@ class GameDialog(
     }
 
     private fun changeParadise(type: String) {
+        val basePrice = MMKV.defaultMMKV().decodeParcelable("base_price", BasePrice::class.java) ?: return
         when (type) {
             "coin" -> {
                 currentType = "coin"
-                binding.tvDrawOnce.text = activity.getString(R.string.match_game_draw_5)
-                binding.tvDrawTen.text = activity.getString(R.string.match_game_draw_30)
+                binding.tvDrawOnce.text = String.format(activity.getString(R.string.match_game_draw_5), basePrice.lottery.coin.one_time)
+                binding.tvDrawTen.text = String.format(activity.getString(R.string.match_game_draw_30), basePrice.lottery.coin.ten_times)
                 binding.tvCoinParadise.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_left_yellow, null)
                 binding.tvGiftParadise.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_right_light_grey, null)
 
@@ -319,8 +336,8 @@ class GameDialog(
 
             "gift" -> {
                 currentType = "gift"
-                binding.tvDrawOnce.text = activity.getString(R.string.match_game_draw_8)
-                binding.tvDrawTen.text = activity.getString(R.string.match_game_draw_50)
+                binding.tvDrawOnce.text = String.format(activity.getString(R.string.match_game_draw_8), basePrice.lottery.gift.one_time)
+                binding.tvDrawTen.text = String.format(activity.getString(R.string.match_game_draw_50), basePrice.lottery.gift.ten_times)
                 binding.tvCoinParadise.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_left_light_grey, null)
                 binding.tvGiftParadise.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_right_yellow, null)
 
@@ -552,11 +569,13 @@ class GameDialog(
             return
         }
 
+        waitingDialog?.show()
         //检查是否有抽奖券未用
         checkTickets { ticket ->
             if (ticket == null) {
                 //给对方发起投币
                 DataManager.giveLotteryTicket(currentCount, roomId, currentType) {
+                    waitingDialog?.cancel()
                     if (it != null) {
                         ToastUtil.showShort(activity, activity.getString(R.string.match_game_wait_lottery))
                     }

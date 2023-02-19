@@ -3,7 +3,10 @@ package com.ql.recovery.yay.ui.store
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
+import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.android.billingclient.api.*
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -82,6 +85,55 @@ class StoreActivity : BaseActivity() {
 
                 ImageManager.getBitmap(this, itemData.icon) {
                     itemBinding.ivIcon.setImageBitmap(it)
+                }
+
+                when (itemData.code) {
+                    "coin_level_one" -> {
+                        itemBinding.ivTag.setImageResource(R.drawable.hybg_standard)
+                        itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_m, null)
+                    }
+
+                    "coin_level_two" -> {
+                        itemBinding.ivTag.setImageResource(R.drawable.hybg_free)
+                        itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_b, null)
+                        itemBinding.root.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_c, null)
+                        itemBinding.tvCount.setTextColor(Color.WHITE)
+                    }
+
+                    "coin_level_three" -> {
+                        itemBinding.ivTag.setImageResource(R.drawable.hybg_save_17)
+                        itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_m, null)
+                    }
+
+                    "member_subscribe_monthly" -> {
+                        itemBinding.ivTag.setImageResource(R.drawable.hybg_save_33)
+                        itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_b, null)
+                        itemBinding.root.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_a, null)
+                        itemBinding.ivIcon.setImageResource(R.drawable.hybg_vip)
+                        itemBinding.tvCount.visibility = View.GONE
+                    }
+
+                    "coin_level_four_in_app" -> {
+                        itemBinding.ivTag.setImageResource(R.drawable.hybg_save_23)
+                        itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_m, null)
+                    }
+
+                    "coin_level_five" -> {
+                        itemBinding.ivTag.setImageResource(R.drawable.hybg_save_27)
+                        itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_b, null)
+                        itemBinding.root.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_a, null)
+                    }
+
+                    "coin_level_six" -> {
+                        itemBinding.ivTag.setImageResource(R.drawable.hybg_save_29)
+                        itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_m, null)
+                    }
+
+                    "coin_level_seven" -> {
+                        itemBinding.ivTag.setImageResource(R.drawable.hybg_save_32)
+                        itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_b, null)
+                        itemBinding.root.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_a, null)
+                    }
                 }
 
                 itemBinding.tvMoney.setOnClickListener {

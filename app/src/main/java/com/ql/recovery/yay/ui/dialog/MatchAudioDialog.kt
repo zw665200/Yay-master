@@ -15,6 +15,7 @@ import com.ql.recovery.bean.User
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.DialogMatchAudioBinding
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.util.AppUtil
 
 
@@ -35,7 +36,6 @@ class MatchAudioDialog(
         setContentView(binding.root)
         setCancelable(false)
 
-        binding.tvTimer.typeface = Typeface.createFromAsset(activity.assets, "fonts/Gilland-Regular.otf")
         binding.ivConnect.setOnClickListener {
             status(MatchStatus.Accept)
         }
@@ -60,8 +60,10 @@ class MatchAudioDialog(
 
         //设置国家
         if (user.country.isNotBlank()) {
-            val flag = World.getFlagOf(user.country)
-            binding.ivNation.setImageResource(flag)
+            val res = "file:///android_asset/images/${user.country}.png"
+            ImageManager.getBitmap(activity, res) { bitmap ->
+                binding.ivNation.setImageBitmap(bitmap)
+            }
         }
     }
 

@@ -168,6 +168,8 @@ com.netease.yunxin.kit.chatkit.ui.page.adapter.SearchMessageAdapter:
     public void setViewHolderFactory(com.netease.yunxin.kit.common.ui.viewholder.IViewHolderFactory)
 com.netease.yunxin.kit.chatkit.ui.page.adapter.WatchImageAdapter:
     private static final java.lang.String TAG
+com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$3:
+    public void audioCall()
 com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$4:
     public boolean onTextSelected(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
 com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$6:
@@ -248,6 +250,9 @@ com.netease.yunxin.kit.chatkit.ui.util.AppUtil:
     public static int px2dp(android.content.Context,float)
     public static int sp2px(android.content.Context,int)
     public static java.lang.String timeStamp2Date(java.lang.Long,java.lang.String)
+com.netease.yunxin.kit.chatkit.ui.util.DoubleUtils:
+    private static final long TIME
+    public void <init>()
 com.netease.yunxin.kit.chatkit.ui.util.ToastUtil:
     private void <init>()
     public static void show(android.content.Context,int,int)
@@ -306,6 +311,7 @@ com.netease.yunxin.kit.chatkit.ui.view.emoji.StickerManager:
 com.netease.yunxin.kit.chatkit.ui.view.input.ActionConstants
 com.netease.yunxin.kit.chatkit.ui.view.input.ActionFactory:
     public void <init>()
+    public static java.util.ArrayList assembleVideoCallActions()
 com.netease.yunxin.kit.chatkit.ui.view.input.ActionsPanelAdapter:
     private static final int COLUMN_COUNT
     private static final int PAGE_SIZE
@@ -318,6 +324,8 @@ com.netease.yunxin.kit.chatkit.ui.view.input.RecordView:
 com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageData
 com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageItemClickListener:
     public boolean onTextSelected(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
+com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageProxy:
+    public abstract void audioCall()
 com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$RotateRunnable:
     private static final long NEVER
 com.netease.yunxin.kit.chatkit.ui.view.media.PhotoView$SnapRunnable:
@@ -685,6 +693,7 @@ com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$3:
     public final void onCustomAction(android.view.View,java.lang.String)
     public final void sendCustomMessage(com.netease.nimlib.sdk.msg.attachment.MsgAttachment,java.lang.String)
     public final void sendLocationLaunch()
+    public final void videoCall()
 com.netease.yunxin.kit.chatkit.ui.page.fragment.ChatBaseFragment$4:
     public final boolean onSelfIconClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
     public final boolean onSelfIconLongClick(android.view.View,int,com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
@@ -1001,7 +1010,6 @@ com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageLoadHandler:
     public abstract void loadMoreForward(com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean)
     public abstract void onVisibleItemChange(java.util.List)
 com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageProxy:
-    public abstract void audioCall()
     public abstract void captureVideo()
     public abstract boolean hasPermission(java.lang.String)
     public abstract void onCustomAction(android.view.View,java.lang.String)
