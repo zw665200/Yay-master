@@ -108,26 +108,26 @@ class VideoActivity : BaseActivity() {
         override fun onFacePositionChanged(imageWidth: Int, imageHeight: Int, faceRectArr: Array<out AgoraFacePositionInfo>?) {
 //            JLog.i("onFacePositionChanged")
             //人脸检测
-            if (faceRectArr.isNullOrEmpty()) {
-                if (faceCheck) return
-                JLog.i("1111")
-                faceCheck = true
-                mRtcEngine?.takeSnapshot(mUser!!.uid, CManager.getCachePath(this@VideoActivity) + System.currentTimeMillis())
-            }
+//            if (faceRectArr.isNullOrEmpty()) {
+//                if (faceCheck) return
+//                JLog.i("1111")
+//                faceCheck = true
+//                mRtcEngine?.takeSnapshot(mUser!!.uid, CManager.getCachePath(this@VideoActivity) + System.currentTimeMillis())
+//            }
         }
 
         override fun onSnapshotTaken(uid: Int, filePath: String?, width: Int, height: Int, errCode: Int) {
             //截图
-            if (errCode == 0 && filePath != null) {
-                runOnUiThread {
-                    JLog.i("2222")
-                    binding.flBlur.visibility = View.VISIBLE
-                    //高斯模糊
-                    Glide.with(this@VideoActivity).load(filePath)
-                        .apply(RequestOptions.bitmapTransform(BlurTransformation(this@VideoActivity, 25, 8)))
-                        .into(binding.ivBlur)
-                }
-            }
+//            if (errCode == 0 && filePath != null) {
+//                runOnUiThread {
+//                    JLog.i("2222")
+//                    binding.flBlur.visibility = View.VISIBLE
+//                    //高斯模糊
+//                    Glide.with(this@VideoActivity).load(filePath)
+//                        .apply(RequestOptions.bitmapTransform(BlurTransformation(this@VideoActivity, 25, 8)))
+//                        .into(binding.ivBlur)
+//                }
+//            }
         }
     }
 
@@ -619,7 +619,7 @@ class VideoActivity : BaseActivity() {
         mRtcEngine?.setBeautyEffectOptions(true, beautyOptions)
 
         //开启人脸检测
-        mRtcEngine?.enableFaceDetection(true)
+//        mRtcEngine?.enableFaceDetection(true)
 
         //将SurfaceView对象传入Agora，以渲染本地视频
         mRtcEngine?.setupLocalVideo(VideoCanvas(binding.surfaceLocal, RENDER_MODE_HIDDEN, userInfo.uid))

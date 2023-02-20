@@ -320,8 +320,8 @@ class NotificationsFragment : BaseFragment() {
 
             mList.clear()
             mList.addAll(relateList)
-            for (child in relateList) {
-                val userInfo = list.find { it.uid == child.uid }
+            for (child in list) {
+                val userInfo = mList.find { it.uid == child.uid }
                 if (userInfo == null) {
                     mList.add(child)
                 }
