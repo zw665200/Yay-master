@@ -136,7 +136,7 @@ class StoreActivity : BaseActivity() {
                     }
                 }
 
-                itemBinding.tvMoney.setOnClickListener {
+                itemView.setOnClickListener {
                     currentServer = itemData
                     checkPay()
                 }
@@ -415,11 +415,24 @@ class StoreActivity : BaseActivity() {
             ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency!!, currentServer!!.price)
             ReportManager.facebookPurchaseLog(this, currentServer!!.currency!!, currentServer!!.price)
             ReportManager.branchPurchaseLog(this, currentServer!!.name, currentServer!!.currency!!, currentServer!!.price)
+
+            val map = HashMap<String, String>()
+            map["currency"] = currentServer!!.currency!!
+            map["price"] = currentServer!!.price
+
+            ReportManager.branchCustomLog(this, "purchased", map)
         } else {
             ReportManager.firebasePurchaseLog(firebaseAnalytics, "USD", currentServer!!.price)
             ReportManager.facebookPurchaseLog(this, "USD", currentServer!!.price)
             ReportManager.branchPurchaseLog(this, currentServer!!.name, "USD", currentServer!!.price)
+
+            val map = HashMap<String, String>()
+            map["currency"] = "USD"
+            map["price"] = currentServer!!.price
+
+            ReportManager.branchCustomLog(this, "purchased", map)
         }
+
 
 //        LogReportManager.logReport("支付", LogReportManager.LogType.PURCHASED)
 

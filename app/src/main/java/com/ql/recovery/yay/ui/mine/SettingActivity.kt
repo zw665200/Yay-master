@@ -74,14 +74,9 @@ class SettingActivity : BaseActivity() {
         val intent = Intent()
         intent.action = Intent.ACTION_VIEW
         intent.data = Uri.parse("$anchorUrl?token=$token")
-        JLog.i("$anchorUrl?token=$token")
 
-        if (intent.resolveActivity(packageManager) != null) {
-            val componentName = intent.resolveActivity(packageManager)
-            startActivity(Intent.createChooser(intent, "choose chrome first"))
-        }else{
-            startActivity(intent)
-        }
+        JLog.i("$anchorUrl?token=$token")
+        startActivity(intent)
     }
 
 }

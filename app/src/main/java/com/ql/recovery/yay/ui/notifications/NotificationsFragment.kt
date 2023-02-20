@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
@@ -43,6 +42,7 @@ class NotificationsFragment : BaseFragment() {
     private lateinit var mAdapter: DataAdapter<UserInfo>
     private lateinit var conversationAdapter: DataAdapter<Conversation>
     private var mList = arrayListOf<UserInfo>()
+    private var relateList = arrayListOf<UserInfo>()
     private var conversationList = arrayListOf<Conversation>()
     private var waitingDialog: WaitingDialog? = null
     private var firstLoad = true
@@ -317,13 +317,19 @@ class NotificationsFragment : BaseFragment() {
                 binding?.includeNoData?.root?.visibility = View.GONE
             }
 
-            list.forEach { it.follow_status = 2 }
 
-            mList.addAll(list)
-            mList.toSet().toList()
+            mList.clear()
+            mList.addAll(relateList)
+            for (child in relateList) {
+                val userInfo = list.find { it.uid == child.uid }
+                if (userInfo == null) {
+                    mList.add(child)
+                }
+            }
+
             mAdapter.notifyDataSetChanged()
 
-            val uidList = list.map { it.uid.toString() }
+            val uidList = mList.map { it.uid.toString() }
 
             //subscribe
             IMManager.subscribe(requireContext(), uidList)
@@ -347,17 +353,8 @@ class NotificationsFragment : BaseFragment() {
                 binding?.includeNoData?.root?.visibility = View.GONE
             }
 
-            list.forEach { it.follow_status = 1 }
-
-            mList.clear()
-            mList.addAll(list)
-
-            //subscribe
-            val uidList = list.map { it.uid.toString() }
-            IMManager.subscribe(requireContext(), uidList)
-
-            //check online status
-            checkFollowOnlineStatus(uidList)
+            relateList.clear()
+            relateList.addAll(list)
 
             getFollowedInfoList()
         }

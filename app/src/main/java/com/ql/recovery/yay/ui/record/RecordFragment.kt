@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
@@ -27,7 +26,6 @@ import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
 import com.ql.recovery.yay.ui.dialog.UnlockDialog
 import com.ql.recovery.yay.ui.self.BlurTransformation
-import com.ql.recovery.yay.ui.self.SelfLinearLayoutManager
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
@@ -41,7 +39,6 @@ class RecordFragment : BaseFragment() {
     private var mVisitorList = arrayListOf<UserInfo>()
     private var mPage = 0
     private var mSize = 20
-    private var isToLast = false
     private var mType = TagType.Visitor
     private var firstLoad = false
 
@@ -69,6 +66,8 @@ class RecordFragment : BaseFragment() {
 
         val record = getLocalStorage().decodeString("recent_record")
         if (record != null) {
+            //移除掉记录
+            getLocalStorage().remove("recent_record")
             when (record) {
                 "game" -> {
                     mType = TagType.Gamer
@@ -184,7 +183,7 @@ class RecordFragment : BaseFragment() {
                 } else {
                     //检查是否是会员状态
                     getUserInfo { userInfo ->
-                        if (userInfo.is_vip) {
+                        if (userInfo.is_vip || userInfo.role == "anchor") {
                             itemBinding.flBlur.visibility = View.GONE
                         } else {
                             itemBinding.flBlur.visibility = View.VISIBLE
@@ -195,9 +194,23 @@ class RecordFragment : BaseFragment() {
                     }
                 }
 
-                itemBinding.ivVideo.setOnClickListener { requestVideoChat(itemData.uid, itemData.online) }
-                itemBinding.flBlur.setOnClickListener { checkLockStatus(itemData) }
-                itemView.setOnClickListener { showUserDetail(itemData.uid, itemData.online, true) }
+                itemBinding.ivVideo.setOnClickListener {
+                    if (!DoubleUtils.isFastDoubleClick()) {
+                        requestVideoChat(itemData.uid, itemData.online)
+                    }
+                }
+
+                itemBinding.flBlur.setOnClickListener {
+                    if (!DoubleUtils.isFastDoubleClick()) {
+                        checkLockStatus(itemData)
+                    }
+                }
+
+                itemView.setOnClickListener {
+                    if (!DoubleUtils.isFastDoubleClick()) {
+                        showUserDetail(itemData.uid, itemData.online, true)
+                    }
+                }
             }
             .create()
 
@@ -209,7 +222,7 @@ class RecordFragment : BaseFragment() {
         mAdapter = DataAdapter.Builder<UserInfo>()
             .setData(mList)
             .setLayoutId(R.layout.item_match_record_list)
-            .addBindView { itemView, itemData, position, payloads ->
+            .addBindView { itemView, itemData, _, payloads ->
                 val itemBinding = ItemMatchRecordListBinding.bind(itemView)
                 if (payloads.isNotEmpty()) {
                     if (itemData.online) {
@@ -255,15 +268,16 @@ class RecordFragment : BaseFragment() {
                     itemBinding.onlineStatus.setImageResource(R.drawable.pp_bzx)
                 }
 
-                itemBinding.ivVideo.setOnClickListener {
-                    if (!DoubleUtils.isFastDoubleClick()) {
-                        requestVideoChat(itemData.uid, itemData.online)
-                    }
-                }
 
                 itemView.setOnClickListener {
                     if (!DoubleUtils.isFastDoubleClick()) {
                         showUserDetail(itemData.uid, itemData.online, true)
+                    }
+                }
+
+                itemBinding.ivVideo.setOnClickListener {
+                    if (!DoubleUtils.isFastDoubleClick()) {
+                        requestVideoChat(itemData.uid, itemData.online)
                     }
                 }
 

@@ -331,10 +331,22 @@ class PrimeDialog(
                                 ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency!!, currentServer!!.price)
                                 ReportManager.facebookPurchaseLog(activity, currentServer!!.currency!!, currentServer!!.price)
                                 ReportManager.branchPurchaseLog(activity, currentServer!!.name, currentServer!!.currency!!, currentServer!!.price)
+
+                                val map = HashMap<String, String>()
+                                map["currency"] = currentServer!!.currency!!
+                                map["price"] = currentServer!!.price
+
+                                ReportManager.branchCustomLog(activity, "purchased", map)
                             } else {
                                 ReportManager.firebasePurchaseLog(firebaseAnalytics, "USD", currentServer!!.price)
                                 ReportManager.facebookPurchaseLog(activity, "USD", currentServer!!.price)
                                 ReportManager.branchPurchaseLog(activity, currentServer!!.name, "USD", currentServer!!.price)
+
+                                val map = HashMap<String, String>()
+                                map["currency"] = "USD"
+                                map["price"] = currentServer!!.price
+
+                                ReportManager.branchCustomLog(activity, "purchased", map)
                             }
                         }
                     }

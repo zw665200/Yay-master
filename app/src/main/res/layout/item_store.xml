@@ -51,6 +51,6 @@
         android:background="@drawable/hybg_m"
         android:gravity="center"
         android:textColor="@color/color_content"
-        android:textSize="@dimen/sp_12" />
+        android:textSize="@dimen/sp_17" />
 
 </FrameLayout>

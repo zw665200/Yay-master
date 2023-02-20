@@ -3,19 +3,13 @@ package com.ql.recovery.yay.ui.dialog
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.PorterDuff
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import androidx.core.content.ContextCompat
-import androidx.core.widget.ContentLoadingProgressBar
 import com.ql.recovery.yay.R
-import com.ql.recovery.yay.databinding.DialogNoticeBinding
 import com.ql.recovery.yay.databinding.DialogUnlockBinding
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
-import kotlin.math.cos
 
 
 class UnlockDialog(
@@ -36,14 +30,6 @@ class UnlockDialog(
         setCancelable(true)
 
         binding.btnCancel.setOnClickListener { cancel() }
-
-        if (coin < cost) {
-            binding.btnCancel.visibility = View.GONE
-            binding.btnTask.text = activity.getString(R.string.club_notice_top_up)
-            binding.tvContent.text = String.format(activity.getString(R.string.club_unlock_sure), cost)
-        } else {
-            binding.tvContent.text = String.format(activity.getString(R.string.club_unlock_content), cost)
-        }
 
         binding.btnTask.setOnClickListener {
             if (coin < cost) {

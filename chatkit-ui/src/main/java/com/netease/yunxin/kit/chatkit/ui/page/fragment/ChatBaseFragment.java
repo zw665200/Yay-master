@@ -336,7 +336,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public boolean sendTextMessage(String msg, ChatMessageBean replyMsg) {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip()) {
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
                             List<String> pushList = null;
                             if (aitManager != null && sessionType == SessionTypeEnum.Team) {
                                 pushList = aitManager.getAitTeamMember();
@@ -369,7 +369,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 public void pickMedia() {
                     //判断是否是会员
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip()) {
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
                             if (PermissionUtils.hasPermissions(
                                     ChatBaseFragment.this.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
                                 startPickMedia();
@@ -395,7 +395,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public void takePicture() {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip()) {
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
                             if (PermissionUtils.hasPermissions(
                                     ChatBaseFragment.this.getContext(), Manifest.permission.CAMERA)) {
                                 startTakePicture();
@@ -419,7 +419,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public void captureVideo() {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip()) {
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
                             if (PermissionUtils.hasPermissions(
                                     ChatBaseFragment.this.getContext(), Manifest.permission.CAMERA)) {
                                 startCaptureVideo();
@@ -443,7 +443,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public boolean sendFile() {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip()) {
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
                             if (PermissionUtils.hasPermissions(
                                     ChatBaseFragment.this.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
                                 startPickFile();
@@ -471,7 +471,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public boolean sendAudio(File audioFile, long audioLength, ChatMessageBean replyMsg) {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip()) {
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
                             //audio not support reply
                             viewModel.sendAudioMessage(audioFile, audioLength);
                         } else {
@@ -493,7 +493,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public boolean sendCustomMessage(MsgAttachment attachment, String content) {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip()) {
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
                             viewModel.sendCustomMessage(attachment, content);
                         } else {
                             if (Config.INSTANCE.getMHandler() != null) {

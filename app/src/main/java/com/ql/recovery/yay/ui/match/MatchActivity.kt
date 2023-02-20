@@ -461,7 +461,7 @@ class MatchActivity : BaseActivity() {
             getLocalStorage().encode("match_report", true)
             ReportManager.firebaseItemLog(firebaseAnalytics, userInfo.uid.toString(), userInfo.nickname, "match")
             ReportManager.facebookItemLog(this, userInfo.uid.toString(), userInfo.nickname, "open", "match")
-            ReportManager.branchItemLog(this, userInfo.uid.toString(), userInfo.nickname, "open", "match")
+            ReportManager.branchCustomLog(this, "match", null)
         }
     }
 
@@ -670,20 +670,14 @@ class MatchActivity : BaseActivity() {
         val type = intent.getStringExtra("type")
         if (type == "video" || type == "voice") {
             timer?.cancel()
+            closeService()
         }
-
-        closeService()
 
         exoPlayer?.stop()
         exoPlayer?.release()
 
         Config.mainHandler?.sendEmptyMessage(0x10006)
         Config.subscriberHandler?.sendEmptyMessage(0x10001)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        mRtcEngine?.leaveChannel()
     }
 
     private fun closeService() {

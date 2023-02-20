@@ -8,6 +8,8 @@ import android.os.*
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.bumptech.glide.Glide
+import com.google.gson.reflect.TypeToken
 import com.netease.yunxin.kit.conversationkit.repo.ConversationRepo
 import com.ql.recovery.bean.*
 import com.ql.recovery.config.Config
@@ -26,6 +28,7 @@ import com.ql.recovery.yay.ui.mine.MineFragment
 import com.ql.recovery.yay.ui.notifications.NotificationsFragment
 import com.ql.recovery.yay.ui.record.RecordFragment
 import com.ql.recovery.yay.util.AppUtil
+import com.ql.recovery.yay.util.GsonUtils
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
 import com.tencent.mmkv.MMKV

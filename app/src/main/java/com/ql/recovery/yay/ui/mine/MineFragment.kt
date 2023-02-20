@@ -48,7 +48,8 @@ class MineFragment : BaseFragment() {
 
         binding!!.ivSetting.setOnClickListener { toSettingPage() }
         binding!!.ivAvatar.setOnClickListener { showUserDetail() }
-        binding!!.ivMoreProfile.setOnClickListener { toProfilePage() }
+        binding!!.includeUser.tvNickname.setOnClickListener { toProfilePage() }
+        binding!!.includeUser.flMoreProfile.setOnClickListener { toProfilePage() }
         binding!!.llFollowed.setOnClickListener { toFollowPage() }
         binding!!.llFollowing.setOnClickListener { toFollowPage() }
         binding!!.includeUser.tvLevel.setOnClickListener { toLevelPage() }
@@ -202,11 +203,14 @@ class MineFragment : BaseFragment() {
 
     private fun loadPicList(userInfo: UserInfo) {
         val list = arrayListOf<String>()
-        if (userInfo.photos.isEmpty()) {
-            list.add("")
-        } else {
-            list.addAll(userInfo.photos)
-        }
+        list.addAll(userInfo.photos)
+        list.add("")
+
+//        if (userInfo.photos.isEmpty()) {
+//            list.add("")
+//        } else {
+//            list.addAll(userInfo.photos)
+//        }
 
         val width = AppUtil.getScreenWidth(requireContext()) / 3
         val adapter = DataAdapter.Builder<String>()
@@ -246,11 +250,14 @@ class MineFragment : BaseFragment() {
 
     private fun loadVideoList(userInfo: UserInfo) {
         val list = arrayListOf<String>()
-        if (userInfo.videos.isEmpty()) {
-            list.add("")
-        } else {
-            list.addAll(userInfo.videos)
-        }
+        list.addAll(userInfo.videos)
+        list.add("")
+
+//        if (userInfo.videos.isEmpty()) {
+//            list.add("")
+//        } else {
+//            list.addAll(userInfo.videos)
+//        }
 
         val width = (AppUtil.getScreenWidth(requireContext()) / 3.5).toInt()
         val mAdapter = DataAdapter.Builder<String>()
@@ -378,6 +385,11 @@ class MineFragment : BaseFragment() {
                             if (ossPath.isNotBlank()) {
                                 val list = arrayListOf<String>()
                                 list.add(ossPath)
+
+                                getUserInfo { userInfo ->
+                                    list.addAll(userInfo.videos)
+                                }
+
                                 DataManager.updateVideo(list) {
                                     if (it) {
                                         getUserInfo()
@@ -405,6 +417,11 @@ class MineFragment : BaseFragment() {
                                     if (ossPath.isNotBlank()) {
                                         val list = arrayListOf<String>()
                                         list.add(ossPath)
+
+                                        getUserInfo { userInfo ->
+                                            list.addAll(userInfo.photos)
+                                        }
+
                                         DataManager.updateImage(list) {
                                             if (it) {
                                                 getUserInfo()

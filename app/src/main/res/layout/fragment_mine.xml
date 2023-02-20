@@ -85,15 +85,6 @@
 
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/iv_more_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end|center_vertical"
-                        android:layout_marginEnd="@dimen/dp_5"
-                        android:padding="@dimen/text_size_10"
-                        android:src="@drawable/arr_black" />
-
                 </FrameLayout>
 
             </FrameLayout>

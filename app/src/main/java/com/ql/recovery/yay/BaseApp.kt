@@ -78,7 +78,7 @@ class BaseApp : Application() {
             initLifecycle()
 
             // Branch logging for debugging
-            Branch.enableTestMode()
+//            Branch.enableTestMode()
             // Branch object initialization
             Branch.getAutoInstance(this)
         }

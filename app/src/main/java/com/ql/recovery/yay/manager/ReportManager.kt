@@ -68,12 +68,10 @@ object ReportManager {
         logger.logPurchase(BigDecimal(value), currency, bundle)
     }
 
-    fun branchItemLog(context: Context, itemId: String, itemName: String, itemType: String, type: String) {
+    fun branchItemLog(context: Context, alias: String, itemId: String, itemName: String) {
         BranchEvent(BRANCH_STANDARD_EVENT.VIEW_ITEM)
-            .setCustomerEventAlias(type)
+            .setCustomerEventAlias(alias)
             .setDescription(itemId + itemName)
-            .addCustomDataProperty("item_type", itemType)
-            .addCustomDataProperty("type", type)
             .logEvent(context)
     }
 
@@ -101,5 +99,23 @@ object ReportManager {
             .setCurrency(CurrencyType.USD)
             .addContentItems(buo)
             .logEvent(context)
+    }
+
+    fun branchCustomLog(
+        context: Context,
+        customName: String,
+        customMap: HashMap<String, String>?
+    ) {
+        val event = BranchEvent(customName)
+        if (customMap.isNullOrEmpty()) {
+            event.logEvent(context)
+            return
+        }
+
+        for (item in customMap.iterator()) {
+            event.addCustomDataProperty(item.key, item.value)
+        }
+
+        event.logEvent(context)
     }
 }

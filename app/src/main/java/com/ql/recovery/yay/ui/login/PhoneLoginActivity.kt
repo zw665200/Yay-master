@@ -284,9 +284,9 @@ class PhoneLoginActivity : BaseActivity() {
             Config.mHandler?.sendEmptyMessage(0x10004)
 
             //更新国家信息
-            if (countryCode != null) {
-                DataManager.updateCountry(countryCode!!) {}
-            }
+//            if (countryCode != null && userInfo.country.isBlank()) {
+//                DataManager.updateCountry(countryCode!!) {}
+//            }
 
             //上报日志
             ReportManager.firebaseLoginLog(firebaseAnalytics, userInfo.uid, userInfo.nickname)
