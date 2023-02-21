@@ -214,6 +214,7 @@ class PhoneLoginActivity : BaseActivity() {
                     viewModel?.resetPassword(phoneCode, phone, code, password) {
                         if (it) {
                             ToastUtil.showShort(this, getString(R.string.login_success))
+                            resetStatus()
                         }
                     }
                 }

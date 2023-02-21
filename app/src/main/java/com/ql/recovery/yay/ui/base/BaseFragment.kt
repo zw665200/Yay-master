@@ -24,6 +24,7 @@ import com.ql.recovery.yay.callback.LocationCallback
 import com.ql.recovery.yay.ui.dialog.NoticeDialog
 import com.ql.recovery.yay.ui.dialog.ProfileDialog
 import com.ql.recovery.yay.ui.login.LoginActivity
+import com.ql.recovery.yay.ui.mine.CountryActivity
 import com.ql.recovery.yay.util.*
 import com.tencent.mmkv.MMKV
 
@@ -130,6 +131,7 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
             override fun onFailed() {
                 requireActivity().runOnUiThread {
                     ToastUtil.showShort(requireContext(), "get location failed, please check your network")
+                    startActivity(Intent(requireActivity(), CountryActivity::class.java))
                 }
             }
         })
@@ -144,7 +146,41 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         return matchConfig
     }
 
-    protected fun checkPermissions(isPermitted: () -> Unit) {
+    protected fun checkLocationPermissions(success: () -> Unit) {
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        requestPermission(permissions) {
+            when (it) {
+                "grant" -> success()
+                "deny" -> {
+                    PermissionPageUtils(requireContext()).jumpPermissionPage()
+                }
+            }
+        }
+    }
+
+    protected fun checkVideoPermissions(success: () -> Unit) {
+        val permissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+
+        requestPermission(permissions) {
+            when (it) {
+                "grant" -> success()
+                "deny" -> {
+                    PermissionPageUtils(requireContext()).jumpPermissionPage()
+                }
+            }
+        }
+    }
+
+    protected fun checkPermissions(success: () -> Unit) {
         val permissions = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO,
@@ -154,51 +190,46 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
         )
 
-        requestPermission(permissions) { isPermitted() }
+        requestPermission(permissions) {
+            when (it) {
+                "grant" -> success()
+                "deny" -> {
+                    PermissionPageUtils(requireContext()).jumpPermissionPage()
+                }
+            }
+        }
     }
 
-    protected fun checkReadAndWritePermissions(isPermitted: () -> Unit) {
+    protected fun checkReadAndWritePermissions(success: () -> Unit) {
         val permissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
 
-        requestPermission(permissions) { isPermitted() }
+        requestPermission(permissions) {
+            when (it) {
+                "grant" -> success()
+                "deny" -> {
+                    PermissionPageUtils(requireContext()).jumpPermissionPage()
+                }
+            }
+        }
     }
 
-    protected fun checkReadPhonePermissions(isPermitted: () -> Unit) {
-        val permissions = arrayOf(
-            Manifest.permission.READ_PHONE_STATE
-        )
-
-        requestPermission(permissions) { isPermitted() }
-    }
-
-    protected fun checkLocationPermissions(isPermitted: () -> Unit) {
-        val permissions = arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-
-        requestPermission(permissions) { isPermitted() }
-    }
-
-    private fun requestPermission(permissions: Array<out String>, method: () -> Unit) {
+    private fun requestPermission(permissions: Array<out String>, method: (String) -> Unit) {
         LivePermissions(this@BaseFragment)
             .request(permissions)
             .observe(this@BaseFragment) {
                 when (it) {
                     is PermissionResult.Grant -> {
-                        method()
-                        mk.encode("permission_deny", 0L)
+                        method("grant")
                     }
 
                     is PermissionResult.Rationale -> {
                         //权限拒绝
-                        ToastUtil.showShort(context, "please open the related permissions")
                         it.permissions.forEach { s ->
-                            println("Rationale:${s}")
-                            mk.encode("permission_deny", System.currentTimeMillis())
+                            JLog.i("Rationale:${s}")
+                            method("rationale")
                         }
                     }
 
@@ -206,8 +237,8 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                         ToastUtil.showShort(context, "please open the related permissions")
                         //权限拒绝，且勾选了不再询问
                         it.permissions.forEach { s ->
-                            println("deny:${s}")
-                            mk.encode("permission_deny", System.currentTimeMillis())
+                            JLog.i("deny:${s}")
+                            method("deny")
                         }
                     }
                 }

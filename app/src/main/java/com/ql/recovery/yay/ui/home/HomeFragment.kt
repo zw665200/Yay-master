@@ -10,8 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
-import com.blongho.country_data.World
-import com.bumptech.glide.Glide
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
@@ -260,12 +258,20 @@ class HomeFragment : BaseFragment() {
             }
 
 
-            checkPermissions {
-                if (userInfo.country.isBlank()) {
+            if (userInfo.country.isBlank()) {
+                //检查定位权限
+                checkLocationPermissions {
+                    //获取定位
                     getLocation {
-                        openMatchPage()
+                        //检查视频的权限
+                        checkVideoPermissions {
+                            openMatchPage()
+                        }
                     }
-                } else {
+                }
+            } else {
+                //检查视频的权限
+                checkVideoPermissions {
                     openMatchPage()
                 }
             }

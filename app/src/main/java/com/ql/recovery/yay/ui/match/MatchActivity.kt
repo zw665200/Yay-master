@@ -614,11 +614,11 @@ class MatchActivity : BaseActivity() {
         timer?.start()
 
         flushConfig()
-        closeService()
 
-        val tp = intent.getStringExtra("type")
-        if (tp != null) {
-            startWebSocketService(userInfo.uid, tp, getMatchConfig())
+        val type = intent.getStringExtra("type")
+        if (type != null) {
+            closeService()
+            startWebSocketService(userInfo.uid, type, getMatchConfig())
         }
 
         if (Config.mainHandler != null) {
@@ -671,6 +671,12 @@ class MatchActivity : BaseActivity() {
     override fun onStop() {
         super.onStop()
 
+        val type = intent.getStringExtra("type")
+        if (type == "video" || type == "voice") {
+            timer?.cancel()
+            closeService()
+        }
+
         Config.mainHandler?.sendEmptyMessage(0x10006)
         Config.subscriberHandler?.sendEmptyMessage(0x10001)
     }
@@ -678,21 +684,19 @@ class MatchActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        val type = intent.getStringExtra("type")
-        if (type == "video" || type == "voice") {
-            timer?.cancel()
-            closeService()
-        }
-
         exoPlayer?.stop()
         exoPlayer?.release()
     }
 
     private fun closeService() {
-        if (bindIntent != null) {
-            mWebSocketService?.closeConnect()
-            unbindService(serviceConnection)
-            stopService(bindIntent)
+        try {
+            if (bindIntent != null) {
+                mWebSocketService?.closeConnect()
+                unbindService(serviceConnection)
+                stopService(bindIntent)
+            }
+        } catch (ex: Exception) {
+
         }
     }
 

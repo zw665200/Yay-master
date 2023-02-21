@@ -135,7 +135,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 itemBinding.tvName.text = itemData.nickname
                 itemBinding.tvAge.text = itemData.age.toString()
 
-                itemBinding.ivPhoto.setImageResource(R.color.white)
+//                itemBinding.ivPhoto.setImageResource(R.color.white)
                 Glide.with(requireActivity()).load(itemData.cover_url).into(itemBinding.ivPhoto)
 
                 when (itemData.sex) {
@@ -155,36 +155,40 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     itemBinding.playerView.player = null
                     itemBinding.ivPhoto.visibility = View.VISIBLE
 
-                    if (exoPlayerList.size > position && exoPlayerList[position] != null) {
-                        exoPlayerList[position]?.stop()
-                        exoPlayerList[position]?.release()
-                        exoPlayerList[position] = null
+                    launch {
+                        if (exoPlayerList.size > position && exoPlayerList[position] != null) {
+                            exoPlayerList[position]?.stop()
+                            exoPlayerList[position]?.release()
+                            exoPlayerList[position] = null
+                        }
                     }
 
                     return@addBindView
                 }
 
-                var exoPlayer: ExoPlayer?
+                var exoPlayer: ExoPlayer? = null
                 if (exoPlayerList.size > position) {
                     if (exoPlayerList[position] == null) {
                         exoPlayer = getPlayer()
                         exoPlayerList[position] = exoPlayer
                     } else {
-                        itemBinding.playerView.player = null
-                        itemBinding.ivPhoto.visibility = View.VISIBLE
-                        exoPlayer = exoPlayerList[position]
-                        exoPlayer?.stop()
-                        exoPlayer?.release()
-                        exoPlayer = getPlayer()
-                        exoPlayerList[position] = exoPlayer
+                        launch {
+                            itemBinding.playerView.player = null
+                            itemBinding.ivPhoto.visibility = View.VISIBLE
+                            exoPlayer = exoPlayerList[position]
+                            exoPlayer?.stop()
+                            exoPlayer?.release()
+                            exoPlayer = getPlayer()
+                            exoPlayerList[position] = exoPlayer
+                        }
                     }
                 } else {
                     exoPlayer = getPlayer()
                     exoPlayerList.add(exoPlayer)
                 }
 
-                if (itemData.cover_url != null) {
-                    loadVideo(exoPlayer, itemBinding, itemData, position)
+                if (itemData.cover_url != null && exoPlayer != null) {
+                    loadVideo(exoPlayer!!, itemBinding, itemData, position)
                 }
 
                 itemView.setOnClickListener {
