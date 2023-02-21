@@ -50,6 +50,9 @@ object Config {
     //umeng key
     var umengKey = "62ce9bcf05844627b5e86bfd"
 
+    //appsflyer
+    var APPS_FLYER_KEY = "DPLpZK4xzXEXfi9gcgGgpm"
+
     //百度01 3
     //头条 4
     //UC 5

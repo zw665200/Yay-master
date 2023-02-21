@@ -2,8 +2,11 @@ package com.ql.recovery.yay.ui
 
 import android.content.Intent
 import android.os.CountDownTimer
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.ql.recovery.bean.Countries
 import com.ql.recovery.bean.UserInfo
+import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityStartBinding
@@ -28,9 +31,15 @@ class StartActivity : BaseActivity() {
     }
 
     override fun initView() {
+        if (intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT != 0) {
+            finish()
+            return
+        }
+
         initTimer()
         getCountries()
         getBasePrice()
+        initAppsFlyer()
     }
 
     override fun onStart() {
@@ -92,6 +101,20 @@ class StartActivity : BaseActivity() {
         } catch (ex: Exception) {
 
         }
+    }
+
+    private fun initAppsFlyer() {
+        AppsFlyerLib.getInstance().start(this.applicationContext, Config.APPS_FLYER_KEY, object : AppsFlyerRequestListener {
+            override fun onSuccess() {
+                JLog.i("appsflyer init success")
+            }
+
+            override fun onError(errorCode: Int, errorDesc: String) {
+                JLog.i("appsflyer init failed : errorCode = $errorCode, errorDesc = $errorDesc")
+            }
+        })
+
+        AppsFlyerLib.getInstance().setDebugLog(true)
     }
 
     private fun initBranch() {

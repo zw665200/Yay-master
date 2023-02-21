@@ -222,7 +222,7 @@ class PrimeDialog(
                                     )
                                     .build()
 
-                            billingClient.queryProductDetailsAsync(queryProductDetailsParams) { result, productDetailsList ->
+                            billingClient.queryProductDetailsAsync(queryProductDetailsParams) { _, productDetailsList ->
                                 // check billingResult
                                 // process returned productDetailsList
                                 if (productDetailsList.isEmpty()) {
@@ -231,12 +231,12 @@ class PrimeDialog(
                                 }
 
                                 for (productDetails in productDetailsList) {
-                                    JLog.i("product = $productDetails")
+//                                    JLog.i("product = $productDetails")
                                     if (!productDetails.subscriptionOfferDetails.isNullOrEmpty()) {
                                         val pricingPhases = productDetails.subscriptionOfferDetails!![0].pricingPhases
                                         for (item in pricingPhases.pricingPhaseList) {
-                                            JLog.i("price = ${item.formattedPrice}")
-                                            JLog.i("code = ${item.priceCurrencyCode}")
+//                                            JLog.i("price = ${item.formattedPrice}")
+//                                            JLog.i("code = ${item.priceCurrencyCode}")
                                             runOnUiThread {
                                                 binding.tvPrice.text = item.formattedPrice
                                                 currentServer!!.currency = item.priceCurrencyCode
@@ -331,6 +331,7 @@ class PrimeDialog(
                                 ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency!!, currentServer!!.price)
                                 ReportManager.facebookPurchaseLog(activity, currentServer!!.currency!!, currentServer!!.price)
                                 ReportManager.branchPurchaseLog(activity, currentServer!!.name, currentServer!!.currency!!, currentServer!!.price)
+                                ReportManager.appsFlyerPurchaseLog(activity, currentServer!!.code, currentServer!!.price)
 
                                 val map = HashMap<String, String>()
                                 map["currency"] = currentServer!!.currency!!
@@ -341,6 +342,7 @@ class PrimeDialog(
                                 ReportManager.firebasePurchaseLog(firebaseAnalytics, "USD", currentServer!!.price)
                                 ReportManager.facebookPurchaseLog(activity, "USD", currentServer!!.price)
                                 ReportManager.branchPurchaseLog(activity, currentServer!!.name, "USD", currentServer!!.price)
+                                ReportManager.appsFlyerPurchaseLog(activity, currentServer!!.code, currentServer!!.price)
 
                                 val map = HashMap<String, String>()
                                 map["currency"] = "USD"

@@ -283,15 +283,11 @@ class PhoneLoginActivity : BaseActivity() {
             //登录IM
             Config.mHandler?.sendEmptyMessage(0x10004)
 
-            //更新国家信息
-//            if (countryCode != null && userInfo.country.isBlank()) {
-//                DataManager.updateCountry(countryCode!!) {}
-//            }
-
             //上报日志
             ReportManager.firebaseLoginLog(firebaseAnalytics, userInfo.uid, userInfo.nickname)
             ReportManager.facebookLoginLog(this, userInfo.uid, userInfo.nickname)
             ReportManager.branchLoginLog(this, userInfo.uid, userInfo.nickname)
+            ReportManager.appsFlyerLoginLog(this, userInfo.uid)
 
             val guide = getLocalStorage().decodeBool("guide_finish", false)
             if (!guide) {
@@ -307,8 +303,10 @@ class PhoneLoginActivity : BaseActivity() {
             val permission = getLocalStorage().decodeBool("show_permission", false)
             if (!permission) {
                 startActivity(Intent(this, AuthActivity::class.java))
+                finish()
             } else {
                 startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
         }
     }

@@ -73,8 +73,6 @@ class ProfileDialog(
         if (userInfo.country.isNotBlank()) {
             val res = "file:///android_asset/images/${userInfo.country}.png"
             ImageManager.getBitmap(activity, res) { bitmap ->
-                JLog.i("width = ${bitmap.width}")
-                JLog.i("height = ${bitmap.height}")
                 binding.includeUser.ivNation.setImageBitmap(bitmap)
             }
         }

@@ -13,6 +13,7 @@ data class Server(
     val is_hot: Boolean,
     val name: String,
     var price: String,
+    var change_Price: String?,
     val icon: String,
     val type: String,
     var currency: String?

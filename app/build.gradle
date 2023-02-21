@@ -11,8 +11,8 @@ android {
         applicationId "com.ql.recovery.yay"
         minSdk 21
         targetSdk 31
-        versionCode 11
-        versionName "1.0.1"
+        versionCode 13
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -24,16 +24,16 @@ android {
 
     signingConfigs {
         debug {
-//            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
-            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
+            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
+//            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
             storePassword 'abcd@1234'
             keyAlias 'key'
             keyPassword 'abcd@1234'
         }
 
         release {
-//            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
-            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
+            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
+//            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
             storePassword 'abcd@1234'
             keyAlias 'key'
             keyPassword 'abcd@1234'
@@ -104,7 +104,6 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:glide:4.13.2'
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
-//    kapt "com.github.bumptech.glide:compiler:4.13.2"
 
     //视频播放库
     implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
@@ -124,6 +123,10 @@ dependencies {
     //firebase
     implementation platform('com.google.firebase:firebase-bom:30.3.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    //appsflyer
+    implementation 'com.appsflyer:af-android-sdk:6.3.2'
+    implementation "com.android.installreferrer:installreferrer:2.2"
 
     //facebook
     implementation 'com.facebook.android:facebook-android-sdk:[4,14)'
@@ -153,7 +156,6 @@ dependencies {
     implementation(project(":http"))
 
     //NetEasy IM
-//    implementation(project(":contactkit-ui"))
     implementation(project(":conversationkit-ui"))
     implementation(project(":chatkit-ui"))
 
@@ -168,12 +170,11 @@ dependencies {
     //xrefreshview
     implementation 'com.huxq17.xrefreshview:xrefreshview:3.6.9'
     implementation 'com.wuxiaolong.pullloadmorerecyclerview:library:1.1.2'
-    implementation  'io.github.scwang90:refresh-layout-kernel:2.0.5'
-    implementation  'io.github.scwang90:refresh-header-material:2.0.5'
-    implementation  'io.github.scwang90:refresh-footer-classics:2.0.5'
+    implementation 'io.github.scwang90:refresh-layout-kernel:2.0.5'
+    implementation 'io.github.scwang90:refresh-header-material:2.0.5'
+    implementation 'io.github.scwang90:refresh-footer-classics:2.0.5'
 
     implementation 'com.github.blongho:worldCountryData:v1.5.4-alpha-1'
-//    implementation 'io.alterac.blurkit:blurkit:1.1.0'
 
     //branch
     implementation 'io.branch.sdk.android:library:5.2.7'

@@ -38,7 +38,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-
 class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     private var binding: FragmentClubBinding? = null
     private lateinit var mAdapter: DataAdapter<Anchor>

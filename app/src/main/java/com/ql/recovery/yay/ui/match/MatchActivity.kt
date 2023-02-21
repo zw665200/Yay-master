@@ -263,6 +263,7 @@ class MatchActivity : BaseActivity() {
                                             val config = getMatchConfig()
                                             if (config.hand_free) {
                                                 matchVideoDialog?.waitConnect()
+                                                acceptInvite(type)
                                             }
                                         }
                                     }
@@ -281,6 +282,7 @@ class MatchActivity : BaseActivity() {
                                             val config = getMatchConfig()
                                             if (config.hand_free) {
                                                 matchAudioDialog?.waitConnect()
+                                                acceptInvite(type)
                                             }
                                         }
                                     }
@@ -462,6 +464,7 @@ class MatchActivity : BaseActivity() {
             ReportManager.firebaseItemLog(firebaseAnalytics, userInfo.uid.toString(), userInfo.nickname, "match")
             ReportManager.facebookItemLog(this, userInfo.uid.toString(), userInfo.nickname, "open", "match")
             ReportManager.branchCustomLog(this, "match", null)
+            ReportManager.appsFlyerCustomLog(this, "match", userInfo.uid)
         }
     }
 
@@ -667,6 +670,14 @@ class MatchActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
+
+        Config.mainHandler?.sendEmptyMessage(0x10006)
+        Config.subscriberHandler?.sendEmptyMessage(0x10001)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
         val type = intent.getStringExtra("type")
         if (type == "video" || type == "voice") {
             timer?.cancel()
@@ -675,9 +686,6 @@ class MatchActivity : BaseActivity() {
 
         exoPlayer?.stop()
         exoPlayer?.release()
-
-        Config.mainHandler?.sendEmptyMessage(0x10006)
-        Config.subscriberHandler?.sendEmptyMessage(0x10001)
     }
 
     private fun closeService() {

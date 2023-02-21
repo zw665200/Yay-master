@@ -444,7 +444,6 @@ class RecordFragment : BaseFragment() {
     }
 
     private fun setMatcherOnline(uid: String, online: Boolean) {
-        JLog.i("uid = $uid , online = $online")
         for ((position, child) in mList.withIndex()) {
             if (child.uid.toString() == uid) {
                 mList[position].online = online

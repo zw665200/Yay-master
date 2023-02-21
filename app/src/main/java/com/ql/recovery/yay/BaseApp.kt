@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import com.appsflyer.AppsFlyerLib
 import com.blongho.country_data.World
 import com.google.gson.reflect.TypeToken
 import com.netease.nimlib.sdk.NIMClient
@@ -43,7 +44,6 @@ import com.ql.recovery.yay.util.*
 import com.tencent.mmkv.MMKV
 import io.branch.referral.Branch
 import java.lang.ref.WeakReference
-import java.util.HashMap
 
 
 /**
@@ -67,6 +67,7 @@ class BaseApp : Application() {
             initHttpRequest()
             initMMKV()
             initCountryLib()
+            initAppsFlyer()
 
             //注册多端登录监听
             registerOtherClientStatus()
@@ -204,6 +205,10 @@ class BaseApp : Application() {
 
     private fun initCountryLib() {
         World.init(this)
+    }
+
+    private fun initAppsFlyer() {
+        AppsFlyerLib.getInstance().init(Config.APPS_FLYER_KEY, null, this)
     }
 
     private fun initNIM() {

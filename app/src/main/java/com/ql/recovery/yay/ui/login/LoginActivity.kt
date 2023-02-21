@@ -362,6 +362,7 @@ class LoginActivity : BaseActivity() {
             ReportManager.firebaseLoginLog(firebaseAnalytics, userInfo.uid, userInfo.nickname)
             ReportManager.facebookLoginLog(this, userInfo.uid, userInfo.nickname)
             ReportManager.branchLoginLog(this, userInfo.uid, userInfo.nickname)
+            ReportManager.appsFlyerLoginLog(this, userInfo.uid)
 
             val guide = getLocalStorage().decodeBool("guide_finish", false)
             if (!guide) {

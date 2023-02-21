@@ -79,6 +79,14 @@ class StoreActivity : BaseActivity() {
                     itemBinding.tvMoney.text = String.format(getString(R.string.store_price), itemData.price)
                 }
 
+                if (!itemData.change_Price.isNullOrEmpty()) {
+                    if (itemData.change_Price!!.contains("$")) {
+                        itemBinding.tvMoney.text = itemData.change_Price
+                    }
+                } else {
+                    itemBinding.tvMoney.text = String.format(getString(R.string.store_price), itemData.price)
+                }
+
                 if (itemData.price == "0.00") {
                     itemBinding.tvMoney.text = getString(R.string.store_pay_free)
                 }
@@ -231,18 +239,17 @@ class StoreActivity : BaseActivity() {
                             JLog.i("productDetailsList = $productDetailsList")
 
                             for (productDetails in productDetailsList) {
-                                JLog.i("productDetails = $productDetails")
                                 if (!productDetails.subscriptionOfferDetails.isNullOrEmpty()) {
                                     for (productDetail in productDetails.subscriptionOfferDetails!!) {
                                         val pricingPhases = productDetails.subscriptionOfferDetails!![0].pricingPhases
                                         for (item in pricingPhases.pricingPhaseList) {
-                                            JLog.i("price = ${item.formattedPrice}")
-                                            JLog.i("code = ${item.priceCurrencyCode}")
+//                                            JLog.i("price = ${item.formattedPrice}")
+//                                            JLog.i("code = ${item.priceCurrencyCode}")
                                             runOnUiThread {
                                                 val server = mList.find { it.code == productDetails.productId }
                                                 if (server != null) {
                                                     val position = mList.indexOf(server)
-                                                    mList[position].price = item.formattedPrice
+                                                    mList[position].change_Price = item.formattedPrice
                                                     mList[position].currency = item.priceCurrencyCode
                                                     mAdapter.notifyItemChanged(position)
                                                 }
@@ -264,16 +271,16 @@ class StoreActivity : BaseActivity() {
                             JLog.i("result = $result")
 
                             for (productDetails in productDetailsList) {
-                                JLog.i("productDetails = $productDetails")
+//                                JLog.i("productDetails = $productDetails")
                                 val details = productDetails.oneTimePurchaseOfferDetails
                                 if (details != null) {
-                                    JLog.i("price = ${details.formattedPrice}")
-                                    JLog.i("code = ${details.priceCurrencyCode}")
+//                                    JLog.i("price = ${details.formattedPrice}")
+//                                    JLog.i("code = ${details.priceCurrencyCode}")
                                     runOnUiThread {
                                         val server = mList.find { it.code == productDetails.productId }
                                         if (server != null) {
                                             val position = mList.indexOf(server)
-                                            mList[position].price = details.formattedPrice
+                                            mList[position].change_Price = details.formattedPrice
                                             mList[position].currency = details.priceCurrencyCode
                                             mAdapter.notifyItemChanged(position)
                                         }
@@ -318,7 +325,7 @@ class StoreActivity : BaseActivity() {
             return
         }
 
-//        LogReportManager.logReport("支付", LogReportManager.LogType.PURCHASE)
+        JLog.i("price = ${currentServer!!.price}")
 
         when (currentServer!!.type) {
             "free" -> doPay(this, 0)
@@ -336,7 +343,7 @@ class StoreActivity : BaseActivity() {
             0 -> {
                 DataManager.createOrder(currentServer!!.id) {
                     if (it.is_paid) {
-                        paySuccess()
+                        paySuccess(true)
                         return@createOrder
                     }
                 }
@@ -345,7 +352,7 @@ class StoreActivity : BaseActivity() {
             1 -> {
                 DataManager.createOrder(currentServer!!.id) {
                     if (it.is_paid) {
-                        paySuccess()
+                        paySuccess(true)
                         return@createOrder
                     }
 
@@ -357,7 +364,7 @@ class StoreActivity : BaseActivity() {
                         object : PayCallback {
                             override fun success(token: String) {
                                 runOnUiThread {
-                                    paySuccess()
+                                    paySuccess(false)
                                 }
                             }
 
@@ -373,7 +380,7 @@ class StoreActivity : BaseActivity() {
             2 -> {
                 DataManager.createOrder(currentServer!!.id) {
                     if (it.is_paid) {
-                        paySuccess()
+                        paySuccess(true)
                         return@createOrder
                     }
 
@@ -385,7 +392,7 @@ class StoreActivity : BaseActivity() {
                         object : PayCallback {
                             override fun success(token: String) {
                                 runOnUiThread {
-                                    paySuccess()
+                                    paySuccess(false)
                                 }
                             }
 
@@ -400,7 +407,7 @@ class StoreActivity : BaseActivity() {
         }
     }
 
-    private fun paySuccess() {
+    private fun paySuccess(isFree: Boolean) {
         //pay success
         ToastUtil.showShort(this, getString(R.string.store_pay_success))
 
@@ -410,31 +417,32 @@ class StoreActivity : BaseActivity() {
         //load server
         loadServerList()
 
-        //上报支付日志
-        if (currentServer!!.currency != null) {
-            ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency!!, currentServer!!.price)
-            ReportManager.facebookPurchaseLog(this, currentServer!!.currency!!, currentServer!!.price)
-            ReportManager.branchPurchaseLog(this, currentServer!!.name, currentServer!!.currency!!, currentServer!!.price)
+        if (!isFree) {
+            //上报支付日志
+            if (currentServer!!.currency != null) {
+                ReportManager.firebasePurchaseLog(firebaseAnalytics, currentServer!!.currency!!, currentServer!!.price)
+                ReportManager.facebookPurchaseLog(this, currentServer!!.currency!!, currentServer!!.price)
+                ReportManager.branchPurchaseLog(this, currentServer!!.name, currentServer!!.currency!!, currentServer!!.price)
+                ReportManager.appsFlyerPurchaseLog(this, currentServer!!.code, currentServer!!.price)
 
-            val map = HashMap<String, String>()
-            map["currency"] = currentServer!!.currency!!
-            map["price"] = currentServer!!.price
+//                val map = HashMap<String, String>()
+//                map["currency"] = currentServer!!.currency!!
+//                map["price"] = currentServer!!.price
+//
+//                ReportManager.branchCustomLog(this, "purchased", map)
+            } else {
+                ReportManager.firebasePurchaseLog(firebaseAnalytics, "USD", currentServer!!.price)
+                ReportManager.facebookPurchaseLog(this, "USD", currentServer!!.price)
+                ReportManager.branchPurchaseLog(this, currentServer!!.name, "USD", currentServer!!.price)
+                ReportManager.appsFlyerPurchaseLog(this, currentServer!!.code, currentServer!!.price)
 
-            ReportManager.branchCustomLog(this, "purchased", map)
-        } else {
-            ReportManager.firebasePurchaseLog(firebaseAnalytics, "USD", currentServer!!.price)
-            ReportManager.facebookPurchaseLog(this, "USD", currentServer!!.price)
-            ReportManager.branchPurchaseLog(this, currentServer!!.name, "USD", currentServer!!.price)
-
-            val map = HashMap<String, String>()
-            map["currency"] = "USD"
-            map["price"] = currentServer!!.price
-
-            ReportManager.branchCustomLog(this, "purchased", map)
+//                val map = HashMap<String, String>()
+//                map["currency"] = "USD"
+//                map["price"] = currentServer!!.price
+//
+//                ReportManager.branchCustomLog(this, "purchased", map)
+            }
         }
-
-
-//        LogReportManager.logReport("支付", LogReportManager.LogType.PURCHASED)
 
         if (Config.mainHandler != null) {
             Config.mainHandler!!.sendEmptyMessage(0x10006)

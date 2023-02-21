@@ -2,9 +2,13 @@ package com.ql.recovery.yay.manager
 
 import android.content.Context
 import android.os.Bundle
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.ql.recovery.config.Config
 import io.branch.indexing.BranchUniversalObject
 import io.branch.referral.util.*
 import java.math.BigDecimal
@@ -118,4 +122,30 @@ object ReportManager {
 
         event.logEvent(context)
     }
+
+    fun appsFlyerCustomLog(context: Context, customName: String, uid: Int) {
+        val eventValues = HashMap<String, Any>()
+        eventValues[AFInAppEventParameterName.CUSTOMER_USER_ID] = uid
+        AppsFlyerLib.getInstance().logEvent(context.applicationContext, customName, eventValues)
+    }
+
+    fun appsFlyerLoginLog(context: Context, uid: Int) {
+        val eventValues = HashMap<String, Any>()
+        eventValues[AFInAppEventParameterName.CUSTOMER_USER_ID] = uid
+        AppsFlyerLib.getInstance().logEvent(context.applicationContext, AFInAppEventType.LOGIN, eventValues)
+    }
+
+    /**
+     * appsFlyer pay
+     */
+    fun appsFlyerPurchaseLog(context: Context, contentType: String, currencyValue: String) {
+        val eventValues = HashMap<String, Any>()
+        eventValues[AFInAppEventParameterName.PURCHASE_CURRENCY] = "USD"
+        eventValues[AFInAppEventParameterName.PRICE] = currencyValue
+        eventValues[AFInAppEventParameterName.CUSTOMER_USER_ID] = Config.USER_ID
+        eventValues[AFInAppEventParameterName.CONTENT_TYPE] = contentType
+        AppsFlyerLib.getInstance().logEvent(context.applicationContext, AFInAppEventType.PURCHASE, eventValues)
+    }
+
+
 }
