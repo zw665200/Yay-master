@@ -852,37 +852,35 @@ public class AppUtil {
 
             @Override
             public void onProviderEnabled(@NonNull String provider) {
-                JLog.i("1111");
             }
 
             @Override
             public void onProviderDisabled(@NonNull String provider) {
-                JLog.i("3333");
                 locationCallback.onFailed();
             }
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
-                JLog.i("44444");
             }
         };
 
-        LocationProvider gpsProvider = locManager.getProvider(LocationManager.GPS_PROVIDER);//1.通过GPS定位，较精确。也比較耗电
-        LocationProvider netProvider = locManager.getProvider(LocationManager.NETWORK_PROVIDER);//2.通过网络定位。对定位精度度不高或省点情况可考虑使用
-
-        if (gpsProvider == null && netProvider == null) {
+        List<String> list = locManager.getAllProviders();
+        if (list.isEmpty()) {
             locationCallback.onFailed();
-            JLog.i("2222");
+            return;
         }
 
-        if (gpsProvider != null) {
-            locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0F, locationListener);
-        } else {
-            if (netProvider != null) {
-                locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0F, locationListener);
+        for (String c : list) {
+            if (c.contains("network")) {
+                //通过网络定位。对定位精度度不高或省点情况可考虑使用
+                LocationProvider netProvider = locManager.getProvider(LocationManager.NETWORK_PROVIDER);
+                if (netProvider != null) {
+                    locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0F, locationListener);
+                } else {
+                    locationCallback.onFailed();
+                }
             }
         }
-
     }
 
 
@@ -897,11 +895,9 @@ public class AppUtil {
         } catch (IOException e) {
             e.printStackTrace();
             locationCallback.onFailed();
-
-            if (locationListener != null) {
-                locManager.removeUpdates(locationListener);
-            }
+            locManager.removeUpdates(locationListener);
         }
+
 
         if (addList != null && addList.size() > 0) {
             Address ad = addList.get(0);
@@ -911,11 +907,10 @@ public class AppUtil {
             JLog.i("GPS: 详细地址" + ad.getFeatureName());
             locationCallback.onSuccess(ad);
 
-            if (locationListener != null) {
-                locManager.removeUpdates(locationListener);
-            }
+            locManager.removeUpdates(locationListener);
         } else {
             locationCallback.onFailed();
+            locManager.removeUpdates(locationListener);
         }
     }
 

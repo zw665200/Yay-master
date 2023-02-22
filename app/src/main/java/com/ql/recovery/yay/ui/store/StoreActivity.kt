@@ -170,7 +170,7 @@ class StoreActivity : BaseActivity() {
     }
 
     private fun getSubProductList(serverList: List<Server>) {
-        val listener = PurchasesUpdatedListener { billingResult, purchases -> }
+        val listener = PurchasesUpdatedListener { _, _ -> }
 
         val billingClient = BillingClient.newBuilder(this)
             .setListener(listener)

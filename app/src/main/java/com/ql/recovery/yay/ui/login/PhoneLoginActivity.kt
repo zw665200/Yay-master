@@ -17,7 +17,6 @@ import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityPhoneLoginBinding
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
-import com.ql.recovery.yay.ui.auth.AuthActivity
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.mine.AgreementActivity
@@ -25,6 +24,7 @@ import com.ql.recovery.yay.ui.region.RegionActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.ToastUtil
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import kotlin.concurrent.thread
 
 class PhoneLoginActivity : BaseActivity() {
     private lateinit var binding: ActivityPhoneLoginBinding
@@ -42,7 +42,7 @@ class PhoneLoginActivity : BaseActivity() {
     }
 
     override fun initView() {
-        viewModel = ViewModelProvider(this).get(PhoneLoginViewModel::class.java)
+        viewModel = ViewModelProvider(this)[PhoneLoginViewModel::class.java]
 
         binding.tvRegister.setOnClickListener {
             type = Type.SignUp
@@ -278,17 +278,20 @@ class PhoneLoginActivity : BaseActivity() {
         DataManager.getUserInfo { userInfo ->
             ToastUtil.showShort(this, getString(R.string.login_success))
 
-            //刷新用户信息
-            Config.mainHandler?.sendEmptyMessage(0x10006)
+            thread {
+                //刷新用户信息
+                Config.mainHandler?.sendEmptyMessage(0x10006)
 
-            //登录IM
-            Config.mHandler?.sendEmptyMessage(0x10004)
+                //登录IM
+                Config.mHandler?.sendEmptyMessage(0x10004)
 
-            //上报日志
-            ReportManager.firebaseLoginLog(firebaseAnalytics, userInfo.uid, userInfo.nickname)
-            ReportManager.facebookLoginLog(this, userInfo.uid, userInfo.nickname)
-            ReportManager.branchLoginLog(this, userInfo.uid, userInfo.nickname)
-            ReportManager.appsFlyerLoginLog(this, userInfo.uid)
+                //上报日志
+                ReportManager.firebaseLoginLog(firebaseAnalytics, userInfo.uid, userInfo.nickname)
+                ReportManager.facebookLoginLog(this, userInfo.uid, userInfo.nickname)
+                ReportManager.branchLoginLog(this, userInfo.uid, userInfo.nickname)
+                ReportManager.appsFlyerLoginLog(this, userInfo.uid)
+            }
+
 
             val guide = getLocalStorage().decodeBool("guide_finish", false)
             if (!guide) {
@@ -301,14 +304,8 @@ class PhoneLoginActivity : BaseActivity() {
                 }
             }
 
-            val permission = getLocalStorage().decodeBool("show_permission", false)
-            if (!permission) {
-                startActivity(Intent(this, AuthActivity::class.java))
-                finish()
-            } else {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 

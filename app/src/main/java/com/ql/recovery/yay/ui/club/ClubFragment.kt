@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.ql.recovery.bean.Anchor
 import com.ql.recovery.bean.Cate
@@ -36,7 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlin.math.abs
+
 
 class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     private var binding: FragmentClubBinding? = null
@@ -48,11 +49,14 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 
     private var currentPosition = 0
     private var page = 0
-    private var pageCount = 6
+    private var pageCount = 20
+    private var isToFirst = false
     private var isToLast = false
     private var isFirstLoad = true
     private var firstVisibleViewPosition = 0
+    private var currentFirstVisibleViewPosition = 0
     private var lastVisibleViewPosition = 5
+    private var currentLastVisibleViewPosition = 5
 
     override fun initView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentClubBinding.inflate(inflater, container, false)
@@ -89,8 +93,13 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
             .setBufferDurationsMs(1000, 3000, 250, 500)
             .build()
 
+//        val mediaSourceFactory = DefaultMediaSourceFactory(requireContext())
+//            .setDataSourceFactory(cacheDataSourceFactory)
+//            .setLocalAdInsertionComponents(adsLoaderProvider, playerView)
+
         val exoPlayer = ExoPlayer.Builder(requireContext())
             .setRenderersFactory(DefaultRenderersFactory(requireContext()).setEnableDecoderFallback(true))
+            .setMediaSourceFactory(DefaultMediaSourceFactory(requireContext()))
             .setLoadControl(loadControl)
             .build()
 
@@ -101,7 +110,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     }
 
     private fun initPicsShow() {
-        val width = AppUtil.getScreenWidth(requireContext())
         val height = AppUtil.getScreenHeight(requireActivity())
         mAdapter = DataAdapter.Builder<Anchor>()
             .setData(mList)
@@ -151,9 +159,11 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     itemBinding.onlineDes.text = getString(R.string.club_unavailable)
                 }
 
-                if (position < firstVisibleViewPosition || position > lastVisibleViewPosition) {
-                    itemBinding.playerView.player = null
-                    itemBinding.ivPhoto.visibility = View.VISIBLE
+                itemBinding.playerView.player = null
+                itemBinding.ivPhoto.visibility = View.VISIBLE
+
+                //item可见
+                if (position < currentFirstVisibleViewPosition || position > currentLastVisibleViewPosition) {
 
                     launch {
                         if (exoPlayerList.size > position && exoPlayerList[position] != null) {
@@ -166,29 +176,27 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     return@addBindView
                 }
 
-                var exoPlayer: ExoPlayer? = null
+                var exoPlayer: ExoPlayer?
                 if (exoPlayerList.size > position) {
                     if (exoPlayerList[position] == null) {
                         exoPlayer = getPlayer()
                         exoPlayerList[position] = exoPlayer
                     } else {
-                        launch {
-                            itemBinding.playerView.player = null
-                            itemBinding.ivPhoto.visibility = View.VISIBLE
-                            exoPlayer = exoPlayerList[position]
-                            exoPlayer?.stop()
-                            exoPlayer?.release()
-                            exoPlayer = getPlayer()
-                            exoPlayerList[position] = exoPlayer
-                        }
+                        itemBinding.playerView.player = null
+                        itemBinding.ivPhoto.visibility = View.VISIBLE
+                        exoPlayer = exoPlayerList[position]
+                        exoPlayer?.stop()
+                        exoPlayer?.release()
+                        exoPlayer = getPlayer()
+                        exoPlayerList[position] = exoPlayer
                     }
                 } else {
                     exoPlayer = getPlayer()
                     exoPlayerList.add(exoPlayer)
                 }
 
-                if (itemData.cover_url != null && exoPlayer != null) {
-                    loadVideo(exoPlayer!!, itemBinding, itemData, position)
+                if (itemData.cover_url != null) {
+                    loadVideo(exoPlayer, itemBinding, itemData, position)
                 }
 
                 itemView.setOnClickListener {
@@ -222,23 +230,58 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     JLog.i("first = $firstVisiblePosition")
                     JLog.i("last = $lastVisiblePosition")
 
+                    currentFirstVisibleViewPosition = firstVisiblePosition
+                    currentLastVisibleViewPosition = lastVisiblePosition
+
                     if (firstVisibleViewPosition != firstVisiblePosition) {
-                        mAdapter.notifyItemRangeChanged(0, abs(firstVisibleViewPosition - firstVisiblePosition))
+                        val start = firstVisibleViewPosition
+                        if (isToLast) {
+                            val end = start + firstVisiblePosition - firstVisibleViewPosition
+                            for (index in start until end) {
+                                JLog.i("remove $index")
+                                mAdapter.notifyItemChanged(index)
+                            }
+                        }
+
+                        if (isToFirst) {
+                            val end = start + firstVisiblePosition - firstVisibleViewPosition
+                            for (index in end until start) {
+                                JLog.i("add $index")
+                                mAdapter.notifyItemChanged(index)
+                            }
+                        }
                     }
 
                     if (lastVisibleViewPosition != lastVisiblePosition) {
                         if (lastVisibleViewPosition < count) {
-                            mAdapter.notifyItemRangeChanged(lastVisibleViewPosition + 1, abs(lastVisibleViewPosition - lastVisiblePosition))
+                            val start = lastVisibleViewPosition + 1
+                            if (isToLast) {
+                                val end = start + lastVisiblePosition - lastVisibleViewPosition
+                                for (index in start until end) {
+                                    JLog.i("add $index")
+                                    mAdapter.notifyItemChanged(index)
+                                }
+                            }
+
+                            if (isToFirst) {
+                                val end = start + lastVisibleViewPosition - lastVisiblePosition
+                                for (index in end until start) {
+                                    JLog.i("remove $index")
+                                    mAdapter.notifyItemChanged(index)
+                                }
+                            }
                         }
                     }
 
                     firstVisibleViewPosition = firstVisiblePosition
                     lastVisibleViewPosition = lastVisiblePosition
+
                 }
             }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                isToFirst = dy < 0
                 isToLast = dy > 0
             }
         })
@@ -318,6 +361,18 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
             page = 0
             mList.clear()
             mAdapter.notifyDataSetChanged()
+
+            firstVisibleViewPosition = 0
+            currentFirstVisibleViewPosition = 0
+            lastVisibleViewPosition = 5
+            currentLastVisibleViewPosition = 5
+
+            launch {
+                for (exoPlayer in exoPlayerList) {
+                    exoPlayer?.release()
+                }
+                exoPlayerList.clear()
+            }
 
             when (type) {
                 "all" -> {
@@ -424,9 +479,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     @SuppressLint("NotifyDataSetChanged")
     private fun getAnchorData() {
         DataManager.getAnchorList(mainList[currentPosition].id, page, pageCount) { anchorList ->
-            binding!!.refreshLayout.finishRefresh()
-            binding!!.refreshLayout.finishLoadMore()
-
             if (page == 0) {
                 mList.clear()
                 anchorList.forEach { it.isPlaying = false }
@@ -437,11 +489,18 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 if (page < 0) {
                     page = 0
                 }
-                return@getAnchorList
             }
 
             mList.addAll(anchorList)
-            mAdapter.notifyDataSetChanged()
+
+            if (page == 0) {
+                mAdapter.notifyItemRangeChanged(0, anchorList.size)
+            } else {
+                mAdapter.notifyItemRangeChanged(mList.size - anchorList.size, anchorList.size)
+            }
+
+            binding!!.refreshLayout.finishRefresh()
+            binding!!.refreshLayout.finishLoadMore()
 
             val uidList = mList.map { it.uid.toString() }
             IMManager.subscribe(requireContext(), uidList)

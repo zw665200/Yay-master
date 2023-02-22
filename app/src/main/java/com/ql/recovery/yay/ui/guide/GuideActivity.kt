@@ -34,7 +34,6 @@ import com.ql.recovery.yay.util.FileUtil
 import com.ql.recovery.yay.util.ToastUtil
 import com.weigan.loopview.LoopView
 import com.weigan.loopview.OnItemScrollListener
-import java.util.HashMap
 
 class GuideActivity : BaseActivity() {
     private lateinit var binding: ActivityGuideBinding
@@ -66,7 +65,7 @@ class GuideActivity : BaseActivity() {
     }
 
     override fun initView() {
-        binding.includeHead.ivBack.setOnClickListener { checkStep() }
+        binding.includeHead.ivBack.setOnClickListener { checkParam() }
         binding.includeGender.ivAmMale.setOnClickListener { chooseGender(ChooseType.I, GenderType.Male) }
         binding.includeGender.ivAmFemale.setOnClickListener { chooseGender(ChooseType.I, GenderType.Female) }
         binding.includeGender.ivFindMale.setOnClickListener { chooseGender(ChooseType.Find, GenderType.Male) }
@@ -542,6 +541,15 @@ class GuideActivity : BaseActivity() {
         finish()
     }
 
+    private fun checkParam() {
+        val param = intent.getBooleanExtra("home", false)
+        if (param) {
+            toMainPage()
+        } else {
+            finish()
+        }
+    }
+
     @Deprecated("")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -583,11 +591,13 @@ class GuideActivity : BaseActivity() {
                             override fun onSuccess(filePath: String) {
                                 dialog?.show()
                                 DataManager.uploadFileToOss(this@GuideActivity, filePath) {
-                                    dialog?.cancel()
-                                    binding.includeAvatar.ivAvatar.visibility = View.VISIBLE
-                                    binding.includeAvatar.llSettingAvatar.visibility = View.GONE
-                                    mAvatar = it
-                                    Glide.with(this@GuideActivity).load(it).apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.includeAvatar.ivAvatar)
+                                    runOnUiThread {
+                                        dialog?.cancel()
+                                        binding.includeAvatar.ivAvatar.visibility = View.VISIBLE
+                                        binding.includeAvatar.llSettingAvatar.visibility = View.GONE
+                                        mAvatar = it
+                                        Glide.with(this@GuideActivity).load(it).apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.includeAvatar.ivAvatar)
+                                    }
                                 }
                             }
 

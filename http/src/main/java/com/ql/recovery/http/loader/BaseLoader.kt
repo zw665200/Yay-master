@@ -409,6 +409,9 @@ object BaseLoader {
         return RetrofitServiceManager.get().baseService.deleteMatcher(Config.CLIENT_TOKEN, uid)
     }
 
+    fun deleteAccount(): Observable<Response<Boolean>> {
+        return RetrofitServiceManager.get().baseService.deleteAccount(Config.CLIENT_TOKEN)
+    }
 
     //-------------------------------声网--------------------------------//
     /**

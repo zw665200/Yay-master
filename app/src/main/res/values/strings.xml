@@ -57,7 +57,7 @@
     <string name="guide_title_gender">Select gender</string>
     <string name="guide_title_age">Select birthday</string>
     <string name="guide_title_nickname">Add nickname</string>
-    <string name="guide_title_avatar">Add a profile picture</string>
+    <string name="guide_title_avatar">Add an avatar</string>
     <string name="guide_title_wallpaper">Upload photos</string>
     <string name="guide_title_fun">Highlight interests tags</string>
     <string name="guide_next_step">Continue</string>
@@ -70,7 +70,7 @@
     <string name="guide_nickname_hint">Enter your nickname</string>
     <string name="guide_album_tip">Please upload a photo</string>
     <string name="guide_tag_tip">Highlight interests tags</string>
-    <string name="guide_avatar_setting">Set profile picture</string>
+    <string name="guide_avatar_setting">Upload</string>
     <string name="guide_avatar_upload">Upload a real profile picture can help you more quickly gain the favor of the opposite sex</string>
     <string name="guide_notice_limit_age">*You must over 18 years of age</string>
 
@@ -324,6 +324,7 @@
     <string name="notice_add_follow_content">Push a notification when there are new followers</string>
     <string name="notice_followed_title">Followed users are online</string>
     <string name="notice_followed_content">When the user you follow is online, a reminder will be pushed</string>
+    <string name="notice_incomplete_profile"> your must complete your profile at first</string>
 
     <!--account delete-->
     <string name="account_delete_title">Delete account</string>
@@ -338,6 +339,7 @@
     <!--not find dialog-->
     <string name="not_find_title">Tips</string>
     <string name="not_find_content">After deleting your account, the platform will clear all data related to your account. This includes but is not limited to, membership privileges an gem balances. Please operate with caution!</string>
+    <string name="not_find_submit">Submit</string>
     <string name="not_find_agree">Please check to agree to delete the account</string>
     <string name="not_find_commit">Application submitted</string>
 

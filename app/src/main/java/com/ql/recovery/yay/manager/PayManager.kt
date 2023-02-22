@@ -123,6 +123,7 @@ class PayManager private constructor() {
                         activity.runOnUiThread {
                             for (purchase in purchases) {
                                 if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+
                                     //多次触发的应对策略
                                     if (currentOrderId == purchase.orderId) return@runOnUiThread
 
@@ -273,6 +274,7 @@ class PayManager private constructor() {
         })
     }
 
+    @Synchronized
     private fun validatePay(
         orderId: Int,
         purchase: Purchase,

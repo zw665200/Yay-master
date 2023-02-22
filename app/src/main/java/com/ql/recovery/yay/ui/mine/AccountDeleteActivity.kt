@@ -3,6 +3,7 @@ package com.ql.recovery.yay.ui.mine
 import android.annotation.SuppressLint
 import android.content.Intent
 import com.ql.recovery.bean.UserInfo
+import com.ql.recovery.config.Config
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityAccountDeleteBinding
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
@@ -38,7 +39,20 @@ class AccountDeleteActivity : BaseActivity() {
 
         AccountDeleteDialog(this) {
             ToastUtil.showShort(this@AccountDeleteActivity, getString(R.string.not_find_commit))
+            logOut()
             finish()
         }
+    }
+
+    private fun logOut() {
+        Config.USER_ID = 0
+        Config.USER_NAME = ""
+        Config.CLIENT_TOKEN = ""
+
+        getLocalStorage().remove("user_info")
+        getLocalStorage().remove("access_token")
+        getLocalStorage().remove("token")
+
+        startActivity(Intent(this, LoginActivity::class.java))
     }
 }

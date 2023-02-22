@@ -5,14 +5,11 @@ import android.os.CountDownTimer
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.ql.recovery.bean.Countries
-import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityStartBinding
 import com.ql.recovery.yay.ui.base.BaseActivity
-import com.ql.recovery.yay.ui.guide.GuideActivity
-import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.mine.AgreementActivity
 import com.ql.recovery.yay.util.GsonUtils
 import com.ql.recovery.yay.util.JLog

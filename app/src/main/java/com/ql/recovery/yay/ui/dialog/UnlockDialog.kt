@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.view.Gravity
-import android.view.View
 import android.view.WindowManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.DialogUnlockBinding
@@ -28,6 +27,8 @@ class UnlockDialog(
         binding = DialogUnlockBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setCancelable(true)
+
+        binding.tvContent.text = String.format(activity.getString(R.string.club_unlock_content), cost)
 
         binding.btnCancel.setOnClickListener { cancel() }
 

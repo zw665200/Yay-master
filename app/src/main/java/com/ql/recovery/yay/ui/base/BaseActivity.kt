@@ -24,6 +24,7 @@ import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.ui.dialog.MatchVideoDialog
 import com.ql.recovery.yay.ui.dialog.NoticeDialog
+import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.match.VideoActivity
 import com.ql.recovery.yay.util.*
 import com.tencent.mmkv.MMKV
@@ -170,6 +171,15 @@ abstract class BaseActivity : FragmentActivity() {
     protected fun requestVideoChat(uid: Int, online: Boolean) {
         getUserInfo { userInfo ->
             if (userInfo.uid == uid) return@getUserInfo
+
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
+                userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
+            ) {
+                //如果用户资料不完整，要填写完整才能匹配
+                ToastUtil.showLong(this, getString(R.string.notice_incomplete_profile))
+                startActivity(Intent(this, GuideActivity::class.java))
+                return@getUserInfo
+            }
 
             DataManager.getBasePrice { basePrice ->
                 NoticeDialog(this, userInfo.coin, basePrice.common.private_video) {

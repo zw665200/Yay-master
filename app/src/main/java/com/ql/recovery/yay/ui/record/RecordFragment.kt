@@ -50,11 +50,15 @@ class RecordFragment : BaseFragment() {
         initVisitorList()
         initRecordList()
 
-        binding?.ivVip?.setOnClickListener { showPrimeDialog() }
+        binding?.ivVip?.setOnClickListener {
+            if (!DoubleUtils.isFastDoubleClick()) {
+                showPrimeDialog()
+            }
+        }
+
         binding?.llCoin?.setOnClickListener { toStorePage() }
-        binding!!.llTitleTop.setOnClickListener { changeTag() }
-        binding!!.llCoin.setOnClickListener { toStorePage() }
-        binding!!.includeNoData.tvToMatch.setOnClickListener { (requireActivity() as MainActivity).changeFragment(0) }
+        binding?.llTitleTop?.setOnClickListener { changeTag() }
+        binding?.includeNoData?.tvToMatch?.setOnClickListener { (requireActivity() as MainActivity).changeFragment(0) }
 
         return binding!!.root
     }
@@ -314,9 +318,6 @@ class RecordFragment : BaseFragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun getMatchInfoList(page: Int, size: Int) {
         DataManager.getMatchList(page, size) { userList ->
-            binding!!.refreshLayout.finishRefresh()
-            binding!!.refreshLayout.finishLoadMore()
-
             if (page == 0 && userList.isEmpty()) {
                 binding?.tvTitleAll?.visibility = View.GONE
                 binding?.includeNoData?.root?.visibility = View.VISIBLE
@@ -338,6 +339,9 @@ class RecordFragment : BaseFragment() {
 
             mList.addAll(userList)
             mAdapter.notifyDataSetChanged()
+
+            binding!!.refreshLayout.finishRefresh()
+            binding!!.refreshLayout.finishLoadMore()
 
             //subscribe
             val uidList = userList.map { it.uid.toString() }
@@ -467,6 +471,7 @@ class RecordFragment : BaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun checkLockStatus(user: UserInfo) {
+        JLog.i("type = $mType")
         when (mType) {
             TagType.Gamer -> {
                 getUserInfo { userInfo ->
@@ -500,12 +505,10 @@ class RecordFragment : BaseFragment() {
     }
 
     private fun showPrimeDialog() {
-        if (!DoubleUtils.isFastDoubleClick()) {
-            val userInfo = getLocalStorage().decodeParcelable("user_info", UserInfo::class.java) ?: return
-            PrimeDialog(requireActivity(), userInfo.is_vip) {
-                getUserInfo()
-                getVisitorInfoList()
-            }
+        val userInfo = getLocalStorage().decodeParcelable("user_info", UserInfo::class.java) ?: return
+        PrimeDialog(requireActivity(), userInfo.is_vip) {
+            getUserInfo()
+            getVisitorInfoList()
         }
     }
 

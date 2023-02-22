@@ -3,8 +3,6 @@ package com.ql.recovery.yay.ui.home
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +36,6 @@ class HomeFragment : BaseFragment() {
     private var type = Type.VIDEO
     private var mk = MMKV.defaultMMKV()
     private var mRtcEngine: RtcEngine? = null
-    private var handler = Handler(Looper.getMainLooper())
-    private var openPreview = false
     private var lastClick = 0L
 
     override fun initView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -253,10 +249,10 @@ class HomeFragment : BaseFragment() {
                 userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
             ) {
                 //如果用户资料不完整，要填写完整才能匹配
+                ToastUtil.showLong(requireContext(), getString(R.string.notice_incomplete_profile))
                 startActivity(Intent(requireActivity(), GuideActivity::class.java))
                 return@checkLogin
             }
-
 
             if (userInfo.country.isBlank()) {
                 //检查定位权限

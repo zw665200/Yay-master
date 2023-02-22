@@ -393,6 +393,14 @@ interface BaseService {
         @Path("id") uid: Int
     ): Observable<Response<Boolean>>
 
+    /**
+     * 删除指定匹配记录
+     */
+    @DELETE("user")
+    fun deleteAccount(
+        @Header("Authorization") authorization: String
+    ): Observable<Response<Boolean>>
+
     //-------------------------------声网--------------------------------//
     /**
      * 获得声网进入房间的Token

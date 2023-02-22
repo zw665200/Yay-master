@@ -20,9 +20,12 @@ import com.ql.recovery.bean.Subscriber
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
+import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.LocationCallback
 import com.ql.recovery.yay.ui.dialog.NoticeDialog
 import com.ql.recovery.yay.ui.dialog.ProfileDialog
+import com.ql.recovery.yay.ui.dialog.WaitingDialog
+import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.mine.CountryActivity
 import com.ql.recovery.yay.util.*
@@ -30,6 +33,7 @@ import com.tencent.mmkv.MMKV
 
 abstract class BaseFragment : Fragment(), View.OnClickListener {
     private var mContext: Context? = null
+    private var waitingDialog: WaitingDialog? = null
     private val mk = MMKV.defaultMMKV()
 
     override fun onAttach(context: Context) {
@@ -41,6 +45,8 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         val v = initView(inflater, container, savedInstanceState)
         initHandler()
         initData()
+
+        waitingDialog = WaitingDialog(requireActivity())
 
         return v
     }
@@ -120,17 +126,22 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    /**
+     * 定位拿到当前的国家编码
+     */
     protected fun getLocation(success: () -> Unit) {
-        //定位拿到当前的国家编码
+        waitingDialog?.show()
         AppUtil.getLocation(requireContext(), object : LocationCallback {
             override fun onSuccess(address: Address) {
+                waitingDialog?.cancel()
                 success()
                 DataManager.updateCountry(address.countryCode) {}
             }
 
             override fun onFailed() {
                 requireActivity().runOnUiThread {
-                    ToastUtil.showShort(requireContext(), "get location failed, please check your network")
+                    waitingDialog?.cancel()
+                    ToastUtil.showShort(requireContext(), "get location failed, please check your country")
                     startActivity(Intent(requireActivity(), CountryActivity::class.java))
                 }
             }
@@ -246,12 +257,22 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
     }
 
     /**
-     * 发起视频聊天，对方在线才能聊天
-     * @param online 在线状态
+     * 发起视频聊天
+     * @param uid 用户id
+     * * @param online 在线状态
      */
     protected fun requestVideoChat(uid: Int, online: Boolean) {
         getUserInfo { userInfo ->
             if (userInfo.uid == uid) return@getUserInfo
+
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
+                userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
+            ) {
+                //如果用户资料不完整，要填写完整才能匹配
+                ToastUtil.showLong(requireContext(), getString(R.string.notice_incomplete_profile))
+                startActivity(Intent(requireActivity(), GuideActivity::class.java))
+                return@getUserInfo
+            }
 
             DataManager.getBasePrice { basePrice ->
                 NoticeDialog(requireActivity(), userInfo.coin, basePrice.common.private_video) {

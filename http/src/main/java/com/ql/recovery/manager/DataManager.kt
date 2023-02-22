@@ -701,6 +701,21 @@ object DataManager {
     }
 
     /**
+     * 删除指定匹配记录
+     */
+    @SuppressLint("CheckResult")
+    fun deleteAccount(result: (Boolean) -> Unit) {
+        thread {
+            BaseLoader.deleteAccount()
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {})
+        }
+    }
+
+    /**
      * 发起视频私聊邀请
      */
     @SuppressLint("CheckResult")

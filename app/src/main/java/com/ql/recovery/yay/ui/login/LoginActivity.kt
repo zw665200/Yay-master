@@ -7,7 +7,6 @@ import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
-import com.facebook.login.LoginBehavior
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.exoplayer2.ExoPlayer
@@ -30,13 +29,13 @@ import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityLoginBinding
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
-import com.ql.recovery.yay.ui.auth.AuthActivity
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.mine.AgreementActivity
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
 import com.tencent.mmkv.MMKV
+import kotlin.concurrent.thread
 
 
 class LoginActivity : BaseActivity() {
@@ -68,6 +67,7 @@ class LoginActivity : BaseActivity() {
         initGoogleLoginService()
 
         firebaseAnalytics = Firebase.analytics
+
         exoPlayer = ExoPlayer.Builder(this).build()
         val mediaItem = MediaItem.fromUri(uri)
         binding.playerView.player = exoPlayer
@@ -352,37 +352,32 @@ class LoginActivity : BaseActivity() {
         DataManager.getUserInfo { userInfo ->
             ToastUtil.showShort(this, getString(R.string.login_success))
 
-            //刷新用户信息
-            Config.mainHandler?.sendEmptyMessage(0x10006)
-
-            //登录IM
-            Config.mHandler?.sendEmptyMessage(0x10004)
-
             //上报日志
-            ReportManager.firebaseLoginLog(firebaseAnalytics, userInfo.uid, userInfo.nickname)
-            ReportManager.facebookLoginLog(this, userInfo.uid, userInfo.nickname)
-            ReportManager.branchLoginLog(this, userInfo.uid, userInfo.nickname)
-            ReportManager.appsFlyerLoginLog(this, userInfo.uid)
+            thread {
+                //刷新用户信息
+                Config.mainHandler?.sendEmptyMessage(0x10006)
 
-            val guide = getLocalStorage().decodeBool("guide_finish", false)
-            if (!guide) {
-                if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()
-                    || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
-                ) {
-                    startActivity(Intent(this, GuideActivity::class.java))
-                    finish()
-                    return@getUserInfo
-                }
+                //登录IM
+                Config.mHandler?.sendEmptyMessage(0x10004)
+
+                ReportManager.firebaseLoginLog(firebaseAnalytics, userInfo.uid, userInfo.nickname)
+                ReportManager.facebookLoginLog(this, userInfo.uid, userInfo.nickname)
+                ReportManager.branchLoginLog(this, userInfo.uid, userInfo.nickname)
+                ReportManager.appsFlyerLoginLog(this, userInfo.uid)
             }
 
-            val permission = getLocalStorage().decodeBool("show_permission", false)
-            if (!permission) {
-                startActivity(Intent(this, AuthActivity::class.java))
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()
+                || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
+            ) {
+                val intent = Intent(this, GuideActivity::class.java)
+                intent.putExtra("home", true)
+                startActivity(intent)
                 finish()
-            } else {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
+                return@getUserInfo
             }
+
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 
@@ -391,6 +386,7 @@ class LoginActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        exoPlayer?.stop()
         exoPlayer?.release()
     }
 

@@ -44,8 +44,8 @@
 
         <FrameLayout
             android:id="@+id/fl_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
             android:layout_gravity="center_horizontal">
 
             <ImageView
@@ -55,11 +55,10 @@
 
             <ImageView
                 android:id="@+id/iv_avatar"
-                android:layout_width="@dimen/dp_90"
-                android:layout_height="@dimen/dp_90"
+                android:layout_width="@dimen/dp_95"
+                android:layout_height="@dimen/dp_95"
                 android:layout_gravity="center"
-                android:scaleType="fitXY"
-                android:visibility="visible" />
+                android:scaleType="fitXY" />
 
             <LinearLayout
                 android:id="@+id/ll_setting_avatar"
@@ -80,7 +79,7 @@
                     android:layout_marginTop="@dimen/dp_5"
                     android:text="@string/guide_avatar_setting"
                     android:textColor="@color/color_content"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="@dimen/sp_12" />
 
             </LinearLayout>
 

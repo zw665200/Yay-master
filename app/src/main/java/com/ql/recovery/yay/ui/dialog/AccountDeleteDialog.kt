@@ -4,12 +4,16 @@ import android.app.Activity
 import android.app.Dialog
 import android.view.Gravity
 import android.view.WindowManager
+import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.DialogAccountDeleteBinding
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.ToastUtil
 
-class AccountDeleteDialog(private val activity: Activity, private val func: () -> Unit) : Dialog(activity, R.style.app_dialog) {
+class AccountDeleteDialog(
+    private val activity: Activity,
+    private val func: () -> Unit
+) : Dialog(activity, R.style.app_dialog) {
     private lateinit var binding: DialogAccountDeleteBinding
 
     init {
@@ -22,11 +26,12 @@ class AccountDeleteDialog(private val activity: Activity, private val func: () -
         setCancelable(true)
 
         binding.ok.setOnClickListener {
-            if (binding.radioAgree.isChecked) {
-                cancel()
-                func()
-            } else {
-                ToastUtil.showShort(activity, activity.getString(R.string.not_find_agree))
+
+            DataManager.deleteAccount {
+                if (it) {
+                    cancel()
+                    func()
+                }
             }
         }
 
