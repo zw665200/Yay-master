@@ -101,7 +101,7 @@ class StoreActivity : BaseActivity() {
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_m, null)
                     }
 
-                    "coin_level_two" -> {
+                    "coin_level_two","" -> {
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_free)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_b, null)
                         itemBinding.root.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_c, null)
@@ -324,8 +324,6 @@ class StoreActivity : BaseActivity() {
         if (currentServer == null) {
             return
         }
-
-        JLog.i("price = ${currentServer!!.price}")
 
         when (currentServer!!.type) {
             "free" -> doPay(this, 0)

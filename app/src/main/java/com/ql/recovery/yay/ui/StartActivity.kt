@@ -111,7 +111,7 @@ class StartActivity : BaseActivity() {
             }
         })
 
-        AppsFlyerLib.getInstance().setDebugLog(true)
+        AppsFlyerLib.getInstance().setDebugLog(false)
     }
 
     private fun initBranch() {

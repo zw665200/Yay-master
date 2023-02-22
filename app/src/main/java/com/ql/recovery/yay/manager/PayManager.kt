@@ -13,6 +13,7 @@ import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.PayCallback
 import com.ql.recovery.yay.config.WalletConstant.LOAD_PAYMENT_DATA_REQUEST_CODE
 import com.ql.recovery.yay.config.WalletConstant.SHIPPING_COST_CENTS
+import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.Json
 import com.ql.recovery.yay.util.PaymentsUtil
@@ -114,26 +115,21 @@ class PayManager private constructor() {
         orderId: Int,
         callback: PayCallback
     ) {
-        var currentOrderId: String? = null
         val listener = PurchasesUpdatedListener { billingResult, purchases ->
             when (billingResult.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
                     JLog.i("pay success")
+
                     if (purchases != null) {
                         activity.runOnUiThread {
                             for (purchase in purchases) {
                                 if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-
-                                    //多次触发的应对策略
-                                    if (currentOrderId == purchase.orderId) return@runOnUiThread
-
-                                    JLog.i("orderId = ${purchase.orderId}")
-                                    currentOrderId = purchase.orderId
                                     validatePay(orderId, purchase, productType, callback)
                                 }
                             }
                         }
                     }
+
                 }
 
                 BillingClient.BillingResponseCode.USER_CANCELED -> {
@@ -281,6 +277,10 @@ class PayManager private constructor() {
         productType: String,
         callback: PayCallback
     ) {
+        if (DoubleUtils.isFastDoubleClick()) return
+
+        JLog.i("orderId = ${purchase.orderId}")
+
         DataManager.googleValidate(orderId, purchase.purchaseToken) {
             if (it) {
                 when (productType) {

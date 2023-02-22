@@ -333,6 +333,7 @@ class RecordFragment : BaseFragment() {
                 }
             } else {
                 binding?.tvTitleAll?.visibility = View.VISIBLE
+                binding?.includeNoData?.root?.visibility = View.GONE
             }
 
             JLog.i("userList size = ${userList.size}")
