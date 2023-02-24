@@ -12,6 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.netease.yunxin.kit.corekit.im.utils.RouterConstant
 import com.netease.yunxin.kit.corekit.route.XKitRouter
 import com.ql.recovery.bean.BasePrice
@@ -22,16 +25,17 @@ import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.LocationCallback
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.dialog.NoticeDialog
 import com.ql.recovery.yay.ui.dialog.ProfileDialog
 import com.ql.recovery.yay.ui.dialog.WaitingDialog
 import com.ql.recovery.yay.ui.guide.GuideActivity
-import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.mine.CountryActivity
 import com.ql.recovery.yay.util.*
 import com.tencent.mmkv.MMKV
 
 abstract class BaseFragment : Fragment(), View.OnClickListener {
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var mContext: Context? = null
     private var waitingDialog: WaitingDialog? = null
     private val mk = MMKV.defaultMMKV()
@@ -45,6 +49,7 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         val v = initView(inflater, container, savedInstanceState)
         initHandler()
         initData()
+        firebaseAnalytics = Firebase.analytics
 
         waitingDialog = WaitingDialog(requireActivity())
 
@@ -90,16 +95,6 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
-    }
-
-    protected fun checkLogin(func: (UserInfo) -> Unit) {
-        val userInfo = mk.decodeParcelable("user_info", UserInfo::class.java)
-        if (userInfo != null) {
-            func(userInfo)
-            return
-        }
-
-        startActivity(Intent(requireActivity(), LoginActivity::class.java))
     }
 
     protected fun getUserInfo(res: (UserInfo) -> Unit) {
@@ -265,6 +260,9 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         getUserInfo { userInfo ->
             if (userInfo.uid == uid) return@getUserInfo
 
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "private_video_click", "private video click")
+            ReportManager.appsFlyerCustomLog(requireContext(), "private_video_click", "private video click")
+
             if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
                 userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
             ) {
@@ -302,6 +300,9 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
             val map = HashMap<String, Any>()
             map["online"] = userInfo.online
             XKitRouter.withKey(RouterConstant.PATH_CHAT_P2P_PAGE).withParam(RouterConstant.CHAT_KRY, user).withContext(requireContext()).navigate()
+
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "private_msg_click", "private msg click")
+            ReportManager.appsFlyerCustomLog(requireContext(), "private_msg_click", "private msg click")
         }
     }
 
@@ -318,6 +319,9 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                     "im" -> requestChat(userInfo.uid, userInfo.nickname, userInfo.avatar)
                 }
             }
+
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "look_user_info", "look user info")
+            ReportManager.appsFlyerCustomLog(requireContext(), "look_user_info", "look user info")
         }
     }
 

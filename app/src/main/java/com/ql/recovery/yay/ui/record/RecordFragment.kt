@@ -459,7 +459,7 @@ class RecordFragment : BaseFragment() {
 
     private fun getUserInfo() {
         DataManager.getUserInfo {
-            binding?.tvCoin?.typeface = Typeface.createFromAsset(requireActivity().assets, "fonts/DINPro-Bold.otf")
+            binding?.tvCoin?.typeface = Typeface.createFromAsset(requireActivity().assets, "fonts/din_b.otf")
             binding?.tvCoin?.text = it.coin.toString()
 
             if (it.is_vip) {

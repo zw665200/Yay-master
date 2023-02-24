@@ -53,7 +53,6 @@ class MatchActivity : BaseActivity() {
 
     //    private var videoUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_video.mp4"
 //    private var audioUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_audio.mp4"
-//    private var gameUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_game.mp4"
     private var videoUri = "file:///android_asset/videos/match_video.mp4"
     private var audioUri = "file:///android_asset/videos/match_audio.mp4"
 
@@ -191,11 +190,15 @@ class MatchActivity : BaseActivity() {
                         when (status) {
                             MatchStatus.Accept -> {
                                 acceptInvite(type)
+                                ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_video_match_click", "accept")
+                                ReportManager.appsFlyerCustomLog(this, "accept_video_match_click", "accept")
                             }
 
                             MatchStatus.Reject -> {
                                 rejectInvite()
                                 rematch(1500L)
+                                ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_video_match_click", "reject")
+                                ReportManager.appsFlyerCustomLog(this, "reject_video_match_click", "reject")
                             }
 
                             MatchStatus.Cancel -> {
@@ -210,11 +213,15 @@ class MatchActivity : BaseActivity() {
                         when (status) {
                             MatchStatus.Accept -> {
                                 acceptInvite(type)
+                                ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_voice_match_click", "accept")
+                                ReportManager.appsFlyerCustomLog(this, "accept_voice_match_click", "accept")
                             }
 
                             MatchStatus.Reject -> {
                                 rejectInvite()
                                 rematch(1500L)
+                                ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_voice_match_click", "reject")
+                                ReportManager.appsFlyerCustomLog(this, "reject_voice_match_click", "reject")
                             }
 
                             MatchStatus.Cancel -> {
@@ -348,12 +355,16 @@ class MatchActivity : BaseActivity() {
                                         matchVideoDialog?.connectingTimeout()
                                         matchVideoDialog?.cancel()
                                         binding.ivUserBg.visibility = View.GONE
+                                        ReportManager.firebaseCustomLog(firebaseAnalytics, "video_match_timeout", "timeout")
+                                        ReportManager.appsFlyerCustomLog(this@MatchActivity, "video_match_timeout", "timeout")
                                     }
 
                                     "voice" -> {
                                         matchAudioDialog?.connectingTimeout()
                                         matchAudioDialog?.cancel()
                                         binding.ivUserBg.visibility = View.GONE
+                                        ReportManager.firebaseCustomLog(firebaseAnalytics, "voice_match_timeout", "timeout")
+                                        ReportManager.appsFlyerCustomLog(this@MatchActivity, "voice_match_timeout", "timeout")
                                     }
                                 }
 
@@ -461,10 +472,10 @@ class MatchActivity : BaseActivity() {
         val matchReport = getLocalStorage().decodeBool("match_report", false)
         if (!matchReport) {
             getLocalStorage().encode("match_report", true)
-            ReportManager.firebaseItemLog(firebaseAnalytics, userInfo.uid.toString(), userInfo.nickname, "match")
-            ReportManager.facebookItemLog(this, userInfo.uid.toString(), userInfo.nickname, "open", "match")
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "match", userInfo.nickname)
+            ReportManager.facebookCustomLog(this, "match", userInfo.nickname)
             ReportManager.branchCustomLog(this, "match", null)
-            ReportManager.appsFlyerCustomLog(this, "match", userInfo.uid)
+            ReportManager.appsFlyerCustomLog(this, "match", userInfo.nickname)
         }
     }
 
@@ -598,10 +609,12 @@ class MatchActivity : BaseActivity() {
                     when (type) {
                         ChooseType.Gender -> FilterDialog(this, userInfo, it, getMatchConfig(), ChooseType.Gender) {
                             reloadMatch(userInfo)
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "gender_filter", "gender filter")
                         }
 
                         ChooseType.Region -> FilterDialog(this, userInfo, it, getMatchConfig(), ChooseType.Region) {
                             reloadMatch(userInfo)
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "region_filter", "region filter")
                         }
                     }
                 }

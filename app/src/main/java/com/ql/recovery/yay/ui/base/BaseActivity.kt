@@ -12,6 +12,9 @@ import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.netease.yunxin.kit.corekit.im.utils.RouterConstant
 import com.netease.yunxin.kit.corekit.route.XKitRouter
 import com.ql.recovery.bean.BasePrice
@@ -22,6 +25,7 @@ import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.dialog.MatchVideoDialog
 import com.ql.recovery.yay.ui.dialog.NoticeDialog
 import com.ql.recovery.yay.ui.guide.GuideActivity
@@ -31,8 +35,11 @@ import com.tencent.mmkv.MMKV
 
 abstract class BaseActivity : FragmentActivity() {
     private lateinit var baseBinding: ActivityBaseBinding
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var mk = MMKV.defaultMMKV()
     private var dialog: MatchVideoDialog? = null
+    private var startAt = 0L
+    private var leaveAt = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +53,8 @@ abstract class BaseActivity : FragmentActivity() {
         initView()
         initData()
 
+        firebaseAnalytics = Firebase.analytics
+
         val different = AppUtil.getNavigationBarHeightIfRoom(this)
         if (different != 0) {
             baseBinding.divider.visibility = View.VISIBLE
@@ -55,7 +64,6 @@ abstract class BaseActivity : FragmentActivity() {
             baseBinding.divider.height = 0
         }
     }
-
 
     protected fun setStatusBarLight() {
         SysWindowUi.hideStatusNavigationBar(this, false)
@@ -172,6 +180,9 @@ abstract class BaseActivity : FragmentActivity() {
         getUserInfo { userInfo ->
             if (userInfo.uid == uid) return@getUserInfo
 
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "private_video_click", "private video click")
+            ReportManager.appsFlyerCustomLog(this, "private_video_click", "private video click")
+
             if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
                 userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
             ) {
@@ -209,6 +220,9 @@ abstract class BaseActivity : FragmentActivity() {
             val map = HashMap<String, Any>()
             map["online"] = userInfo.online
             XKitRouter.withKey(RouterConstant.PATH_CHAT_P2P_PAGE).withParam(RouterConstant.CHAT_KRY, user).withContext(this).navigate()
+
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "private_msg_click", "private msg click")
+            ReportManager.appsFlyerCustomLog(this, "private_msg_click", "private msg click")
         }
     }
 

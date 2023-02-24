@@ -5,10 +5,7 @@ import android.app.Application
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
+import android.os.*
 import com.appsflyer.AppsFlyerLib
 import com.blongho.country_data.World
 import com.google.gson.reflect.TypeToken
@@ -54,7 +51,14 @@ import java.lang.ref.WeakReference
 class BaseApp : Application() {
     private var currentActivity: WeakReference<Activity>? = null
     private var dialog: MatchVideoDialog? = null
+    private var timer: CountDownTimer? = null
     private var handler = Handler(Looper.getMainLooper())
+    private var activityCount = 0
+    private var isForeground = false
+    private var isScreenOff = false
+    private var lastReportDate = 0L
+    private var startAt = 0L
+    private var leaveAt = 0L
 
     override fun onCreate() {
         super.onCreate()
@@ -89,6 +93,8 @@ class BaseApp : Application() {
         if (AppUtil.isDebugger(this)) {
             Config.isDebug = true
         }
+
+        initTimer()
     }
 
     private fun initHandler() {
@@ -112,11 +118,9 @@ class BaseApp : Application() {
                                     Config.USER_NAME = ""
                                 }
 
-                                if (code == 20100 || code == 20102) {
-                                    val activity = currentActivity?.get()
-                                    if (activity != null) {
-                                        startActivity(Intent(activity, LoginActivity::class.java))
-                                    }
+                                val activity = currentActivity?.get()
+                                if (activity != null) {
+                                    startActivity(Intent(activity, LoginActivity::class.java))
                                 }
                             }
 
@@ -188,6 +192,10 @@ class BaseApp : Application() {
                                 }
                             }
                         }
+                    }
+
+                    0x10006 -> {
+                        addAnchorOnlineTime()
                     }
 
                 }
@@ -373,7 +381,6 @@ class BaseApp : Application() {
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 currentActivity = if (activity.parent != null) {
-                    //如果这个视图是嵌入的子视图
                     WeakReference<Activity>(activity.parent)
                 } else {
                     WeakReference<Activity>(activity)
@@ -381,11 +388,11 @@ class BaseApp : Application() {
             }
 
             override fun onActivityStarted(activity: Activity) {
+
             }
 
             override fun onActivityResumed(activity: Activity) {
                 currentActivity = if (activity.parent != null) {
-                    //如果这个视图是嵌入的子视图
                     WeakReference<Activity>(activity.parent)
                 } else {
                     WeakReference<Activity>(activity)
@@ -393,12 +400,34 @@ class BaseApp : Application() {
 
                 //保证对话框能在所有页面弹出
                 initVideoDialog(activity)
+
+                activityCount++
+                if (startAt == 0L) {
+                    startAt = System.currentTimeMillis() / 1000L
+                }
+
+                isForeground = true
+                isScreenOff = false
+
+                JLog.i("time = " + (System.currentTimeMillis() - lastReportDate).toString())
+
+                if (lastReportDate == 0L || System.currentTimeMillis() - lastReportDate > 5000L) {
+                    lastReportDate = System.currentTimeMillis()
+                    timer?.start()
+                }
             }
 
             override fun onActivityPaused(activity: Activity) {
             }
 
             override fun onActivityStopped(activity: Activity) {
+                activityCount--
+
+                //退到后台立即上报
+                if (activityCount == 0) {
+                    isForeground = false
+                    addAnchorOnlineTime()
+                }
             }
 
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
@@ -455,7 +484,7 @@ class BaseApp : Application() {
         }
     }
 
-    fun showVideoChatFromMyself(user: User) {
+    private fun showVideoChatFromMyself(user: User) {
         if (dialog != null && dialog?.isShowing == false) {
             dialog?.setUser(user)
             dialog?.waitConnectForPersonal()
@@ -623,6 +652,41 @@ class BaseApp : Application() {
 
         } catch (ex: Exception) {
 
+        }
+    }
+
+    private fun initTimer() {
+        timer = object : CountDownTimer(5000L, 1000L) {
+            override fun onFinish() {
+                addAnchorOnlineTime()
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+            }
+        }
+    }
+
+    private fun addAnchorOnlineTime() {
+        val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java) ?: return
+        if (userInfo.role != "anchor") return
+
+        if (startAt == 0L) return
+
+        leaveAt = System.currentTimeMillis() / 1000L
+        DataManager.addAnchorOnlineTime(startAt, leaveAt) {
+            if (it) {
+                JLog.i("report success")
+                startAt = if (activityCount == 0) {
+                    0L
+                } else {
+                    System.currentTimeMillis() / 1000L
+                }
+
+                leaveAt = 0L
+                lastReportDate = System.currentTimeMillis()
+
+                Config.subscriberHandler?.sendEmptyMessage(0x10001)
+            }
         }
     }
 

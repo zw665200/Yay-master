@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MessageBuilder
@@ -37,11 +40,10 @@ import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityVideoBinding
 import com.ql.recovery.yay.databinding.ItemChatBinding
-import com.ql.recovery.yay.manager.CManager
 import com.ql.recovery.yay.manager.ImageManager
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.*
-import com.ql.recovery.yay.ui.self.BlurTransformation
 import com.ql.recovery.yay.util.*
 import io.agora.rtc2.*
 import io.agora.rtc2.video.BeautyOptions
@@ -53,6 +55,7 @@ class VideoActivity : BaseActivity() {
     private lateinit var mAdapter: DataAdapter<Chat>
     private var chatList = arrayListOf<Chat>()
     private var handler = Handler(Looper.getMainLooper())
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private var mUser: User? = null
     private var timer: CountDownTimer? = null
@@ -177,6 +180,8 @@ class VideoActivity : BaseActivity() {
         mType = intent.getStringExtra("type")
         if (mRoom != null && mUser != null && mType != null) {
             waitingDialog = WaitingDialog(this)
+            firebaseAnalytics = Firebase.analytics
+
             initUserInfo(mUser!!)
             initHandler()
             initGameDialog()
@@ -317,6 +322,9 @@ class VideoActivity : BaseActivity() {
                 mRtcEngine?.leaveChannel()
                 mRtcEngine?.stopPreview()
                 timerDialog?.cancel()
+
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "video_chat_timeout", "timeout")
+                ReportManager.appsFlyerCustomLog(this@VideoActivity, "video_chat_timeout", "timeout")
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -487,6 +495,8 @@ class VideoActivity : BaseActivity() {
                 initTimer(room.duration * 1000L)
                 timer?.start()
 
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", addition.type)
+                ReportManager.appsFlyerCustomLog(this@VideoActivity, "add_time_success", addition.type)
             }
         }
     }
@@ -538,6 +548,9 @@ class VideoActivity : BaseActivity() {
                             isEnough = false
                         }
                     }
+
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", addition.type)
+                    ReportManager.appsFlyerCustomLog(this@VideoActivity, "add_time_success", addition.type)
                 }
             }
         }
@@ -588,6 +601,9 @@ class VideoActivity : BaseActivity() {
                     } else {
                         isEnough = false
                     }
+
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", list[0].type)
+                    ReportManager.appsFlyerCustomLog(this@VideoActivity, "add_time_success", list[0].type)
                 }
             }
         }

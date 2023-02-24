@@ -31,8 +31,8 @@
     <string name="login_pwd_tip">Login password consists of 4–20 upper or lower case letters, symbols, or numbers</string>
     <string name="login_get_message_code">Send</string>
     <string name="login_sign_up">Register</string>
-    <string name="login_login">Log in</string>
-    <string name="login_pwd_forget">Forgot password?</string>
+    <string name="login_login">Login</string>
+    <string name="login_pwd_forget">Forget password?</string>
     <string name="login_pwd_get">Retrieve password</string>
     <string name="login_pwd_reset">Reset Password</string>
     <string name="login_next_step">Next step</string>
@@ -228,6 +228,7 @@
     <string name="club_notice_sure">Initiate</string>
     <string name="club_score">Score:%1$s</string>
     <string name="club_level">Level:%1$d</string>
+    <string name="club_uid">UID:%1$d</string>
 
     <!--notification-->
     <string name="notification_title">Message</string>
@@ -252,6 +253,8 @@
     <string name="mine_income_host">Host Income</string>
     <string name="mine_short_video">Short videos</string>
     <string name="mine_photo_wall">Photo wall</string>
+    <string name="mine_online_time">Online hours today：</string>
+    <string name="mine_get_phone_count">Calls today：</string>
 
     <!--chat-->
     <string name="chat_video_blur_tip">The blur effect disappears when facing the camera</string>

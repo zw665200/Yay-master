@@ -5,12 +5,13 @@ import android.os.CountDownTimer
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.ql.recovery.bean.Countries
+import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityStartBinding
 import com.ql.recovery.yay.ui.base.BaseActivity
-import com.ql.recovery.yay.ui.mine.AgreementActivity
+import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.util.GsonUtils
 import com.ql.recovery.yay.util.JLog
 import com.tencent.mmkv.MMKV
@@ -32,11 +33,6 @@ class StartActivity : BaseActivity() {
             finish()
             return
         }
-
-        initTimer()
-        getCountries()
-        getBasePrice()
-        initAppsFlyer()
     }
 
     override fun onStart() {
@@ -45,14 +41,10 @@ class StartActivity : BaseActivity() {
     }
 
     override fun initData() {
-        val agree = mk.decodeBool("service_agree", false)
-        if (agree) {
-            val intent = Intent(this, AgreementActivity::class.java)
-            intent.putExtra("index", 3)
-            startActivityForResult(intent, 0x1)
-        } else {
-            timer.start()
-        }
+        initTimer()
+        getCountries()
+        getBasePrice()
+        initAppsFlyer()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -69,12 +61,19 @@ class StartActivity : BaseActivity() {
     private fun initTimer() {
         timer = object : CountDownTimer(2000L, 1000L) {
             override fun onFinish() {
-                openMainPage()
+                val userInfo = getLocalStorage().decodeParcelable("user_info", UserInfo::class.java)
+                if (userInfo == null) {
+                    openLoginPage()
+                } else {
+                    openMainPage()
+                }
             }
 
             override fun onTick(millisUntilFinished: Long) {
             }
         }
+
+        timer.start()
     }
 
     private fun getCountries() {
@@ -101,17 +100,8 @@ class StartActivity : BaseActivity() {
     }
 
     private fun initAppsFlyer() {
-        AppsFlyerLib.getInstance().start(this.applicationContext, Config.APPS_FLYER_KEY, object : AppsFlyerRequestListener {
-            override fun onSuccess() {
-                JLog.i("appsflyer init success")
-            }
-
-            override fun onError(errorCode: Int, errorDesc: String) {
-                JLog.i("appsflyer init failed : errorCode = $errorCode, errorDesc = $errorDesc")
-            }
-        })
-
-        AppsFlyerLib.getInstance().setDebugLog(false)
+        AppsFlyerLib.getInstance().start(this.applicationContext)
+        AppsFlyerLib.getInstance().setDebugLog(true)
     }
 
     private fun initBranch() {
@@ -133,13 +123,19 @@ class StartActivity : BaseActivity() {
         }.withData(this.intent.data).init()
     }
 
-
     private fun getBasePrice() {
         getUserInfo {
             DataManager.getBasePrice { basePrice ->
                 getLocalStorage().encode("base_price", basePrice)
             }
         }
+    }
+
+    private fun openLoginPage() {
+        val intent = Intent()
+        intent.setClass(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun openMainPage() {

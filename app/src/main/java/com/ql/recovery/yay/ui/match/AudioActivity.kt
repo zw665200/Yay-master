@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MessageBuilder
@@ -35,6 +38,7 @@ import com.ql.recovery.yay.databinding.ActivityAudioBinding
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ItemChatBinding
 import com.ql.recovery.yay.manager.ImageManager
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.*
 import com.ql.recovery.yay.util.*
@@ -43,6 +47,7 @@ import io.agora.rtc2.*
 
 class AudioActivity : BaseActivity() {
     private lateinit var binding: ActivityAudioBinding
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var mAdapter: DataAdapter<Chat>
     private var chatList = arrayListOf<Chat>()
     private var handler = Handler(Looper.getMainLooper())
@@ -148,6 +153,7 @@ class AudioActivity : BaseActivity() {
         mUser = intent.getParcelableExtra("user")
         if (mRoom != null && mUser != null) {
             waitingDialog = WaitingDialog(this)
+            firebaseAnalytics = Firebase.analytics
 
             initHandler()
             initUserInfo(mUser!!)
@@ -182,6 +188,9 @@ class AudioActivity : BaseActivity() {
                                 timer?.cancel()
                                 initTimer(room.duration * 1000L)
                                 timer?.start()
+
+                                ReportManager.firebaseCustomLog(firebaseAnalytics, "voice_chat_timeout", "timeout")
+                                ReportManager.appsFlyerCustomLog(this@AudioActivity, "voice_chat_timeout", "timeout")
                             }
                         }
                     }
@@ -511,6 +520,9 @@ class AudioActivity : BaseActivity() {
                 timer?.cancel()
                 initTimer(room.duration * 1000L)
                 timer?.start()
+
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", addition.type)
+                ReportManager.appsFlyerCustomLog(this, "add_time_success", addition.type)
             }
         }
     }
@@ -550,6 +562,9 @@ class AudioActivity : BaseActivity() {
                             }
                         }
                     }
+
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", addition.type)
+                    ReportManager.appsFlyerCustomLog(this, "add_time_success", addition.type)
                 }
             }
         }

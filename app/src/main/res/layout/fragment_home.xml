@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/dp_5"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/din_m"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_15" />
 

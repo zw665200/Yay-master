@@ -1,6 +1,7 @@
 package com.ql.recovery.yay.ui.login
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.InputType
@@ -69,6 +70,7 @@ class PhoneLoginActivity : BaseActivity() {
         }
 
         binding.tvPhoneCode.setOnClickListener { toRegionPage() }
+        binding.ivPhoneCode.setOnClickListener { toRegionPage() }
         binding.ivBack.setOnClickListener { resetStatus() }
         binding.tvCodeCounter.setOnClickListener { getSMS() }
         binding.tvLoginOrRegister.setOnClickListener { doTask() }
@@ -148,6 +150,7 @@ class PhoneLoginActivity : BaseActivity() {
             ToastUtil.showShort(this, getString(R.string.login_agreement))
             return
         }
+
         if (type != Type.GetPassword) {
             val password = binding.etPwdInput.editableText.toString()
             if (password.length < 4) {
@@ -162,9 +165,16 @@ class PhoneLoginActivity : BaseActivity() {
                 val phoneNumber = binding.etPhoneInput.editableText.toString()
                 val password = binding.etPwdInput.editableText.toString()
                 if (phoneCode.isNotBlank() && phoneNumber.isNotBlank() && password.isNotBlank()) {
+
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_login_confirm_click", "before login")
+                    ReportManager.appsFlyerCustomLog(this, "phone_login_confirm_click", "before login")
+
                     viewModel?.loginWithPhone(password, phoneNumber, phoneCode) {
                         if (it) {
                             loadUserInfo()
+
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_login_success", "after login")
+                            ReportManager.appsFlyerPurchaseLog(this, "phone_login_success", "after login")
                         }
                     }
                 }
@@ -179,9 +189,15 @@ class PhoneLoginActivity : BaseActivity() {
                 if (phoneCode.isNotBlank() && phone.isNotBlank() && code.isNotBlank()
                     && password.isNotBlank() && !deviceId.isNullOrBlank()
                 ) {
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_register_click", "before login")
+                    ReportManager.appsFlyerCustomLog(this, "phone_register_click", "before login")
+
                     viewModel?.signUpWithPhone(phoneCode, phone, code, password, deviceId) {
                         if (it) {
                             loadUserInfo()
+
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_register_success", "after login")
+                            ReportManager.appsFlyerCustomLog(this, "phone_register_success", "after login")
                         }
                     }
                 }
@@ -211,10 +227,17 @@ class PhoneLoginActivity : BaseActivity() {
                 val code = binding.etCodeInput.editableText.toString()
                 val password = binding.etPwdInput.editableText.toString()
                 if (phoneCode.isNotBlank() && phone.isNotBlank() && code.isNotBlank() && password.isNotBlank()) {
+
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_reset_pwd_click", "reset pwd")
+                    ReportManager.appsFlyerCustomLog(this, "phone_reset_pwd_click", "reset pwd")
+
                     viewModel?.resetPassword(phoneCode, phone, code, password) {
                         if (it) {
                             ToastUtil.showShort(this, getString(R.string.login_success))
                             resetStatus()
+
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_reset_pwd_success", "reset pwd")
+                            ReportManager.appsFlyerCustomLog(this, "phone_reset_pwd_success", "reset pwd")
                         }
                     }
                 }
@@ -240,10 +263,17 @@ class PhoneLoginActivity : BaseActivity() {
                 val isValid = phoneUtil!!.isValidNumber(number)
                 if (isValid) {
                     isSent = false
+
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_send_code_click", "send code")
+                    ReportManager.appsFlyerCustomLog(this, "phone_send_code_click", "send code")
+
                     viewModel?.sendSMS(phoneCode, phone) {
                         if (it) {
                             isSent = true
                             timer.start()
+
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_send_code_success", "send code success")
+                            ReportManager.appsFlyerCustomLog(this, "phone_send_code_success", "send code success")
                         }
                     }
                 } else {
@@ -263,6 +293,7 @@ class PhoneLoginActivity : BaseActivity() {
                 binding.ivPwdVisibility.setImageResource(R.drawable.pw_hide)
                 binding.etPwdInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                 binding.etPwdInput.setSelection(binding.etPwdInput.editableText.length)
+                binding.etPwdInput.typeface = Typeface.createFromAsset(assets, "fonts/din_m.otf")
             }
 
             PwdVisibility.Invisible -> {
@@ -270,6 +301,7 @@ class PhoneLoginActivity : BaseActivity() {
                 binding.ivPwdVisibility.setImageResource(R.drawable.yj_dl)
                 binding.etPwdInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                 binding.etPwdInput.setSelection(binding.etPwdInput.editableText.length)
+                binding.etPwdInput.typeface = Typeface.createFromAsset(assets, "fonts/din_m.otf")
             }
         }
     }
@@ -333,6 +365,9 @@ class PhoneLoginActivity : BaseActivity() {
 
     private fun toRegionPage() {
         startActivityForResult(Intent(this, RegionActivity::class.java), 0x1)
+
+        ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_choose_region_click", "click region")
+        ReportManager.appsFlyerCustomLog(this, "phone_choose_region_click", "click region")
     }
 
     private fun toAgreementPage() {
@@ -340,6 +375,7 @@ class PhoneLoginActivity : BaseActivity() {
         startActivity(intent)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0x1 && resultCode == 0x1) {

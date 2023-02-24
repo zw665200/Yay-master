@@ -423,6 +423,40 @@ public class FFmpegUtil {
     }
 
     /**
+     * @param inputPath
+     * @param rates
+     * @param outputPath
+     * @return
+     */
+    public static String[] compressRates(String inputPath, Float rates, String outputPath) {
+        String waterMarkCmd = "ffmpeg -i %s -b:v %fM -threads 5 -preset superfast -t 10 -y %s";
+        waterMarkCmd = String.format(Locale.getDefault(), waterMarkCmd, inputPath, rates, outputPath);
+        return waterMarkCmd.split(" ");
+    }
+
+    /**
+     * @param inputPath
+     * @param outputPath
+     * @return
+     */
+    public static String[] changeRatio(String inputPath, String outputPath) {
+        String waterMarkCmd = "ffmpeg -i %s -s vga -y %s";
+        waterMarkCmd = String.format(Locale.getDefault(), waterMarkCmd, inputPath, outputPath);
+        return waterMarkCmd.split(" ");
+    }
+
+    /**
+     * @param inputPath
+     * @param outputPath
+     * @return
+     */
+    public static String[] transToH265(String inputPath, String outputPath) {
+        String waterMarkCmd = "ffmpeg -i %s  -vcodec  libx265 -preset slow -b:v 2000k  -crf  21 -strict -2 %s";
+        waterMarkCmd = String.format(Locale.getDefault(), waterMarkCmd, inputPath, outputPath);
+        return waterMarkCmd.split(" ");
+    }
+
+    /**
      * Remove watermark from video: Suppress logo by a simple interpolation of the surrounding pixels.
      * On the other hand, it can be used to mosaic video
      *

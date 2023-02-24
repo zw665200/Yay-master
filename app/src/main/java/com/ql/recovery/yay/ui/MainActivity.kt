@@ -109,6 +109,7 @@ class MainActivity : BaseFragmentActivity() {
         }
     }
 
+
     override fun putFragments(): Array<Class<out BaseFragment>> {
         return FRAGMENT_CLASS_ARRAY
     }

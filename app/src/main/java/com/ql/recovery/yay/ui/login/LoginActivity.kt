@@ -131,6 +131,9 @@ class LoginActivity : BaseActivity() {
             return
         }
 
+        ReportManager.firebaseCustomLog(firebaseAnalytics, "google_login_click", "login before")
+        ReportManager.appsFlyerCustomLog(this, "google_login_click", "login before")
+
         //检查用户是否已经登录
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if (account == null) {
@@ -201,6 +204,9 @@ class LoginActivity : BaseActivity() {
             return
         }
 
+        ReportManager.firebaseCustomLog(firebaseAnalytics, "facebook_login_click", "login before")
+        ReportManager.appsFlyerPurchaseLog(this, "facebook_login_click", "login before")
+
         //检查登录状态
         val currentToken = AccessToken.getCurrentAccessToken()
         if (currentToken != null && !currentToken.isExpired) {
@@ -246,6 +252,9 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun toPhoneLoginPage() {
+        ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_login_click", "login before")
+        ReportManager.appsFlyerPurchaseLog(this, "phone_login_click", "login before")
+
         startActivity(
             Intent(this, PhoneLoginActivity::class.java),
             ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
@@ -312,7 +321,11 @@ class LoginActivity : BaseActivity() {
                 } catch (e: ApiException) {
                     val content = "signInResult:failed code = ${e.statusCode} , message = ${e.status}"
                     JLog.i(content)
-                    ToastUtil.showShort(this, content)
+
+                    when (e.statusCode) {
+                        12501 -> {}
+                        else -> ToastUtil.showShort(this, e.statusCode.toString())
+                    }
                 }
             }
         }
@@ -325,6 +338,9 @@ class LoginActivity : BaseActivity() {
             MMKV.defaultMMKV()?.encode("access_token", accessToken)
             MMKV.defaultMMKV()?.encode("token", it.access_token)
             loadUserInfo()
+
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "google_login_success", "after login")
+            ReportManager.appsFlyerCustomLog(this, "google_login_success", "after login")
         }
     }
 
@@ -335,6 +351,9 @@ class LoginActivity : BaseActivity() {
             MMKV.defaultMMKV()?.encode("access_token", accessToken)
             MMKV.defaultMMKV()?.encode("token", it.access_token)
             loadUserInfo()
+
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "facebook_login_success", "after login")
+            ReportManager.appsFlyerCustomLog(this, "facebook_login_success", "after login")
         }
     }
 
@@ -366,8 +385,8 @@ class LoginActivity : BaseActivity() {
                 ReportManager.appsFlyerLoginLog(this, userInfo.uid)
             }
 
-            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()
-                || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank()
+                || userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
             ) {
                 val intent = Intent(this, GuideActivity::class.java)
                 intent.putExtra("home", true)
@@ -388,11 +407,6 @@ class LoginActivity : BaseActivity() {
         super.onDestroy()
         exoPlayer?.stop()
         exoPlayer?.release()
-    }
-
-    override fun onStop() {
-        super.onStop()
-//        exoPlayer?.stop()
     }
 
 }

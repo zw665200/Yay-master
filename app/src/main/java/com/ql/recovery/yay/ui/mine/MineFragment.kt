@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.ql.recovery.bean.Resource
 import com.ql.recovery.bean.UserInfo
+import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.FileCallback
@@ -26,6 +27,7 @@ import com.ql.recovery.yay.databinding.ItemVideoBinding
 import com.ql.recovery.yay.databinding.ItemWallpaperBinding
 import com.ql.recovery.yay.manager.CManager
 import com.ql.recovery.yay.manager.ImageManager
+import com.ql.recovery.yay.manager.RtcManager
 import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
 import com.ql.recovery.yay.ui.dialog.WaitingDialog
@@ -44,7 +46,7 @@ class MineFragment : BaseFragment() {
 
     override fun initView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMineBinding.inflate(inflater, container, false)
-        val notificationsViewModel = ViewModelProvider(this).get(ClubViewModel::class.java)
+        val notificationsViewModel = ViewModelProvider(this)[ClubViewModel::class.java]
 
         binding!!.ivSetting.setOnClickListener { toSettingPage() }
         binding!!.ivAvatar.setOnClickListener { showUserDetail() }
@@ -54,10 +56,12 @@ class MineFragment : BaseFragment() {
         binding!!.llFollowing.setOnClickListener { toFollowPage() }
         binding!!.includeUser.tvLevel.setOnClickListener { toLevelPage() }
         binding!!.includeUser.tvScore.setOnClickListener { toScorePage() }
+        binding!!.ivRefresh.setOnClickListener { requestToUpdateOnlineTime() }
 
         binding!!.refreshLayout.setOnRefreshListener { refreshLayout ->
             refreshLayout.finishRefresh()
             getUserInfo()
+            getAnchorOnline()
             loadFunction()
         }
 
@@ -70,6 +74,8 @@ class MineFragment : BaseFragment() {
             getUserInfo()
             loadFunction()
         }
+
+        getAnchorOnline()
     }
 
     override fun setOnlineStatus(uid: String, online: Boolean) {
@@ -162,12 +168,24 @@ class MineFragment : BaseFragment() {
                 }
             }
 
+            //设置主播身份
+            if (userInfo.role == "anchor") {
+                binding?.ivHost?.visibility = View.VISIBLE
+                binding?.flOnlineTime?.visibility = View.VISIBLE
+            } else {
+                binding?.ivHost?.visibility = View.GONE
+                binding?.flOnlineTime?.visibility = View.GONE
+            }
+
             //设置风度评分
             val score = String.format("%.1f", userInfo.grace_score)
             binding?.includeUser?.tvScore?.text = String.format(requireActivity().getString(R.string.club_score), score)
 
             //设置会员等级
             binding?.includeUser?.tvLevel?.text = String.format(requireActivity().getString(R.string.club_level), userInfo.grade)
+
+            //设置UID
+            binding?.includeUser?.tvUid?.text = String.format(getString(R.string.club_uid), userInfo.uid)
 
             //设置关注
             binding?.tvFollower?.text = userInfo.followers.toString()
@@ -196,6 +214,27 @@ class MineFragment : BaseFragment() {
 
             loadPicList(userInfo)
             loadVideoList(userInfo)
+        }
+    }
+
+    private fun requestToUpdateOnlineTime() {
+        getUserInfo { userInfo ->
+            if (userInfo.role == "anchor") {
+                Config.mHandler?.sendEmptyMessage(0x10006)
+            }
+        }
+    }
+
+    private fun getAnchorOnline() {
+        getUserInfo { userInfo ->
+            if (userInfo.role == "anchor") {
+                DataManager.getAnchorOnlineTime { onlineTime ->
+                    val allTime = AppUtil.second2Hour(onlineTime.duration)
+                    JLog.i("allTime = $allTime")
+                    binding?.tvOnlineTime?.text = allTime.toString()
+                    binding?.tvCallTimes?.text = onlineTime.answer_count.toString()
+                }
+            }
         }
     }
 
@@ -299,7 +338,7 @@ class MineFragment : BaseFragment() {
 
     private fun showUserDetail() {
         if (!DoubleUtils.isFastDoubleClick()) {
-            checkLogin { userInfo ->
+            getUserInfo { userInfo ->
                 showUserDetail(userInfo.uid, true, showChat = false)
             }
         }
@@ -354,6 +393,7 @@ class MineFragment : BaseFragment() {
 
     override fun flushUserInfo() {
         getUserInfo()
+        getAnchorOnline()
     }
 
     private fun showPrimeDialog() {
@@ -371,6 +411,7 @@ class MineFragment : BaseFragment() {
     @Deprecated("")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        //上传视频
         if (requestCode == 0x1001) {
             if (data != null) {
                 val uri = data.data
@@ -378,19 +419,23 @@ class MineFragment : BaseFragment() {
                     val realPath = FileUtil.getRealPathFromUri(requireContext(), uri)
                     if (realPath != null) {
                         waitingDialog.show()
-                        DataManager.uploadFileToOss(requireContext(), realPath) { ossPath ->
-                            waitingDialog.cancel()
-                            if (ossPath.isNotBlank()) {
-                                val list = arrayListOf<String>()
-                                list.add(ossPath)
 
-                                getUserInfo { userInfo ->
-                                    list.addAll(userInfo.videos)
-                                }
+                        //压缩视频
+                        RtcManager.compressVideo(requireActivity(), realPath) { compressPath ->
+                            DataManager.uploadFileToOss(requireContext(), compressPath) { ossPath ->
+                                waitingDialog.cancel()
+                                if (ossPath.isNotBlank()) {
+                                    val list = arrayListOf<String>()
+                                    list.add(ossPath)
 
-                                DataManager.updateVideo(list) {
-                                    if (it) {
-                                        getUserInfo()
+                                    getUserInfo { userInfo ->
+                                        list.addAll(userInfo.videos)
+                                    }
+
+                                    DataManager.updateVideo(list) {
+                                        if (it) {
+                                            getUserInfo()
+                                        }
                                     }
                                 }
                             }
@@ -400,12 +445,14 @@ class MineFragment : BaseFragment() {
             }
         }
 
+        //上传图片
         if (requestCode == 0x1002) {
             if (data != null) {
                 val uri = data.data
                 if (uri != null) {
                     val realPath = FileUtil.getRealPathFromUri(requireContext(), uri)
                     if (realPath != null) {
+
                         //压缩图片
                         CManager.compress(requireActivity(), realPath, object : FileCallback {
                             override fun onSuccess(filePath: String) {

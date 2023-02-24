@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.uinfo.UserService
 import com.netease.nimlib.sdk.uinfo.constant.UserInfoFieldEnum
@@ -25,6 +28,7 @@ import com.ql.recovery.yay.databinding.ItemGuideTagBinding
 import com.ql.recovery.yay.databinding.ItemWallpaperBinding
 import com.ql.recovery.yay.manager.CManager
 import com.ql.recovery.yay.manager.ImageManager
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.auth.AuthActivity
 import com.ql.recovery.yay.ui.base.BaseActivity
@@ -50,6 +54,7 @@ class GuideActivity : BaseActivity() {
     private var currentMonth: String? = null
     private var currentDay: String? = null
     private var currentUserInfo: UserInfo? = null
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private lateinit var mAdapter: DataAdapter<Bitmap>
     private lateinit var mTagAdapter: DataAdapter<Tag>
@@ -58,6 +63,7 @@ class GuideActivity : BaseActivity() {
 
     private var dialog: WaitingDialog? = null
     private var jumpList = arrayListOf<String>()
+    private var stepList = arrayListOf<Step>()
     private var step = Step.Gender
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
@@ -77,6 +83,7 @@ class GuideActivity : BaseActivity() {
 
     override fun initData() {
         dialog = WaitingDialog(this)
+        firebaseAnalytics = Firebase.analytics
         checkStep()
     }
 
@@ -145,6 +152,9 @@ class GuideActivity : BaseActivity() {
 
             getLocalStorage().encode("guide_finish", true)
 
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "guide_leave", "leave guide page")
+            ReportManager.appsFlyerCustomLog(this, "guide_leave", "leave guide page")
+
             val permission = getLocalStorage().decodeBool("show_permission", false)
             if (!permission) {
                 toAuthPage()
@@ -193,6 +203,7 @@ class GuideActivity : BaseActivity() {
                 }
 
                 updateUserInfo(null, null, null, mIsMale, mFindIsMale, null, null)
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_gender", "modify gender")
             }
 
             Step.Birthday -> {
@@ -214,6 +225,7 @@ class GuideActivity : BaseActivity() {
                 }
 
                 updateUserInfo(null, mBirthday, null, null, null, null, null)
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_birthday", "modify birthday")
             }
 
             Step.NickName -> {
@@ -225,6 +237,7 @@ class GuideActivity : BaseActivity() {
                     }
                     mNickname = nickname
                     updateUserInfo(null, null, nickname, null, null, null, null)
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_nickname", "modify nickname")
 
                     //更新用户资料
                     val fields = HashMap<UserInfoFieldEnum, Any>()
@@ -239,6 +252,7 @@ class GuideActivity : BaseActivity() {
                     return
                 }
                 updateUserInfo(mAvatar, null, null, null, null, null, null)
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_avatar", "modify avatar")
             }
 
             Step.Album -> {
@@ -247,6 +261,7 @@ class GuideActivity : BaseActivity() {
                     return
                 }
                 updateUserInfo(null, null, null, null, null, mAlbumList, null)
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_pic", "modify pics")
             }
 
             Step.Tags -> {
@@ -255,6 +270,7 @@ class GuideActivity : BaseActivity() {
                     return
                 }
                 updateUserInfo(null, null, null, null, null, null, mTargetList)
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_short_video", "modify short videos")
             }
         }
     }
@@ -542,11 +558,24 @@ class GuideActivity : BaseActivity() {
     }
 
     private fun checkParam() {
-        val param = intent.getBooleanExtra("home", false)
-        if (param) {
-            toMainPage()
-        } else {
-            finish()
+        ReportManager.firebaseCustomLog(firebaseAnalytics, "guide_force_leave_click", "leave guide page")
+        ReportManager.appsFlyerCustomLog(this, "guide_force_leave_click", "leave guide page")
+
+        getUserInfo { userInfo ->
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()) {
+                ToastUtil.showShort(this, "please finish your profile and enjoy more benefits")
+                return@getUserInfo
+            }
+
+            val param = intent.getBooleanExtra("home", false)
+            if (param) {
+                toMainPage()
+            } else {
+                finish()
+            }
+
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "guide_force_leave", "leave guide page")
+            ReportManager.appsFlyerCustomLog(this, "guide_force_leave", "leave guide page")
         }
     }
 

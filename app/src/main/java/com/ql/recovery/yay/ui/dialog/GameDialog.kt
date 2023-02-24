@@ -136,7 +136,7 @@ class GameDialog(
 //                            }
 
                         } else {
-                            itemBinding.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/DINPro-Bold.otf")
+                            itemBinding.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/din_b.otf")
                             itemBinding.tvCoin.setTextColor(Color.BLACK)
                             itemBinding.tvCoin.text = itemData.coin.toString()
                             itemBinding.ivDemon.visibility = View.VISIBLE
@@ -181,7 +181,7 @@ class GameDialog(
 //                            }
 
                         } else {
-                            itemBinding.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/DINPro-Bold.otf")
+                            itemBinding.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/din_b.otf")
                             itemBinding.ivGift.visibility = View.VISIBLE
                             itemBinding.tvCoin.textSize = 13f
                             itemBinding.tvCoin.setTextColor(Color.BLACK)

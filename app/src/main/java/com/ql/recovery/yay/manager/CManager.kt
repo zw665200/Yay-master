@@ -115,7 +115,7 @@ object CManager {
     }
 
     /**
-     * 无损压缩
+     * 无损压缩图片
      */
     fun compress(activity: Activity, filePath: String, callback: FileCallback) {
         var defaultFormat = Bitmap.CompressFormat.JPEG

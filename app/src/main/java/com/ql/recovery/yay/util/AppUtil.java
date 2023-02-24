@@ -154,6 +154,33 @@ public class AppUtil {
         return sdf.format(new Date(timeStamp));
     }
 
+    public static String second2Hour(long seconds) {
+        long hour = 0;
+        long minutes = 0;
+        long sencond = 0;
+        long temp = seconds % 3600;
+        if (seconds > 3600) {
+            hour = seconds / 3600;
+            if (temp != 0) {
+                if (temp > 60) {
+                    minutes = temp / 60;
+                    if (temp % 60 != 0) {
+                        sencond = temp % 60;
+                    }
+                } else {
+                    sencond = temp;
+                }
+            }
+        } else {
+            minutes = seconds / 60;
+            if (seconds % 60 != 0) {
+                sencond = seconds % 60;
+            }
+        }
+
+        return (hour < 10 ? ("0" + hour) : hour) + ":" + (minutes < 10 ? ("0" + minutes) : minutes) + ":" + (sencond < 10 ? ("0" + sencond) : sencond);
+    }
+
     /**
      * 时间戳转日期
      *
@@ -173,6 +200,19 @@ public class AppUtil {
 
         return timeStamp;
     }
+
+//    public static String timestamp2Time(long time) {
+//        if (time < 60) {
+//            return time + "s";
+//        }
+//
+//        if (time < 3600) {
+//            long a = time / 60;
+//            long b = time % 60;
+//
+//            return a + ":" + b;
+//        }
+//    }
 
     public static String getTodayDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());

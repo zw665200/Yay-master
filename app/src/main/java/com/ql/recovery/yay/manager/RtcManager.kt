@@ -6,6 +6,7 @@ import com.frank.ffmpeg.listener.OnHandleListener
 import com.frank.ffmpeg.util.FFmpegUtil
 import com.ql.recovery.yay.util.JLog
 import java.io.File
+import kotlin.concurrent.thread
 
 /**
  * @author Herr_Z
@@ -86,6 +87,35 @@ object RtcManager {
                     func(outPath)
                 }
             })
+        }
+    }
+
+    fun compressVideo(activity: Activity, srcPath: String, func: (String) -> Unit) {
+        val rootFile = activity.externalCacheDir
+        if (rootFile != null) {
+            val outPath = rootFile.path + File.separator + "t_" + System.currentTimeMillis() + ".mp4"
+            val command = FFmpegUtil.compressRates(srcPath, 1.5f, outPath)
+
+            thread {
+                FFmpegCmd.execute(command, object : OnHandleListener {
+                    override fun onBegin() {
+//                    JLog.i("onBegin")
+                    }
+
+                    override fun onMsg(msg: String) {
+//                    JLog.i("msg = $msg")
+                    }
+
+                    override fun onProgress(progress: Int, duration: Int) {
+//                    JLog.i("progress = $progress")
+                    }
+
+                    override fun onEnd(resultCode: Int, resultMsg: String) {
+                        JLog.i("resultCode = $resultCode, resultMsg = $resultMsg")
+                        func(outPath)
+                    }
+                })
+            }
         }
     }
 }

@@ -22,6 +22,9 @@ object Config {
 
     var baseHandler: Handler? = null
 
+    var startAt = 0L
+    var leaveAt = 0L
+
     var ROM = ""
     const val ROM_MIUI = "MIUI"
     const val ROM_EMUI = "EMUI"
@@ -48,7 +51,7 @@ object Config {
     var NIM_APP_SECRET = "9ac8ed8c99a5"
 
     //umeng key
-    var umengKey = "62ce9bcf05844627b5e86bfd"
+    var umengKey = "63f86e9bd64e68613937cfd8"
 
     //appsflyer
     var APPS_FLYER_KEY = "DPLpZK4xzXEXfi9gcgGgpm"

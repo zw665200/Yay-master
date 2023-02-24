@@ -539,6 +539,23 @@ interface BaseService {
     ): Observable<Response<List<Income>>>
 
     /**
+     * 获得主播在线时长
+     */
+    @GET("user/anchor/onlineTime")
+    fun getAnchorOnlineTime(
+        @Header("Authorization") authorization: String
+    ): Observable<Response<OnlineTime>>
+
+    /**
+     * 统计主播在线时长
+     */
+    @POST("user/online")
+    fun addAnchorOnlineTime(
+        @Header("Authorization") authorization: String,
+        @Body body: RequestBody
+    ): Observable<Response<Boolean>>
+
+    /**
      * 获得收益详情
      */
     @GET("user/income/{type}")

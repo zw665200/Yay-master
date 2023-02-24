@@ -28,6 +28,7 @@ import com.ql.recovery.yay.databinding.ActivityProfileBinding
 import com.ql.recovery.yay.databinding.ItemVideoBinding
 import com.ql.recovery.yay.databinding.ItemWallpaperBinding
 import com.ql.recovery.yay.manager.CManager
+import com.ql.recovery.yay.manager.RtcManager
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.*
 import com.ql.recovery.yay.ui.self.ItemTouchHelperCallback
@@ -388,19 +389,22 @@ class ProfileActivity : BaseActivity() {
                     val realPath = FileUtil.getRealPathFromUri(this, uri)
                     if (realPath != null) {
                         waitingDialog.show()
-                        DataManager.uploadFileToOss(this, realPath) { ossPath ->
-                            waitingDialog.cancel()
-                            if (ossPath.isNotBlank() && ossPath.startsWith("http")) {
-                                val list = arrayListOf<String>()
-                                list.addAll(mUserInfo!!.videos)
-                                list.add(ossPath)
-                                DataManager.updateVideo(list) {
-                                    if (it) {
-                                        getUserInfo()
+                        //压缩视频
+                        RtcManager.compressVideo(this, realPath) { compressPath ->
+                            DataManager.uploadFileToOss(this, compressPath) { ossPath ->
+                                waitingDialog.cancel()
+                                if (ossPath.isNotBlank() && ossPath.startsWith("http")) {
+                                    val list = arrayListOf<String>()
+                                    list.addAll(mUserInfo!!.videos)
+                                    list.add(ossPath)
+                                    DataManager.updateVideo(list) {
+                                        if (it) {
+                                            getUserInfo()
+                                        }
                                     }
+                                } else {
+                                    ToastUtil.showShort(this, ossPath)
                                 }
-                            } else {
-                                ToastUtil.showShort(this, ossPath)
                             }
                         }
                     }

@@ -13,6 +13,7 @@ import io.branch.indexing.BranchUniversalObject
 import io.branch.referral.util.*
 import java.math.BigDecimal
 import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * @author Herr_Z
@@ -28,6 +29,12 @@ object ReportManager {
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, itemType)
 
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+    }
+
+    fun firebaseCustomLog(firebaseAnalytics: FirebaseAnalytics, customName: String, content: String) {
+        val bundle = Bundle()
+        bundle.putString("content", content)
+        firebaseAnalytics.logEvent(customName, bundle)
     }
 
     fun firebaseLoginLog(firebaseAnalytics: FirebaseAnalytics, uid: Int, name: String) {
@@ -54,6 +61,12 @@ object ReportManager {
         logger.logEvent(type, bundle)
     }
 
+    fun facebookCustomLog(context: Context, customName: String, content: String) {
+        val logger = AppEventsLogger.newLogger(context)
+        val bundle = Bundle()
+        bundle.putString(AppEventsConstants.EVENT_PARAM_CONTENT, content)
+        logger.logEvent(customName, bundle)
+    }
 
     fun facebookLoginLog(context: Context, uid: Int, name: String) {
         val logger = AppEventsLogger.newLogger(context)
@@ -123,9 +136,9 @@ object ReportManager {
         event.logEvent(context)
     }
 
-    fun appsFlyerCustomLog(context: Context, customName: String, uid: Int) {
+    fun appsFlyerCustomLog(context: Context, customName: String, customContent: String) {
         val eventValues = HashMap<String, Any>()
-        eventValues[AFInAppEventParameterName.CUSTOMER_USER_ID] = uid
+        eventValues[AFInAppEventParameterName.CONTENT] = customContent
         AppsFlyerLib.getInstance().logEvent(context.applicationContext, customName, eventValues)
     }
 
@@ -146,6 +159,5 @@ object ReportManager {
         eventValues[AFInAppEventParameterName.CONTENT_TYPE] = contentType
         AppsFlyerLib.getInstance().logEvent(context.applicationContext, AFInAppEventType.PURCHASE, eventValues)
     }
-
 
 }

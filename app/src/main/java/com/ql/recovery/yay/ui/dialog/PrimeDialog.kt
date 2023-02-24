@@ -3,7 +3,6 @@ package com.ql.recovery.yay.ui.dialog
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.graphics.Typeface
 import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
@@ -76,6 +75,9 @@ class PrimeDialog(
 
             mType = Type.Pay
         }
+
+        ReportManager.firebaseCustomLog(firebaseAnalytics, "prime_dialog_open", "dialog open")
+        ReportManager.appsFlyerCustomLog(activity, "prime_dialog_open", "dialog open")
 
         show()
     }
@@ -304,6 +306,14 @@ class PrimeDialog(
 
         lastClickTime = System.currentTimeMillis()
 
+        if (currentServer!!.code.isBlank()) {
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "purchase_begin_click", "free")
+            ReportManager.appsFlyerCustomLog(activity, "purchase_begin_click", "free")
+        } else {
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "purchase_begin_click", currentServer!!.code)
+            ReportManager.appsFlyerCustomLog(activity, "purchase_begin_click", currentServer!!.code)
+        }
+
         DataManager.createOrder(currentServer!!.id) {
             if (it.is_paid) {
                 cancel()
@@ -356,6 +366,8 @@ class PrimeDialog(
                     override fun failed(msg: String) {
                         runOnUiThread {
                             ToastUtil.showShort(activity, msg)
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "purchase_cancel", "purchase cancel")
+                            ReportManager.appsFlyerCustomLog(activity, "purchase_cancel", "purchase cancel")
                         }
                     }
                 })

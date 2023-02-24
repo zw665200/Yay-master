@@ -10,6 +10,7 @@ import com.ql.recovery.yay.R
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.netease.yunxin.kit.adapters.MutableDataAdapter
 import com.ql.recovery.bean.Region
+import com.ql.recovery.bean.Regions
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityRegionBinding
@@ -18,6 +19,8 @@ import com.ql.recovery.yay.databinding.ItemRegionIndexBinding
 import com.ql.recovery.yay.databinding.ItemRegionTitleBinding
 import com.ql.recovery.yay.manager.CManager
 import com.ql.recovery.yay.ui.base.BaseActivity
+import com.ql.recovery.yay.ui.dialog.WaitingDialog
+import com.ql.recovery.yay.util.JLog
 
 class RegionActivity : BaseActivity() {
     private lateinit var binding: ActivityRegionBinding
@@ -25,6 +28,7 @@ class RegionActivity : BaseActivity() {
     private var regionList = arrayListOf<Region>()
     private var searchList = arrayListOf<Region>()
     private var indexList = arrayListOf<String>()
+    private var waitingDialog: WaitingDialog? = null
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityRegionBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -36,6 +40,8 @@ class RegionActivity : BaseActivity() {
     }
 
     override fun initData() {
+        waitingDialog = WaitingDialog(this)
+
         initIndexList()
         initRegionList()
         initSearch()
@@ -99,8 +105,11 @@ class RegionActivity : BaseActivity() {
         binding.rcContent.adapter = adapter
         binding.rcContent.layoutManager = LinearLayoutManager(this)
 
+        waitingDialog?.show()
         DataManager.getRegion { regions ->
-            regions.forEach { it.type = "content" }
+            waitingDialog?.cancel()
+
+             regions.forEach { it.type = "content" }
             regions.sortedBy { it.name }
 
             for (index in indexList) {

@@ -13,6 +13,9 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blongho.country_data.World
 import com.bumptech.glide.Glide
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.ql.recovery.bean.*
 import com.ql.recovery.yay.R
@@ -20,6 +23,7 @@ import com.ql.recovery.yay.config.ChooseType
 import com.ql.recovery.yay.config.GenderType
 import com.ql.recovery.yay.databinding.DialogFilterBinding
 import com.ql.recovery.yay.databinding.ItemCountryBinding
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.ToastUtil
@@ -36,6 +40,7 @@ class FilterDialog(
 ) : Dialog(activity, R.style.app_dialog2) {
     private lateinit var binding: DialogFilterBinding
     private lateinit var adapter: DataAdapter<Country>
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var mk = MMKV.defaultMMKV()
 
     init {
@@ -48,14 +53,16 @@ class FilterDialog(
         setContentView(binding.root)
         setCancelable(true)
 
+        firebaseAnalytics = Firebase.analytics
+
         when (type) {
             ChooseType.Gender -> {
                 binding.includeGender.root.visibility = View.VISIBLE
                 binding.includeRegion.root.visibility = View.GONE
                 binding.tvFilterTitle.text = activity.getString(R.string.home_sex_ref)
-                binding.includeGender.tvAmountMale.typeface = Typeface.createFromAsset(activity.assets, "fonts/DINPro-Bold.otf")
-                binding.includeGender.tvAmountFemale.typeface = Typeface.createFromAsset(activity.assets, "fonts/DINPro-Bold.otf")
-                binding.includeGender.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/DINPro-Bold.otf")
+                binding.includeGender.tvAmountMale.typeface = Typeface.createFromAsset(activity.assets, "fonts/din_b.otf")
+                binding.includeGender.tvAmountFemale.typeface = Typeface.createFromAsset(activity.assets, "fonts/din_b.otf")
+                binding.includeGender.tvCoin.typeface = Typeface.createFromAsset(activity.assets, "fonts/din_b.otf")
                 binding.includeGender.tvCoin.text = userInfo.coin.toString()
 
                 val count = basePrice.match_filter.sex_cost
@@ -202,7 +209,7 @@ class FilterDialog(
             .setLayoutId(R.layout.item_country)
             .addBindView { itemView, itemData, position ->
                 val itemBinding = ItemCountryBinding.bind(itemView)
-                itemBinding.tvCoinConsume.typeface = Typeface.createFromAsset(activity.assets, "fonts/DINPro-Bold.otf")
+                itemBinding.tvCoinConsume.typeface = Typeface.createFromAsset(activity.assets, "fonts/din_b.otf")
                 itemBinding.tvCountryName.text = itemData.en
 
                 if (itemData.locale.isBlank()) {
@@ -275,11 +282,17 @@ class FilterDialog(
             binding.includeGender.ivHandFree.setImageResource(R.drawable.filter_close)
             matchConfig.hand_free = false
             mk.encode("match_config", matchConfig)
+
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "hands_free_off", "hands free off")
+            ReportManager.appsFlyerCustomLog(activity, "hands_free_off", "hands free off")
         } else {
             binding.includeGender.ivHandFree.setImageResource(R.drawable.filter_open)
             matchConfig.hand_free = true
             mk.encode("match_config", matchConfig)
             ToastUtil.showShort(activity, activity.getString(R.string.match_hand_off_tip))
+
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "hands_free_on", "hands free on")
+            ReportManager.appsFlyerCustomLog(activity, "hands_free_on", "hands free on")
         }
     }
 
@@ -295,7 +308,6 @@ class FilterDialog(
 
     override fun cancel() {
         super.cancel()
-//        setWindowAlpha(1.0f)
         func()
     }
 

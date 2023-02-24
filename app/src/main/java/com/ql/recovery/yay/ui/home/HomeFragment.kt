@@ -1,20 +1,22 @@
 package com.ql.recovery.yay.ui.home
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
-import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.ChooseType
 import com.ql.recovery.yay.databinding.FragmentHomeBinding
 import com.ql.recovery.yay.manager.ImageManager
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.BeautyDialog
@@ -32,6 +34,7 @@ import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.RtcEngineConfig
 
 class HomeFragment : BaseFragment() {
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var binding: FragmentHomeBinding? = null
     private var type = Type.VIDEO
     private var mk = MMKV.defaultMMKV()
@@ -48,6 +51,8 @@ class HomeFragment : BaseFragment() {
         loadVideoLottie()
         loadAudioLottie()
         loadGameLottie()
+
+        firebaseAnalytics = Firebase.analytics
 
         binding?.ivVip?.setOnClickListener { showPrimeDialog() }
         binding?.tvVideoMatch?.setOnClickListener { checkVideoMatch() }
@@ -123,21 +128,15 @@ class HomeFragment : BaseFragment() {
         binding!!.lottieMatch.imageAssetsFolder = "loading/button"
         binding!!.lottieMatch.setAnimation("btn_data.json")
         binding!!.lottieMatch.playAnimation()
-
-        binding!!.tvMatchBegin.typeface = Typeface.createFromAsset(requireActivity().assets, "fonts/abc.ttf")
     }
 
     private fun getUserInfo() {
-        checkLogin {
-            DataManager.getUserInfo {
-                binding?.tvCoin?.typeface = Typeface.createFromAsset(requireActivity().assets, "fonts/DINPro-Bold.otf")
-                binding?.tvCoin?.text = it.coin.toString()
-
-                if (it.is_vip) {
-                    binding?.ivVip?.setImageResource(R.drawable.in_vip)
-                } else {
-                    binding?.ivVip?.setImageResource(R.drawable.vip_c)
-                }
+        getUserInfo {
+            binding?.tvCoin?.text = it.coin.toString()
+            if (it.is_vip) {
+                binding?.ivVip?.setImageResource(R.drawable.in_vip)
+            } else {
+                binding?.ivVip?.setImageResource(R.drawable.vip_c)
             }
         }
     }
@@ -244,14 +243,17 @@ class HomeFragment : BaseFragment() {
             return
         }
 
-        checkLogin { userInfo ->
+        getUserInfo { userInfo ->
+            //report
+            initReport(userInfo, "match_first_click")
+
             if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
                 userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
             ) {
                 //如果用户资料不完整，要填写完整才能匹配
                 ToastUtil.showLong(requireContext(), getString(R.string.notice_incomplete_profile))
                 startActivity(Intent(requireActivity(), GuideActivity::class.java))
-                return@checkLogin
+                return@getUserInfo
             }
 
             if (userInfo.country.isBlank()) {
@@ -280,17 +282,42 @@ class HomeFragment : BaseFragment() {
                 val intent = Intent(requireActivity(), MatchActivity::class.java)
                 intent.putExtra("type", "video")
                 startActivity(intent)
+
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "match_video_begin", "begin match video")
+                ReportManager.appsFlyerCustomLog(requireContext(), "match_video_begin", "begin match video")
             }
+
             Type.VOICE -> {
                 val intent = Intent(requireActivity(), MatchActivity::class.java)
                 intent.putExtra("type", "voice")
                 startActivity(intent)
+
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "match_voice_begin", "begin match voice")
+                ReportManager.appsFlyerCustomLog(requireContext(), "match_voice_begin", "begin match voice")
             }
+
             Type.GAME -> {
                 val intent = Intent(requireActivity(), MatchActivity::class.java)
                 intent.putExtra("type", "game")
                 startActivity(intent)
+
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "match_game_begin", "begin match game")
+                ReportManager.appsFlyerCustomLog(requireContext(), "match_game_begin", "begin match game")
             }
+        }
+    }
+
+    /**
+     * 匹配上报，一个用户上报一次
+     */
+    private fun initReport(userInfo: UserInfo, customName: String) {
+        val report = getLocalStorage().decodeBool(customName, false)
+        if (!report) {
+            getLocalStorage().encode(customName, true)
+            ReportManager.firebaseCustomLog(firebaseAnalytics, customName, userInfo.nickname)
+            ReportManager.facebookCustomLog(requireContext(), customName, userInfo.nickname)
+            ReportManager.branchCustomLog(requireContext(), customName, null)
+            ReportManager.appsFlyerCustomLog(requireContext(), customName, userInfo.nickname)
         }
     }
 
@@ -304,12 +331,20 @@ class HomeFragment : BaseFragment() {
             getUserInfo { userInfo ->
                 getBasePrice {
                     when (type) {
-                        ChooseType.Gender -> FilterDialog(requireActivity(), userInfo, it, getMatchConfig(), ChooseType.Gender) {
-                            flushConfig()
+                        ChooseType.Gender -> {
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "gender_filter", "gender filter")
+                            ReportManager.appsFlyerCustomLog(requireContext(), "gender_filter", "gender filter")
+                            FilterDialog(requireActivity(), userInfo, it, getMatchConfig(), ChooseType.Gender) {
+                                flushConfig()
+                            }
                         }
 
-                        ChooseType.Region -> FilterDialog(requireActivity(), userInfo, it, getMatchConfig(), ChooseType.Region) {
-                            flushConfig()
+                        ChooseType.Region -> {
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "region_filter", "region filter")
+                            ReportManager.appsFlyerCustomLog(requireContext(), "region_filter", "region filter")
+                            FilterDialog(requireActivity(), userInfo, it, getMatchConfig(), ChooseType.Region) {
+                                flushConfig()
+                            }
                         }
                     }
                 }

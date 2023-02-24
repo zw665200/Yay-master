@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -910,6 +911,42 @@ public class FileUtil {
     }
 
     /**
+     * 保存图片到缓存路径
+     *
+     * @param context
+     * @param bitmap
+     */
+    public static void saveImageToCache(Context context, Bitmap bitmap, String fileName, FileCallback callback) {
+        if (bitmap == null) {
+            JLog.i("image is null");
+            callback.onFailed("image is empty");
+            return;
+        }
+
+        File rootFile = context.getExternalFilesDir("video");
+        if (rootFile == null) return;
+
+        String target = rootFile.getAbsolutePath() + File.separator + AppUtil.MD5Encode(fileName) + ".jpg";
+
+        File file = new File(target);
+        if (file.exists()) {
+            callback.onSuccess(target);
+            return;
+        }
+
+        try {
+            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
+            if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)) {
+                outputStream.flush();
+                outputStream.close();
+                callback.onSuccess(file.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            callback.onFailed("save failed");
+        }
+    }
+
+    /**
      * 根据压缩比例保存图片
      *
      * @param context
@@ -1426,9 +1463,54 @@ public class FileUtil {
 
     public static void downloadVideo(Context context, @NonNull String url, @NonNull FileCallback callback) {
         try {
+            URL u = new URL(url);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) u.openConnection();
+            InputStream is = httpURLConnection.getInputStream();
+            File rootFile = context.getExternalFilesDir("video");
+            if (rootFile == null) return;
+
+            String target = rootFile + File.separator + AppUtil.MD5Encode(url) + ".mp4";
+            File file = new File(target);
+            if (file.exists()) {
+                callback.onSuccess(target);
+                return;
+            }
+
+            if (!file.exists()) {
+                boolean bl = file.createNewFile();
+            }
+
+            OutputStream os = new FileOutputStream(target);
+            byte[] buf = new byte[4 * 1024];
+            int read;
+            while ((read = is.read(buf)) != -1) {
+                os.write(buf, 0, read);
+            }
+
+            os.flush();
+            os.close();
+            is.close();
+
+            JLog.i("download finished");
+            callback.onSuccess(target);
+
+        } catch (IOException e) {
+            JLog.i("download error:" + e);
+        }
+    }
+
+    public static void downloadPartOfVideo(Context context, @NonNull String url, @NonNull FileCallback callback) {
+        try {
 //            JLog.i("download url = " + url);
             URL u = new URL(url);
-            InputStream is = u.openStream();
+            HttpURLConnection httpURLConnection = (HttpURLConnection) u.openConnection();
+            httpURLConnection.setRequestProperty("Accept-Encoding", "identity");
+//            int length = httpURLConnection.getContentLength();
+//            if (length > 5 * 1024 * 1024) {
+                httpURLConnection.setRequestProperty("Range", "bytes=0-4999999"); // 设置Range头，获取前500KB数据
+//            }
+
+            InputStream is = httpURLConnection.getInputStream();
             File rootFile = context.getExternalFilesDir("video");
             if (rootFile == null) return;
 

@@ -62,6 +62,9 @@ class StoreActivity : BaseActivity() {
         loadServerList()
         getUserInfo()
         firebaseAnalytics = Firebase.analytics
+
+        ReportManager.firebaseCustomLog(firebaseAnalytics, "open_store_click", "open store")
+        ReportManager.appsFlyerCustomLog(this, "open_store_click", "open store")
     }
 
     private fun initServerList() {
@@ -71,7 +74,7 @@ class StoreActivity : BaseActivity() {
             .addBindView { itemView, itemData ->
                 val itemBinding = ItemStoreBinding.bind(itemView)
                 itemBinding.tvCount.text = itemData.count.toString()
-                itemBinding.tvMoney.typeface = Typeface.createFromAsset(assets, "fonts/DINPro-Bold.otf")
+                itemBinding.tvMoney.typeface = Typeface.createFromAsset(assets, "fonts/din_b.otf")
 
                 if (itemData.price.contains("$")) {
                     itemBinding.tvMoney.text = itemData.price
@@ -91,26 +94,34 @@ class StoreActivity : BaseActivity() {
                     itemBinding.tvMoney.text = getString(R.string.store_pay_free)
                 }
 
-                ImageManager.getBitmap(this, itemData.icon) {
-                    itemBinding.ivIcon.setImageBitmap(it)
-                }
-
                 when (itemData.code) {
                     "coin_level_one" -> {
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_standard)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_m, null)
+
+                        ImageManager.getBitmap(this, itemData.icon) {
+                            itemBinding.ivIcon.setImageBitmap(it)
+                        }
                     }
 
-                    "coin_level_two","" -> {
+                    "coin_level_two", "" -> {
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_free)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_b, null)
                         itemBinding.root.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_c, null)
                         itemBinding.tvCount.setTextColor(Color.WHITE)
+
+                        ImageManager.getBitmap(this, itemData.icon) {
+                            itemBinding.ivIcon.setImageBitmap(it)
+                        }
                     }
 
                     "coin_level_three" -> {
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_17)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_m, null)
+
+                        ImageManager.getBitmap(this, itemData.icon) {
+                            itemBinding.ivIcon.setImageBitmap(it)
+                        }
                     }
 
                     "member_subscribe_monthly" -> {
@@ -124,23 +135,39 @@ class StoreActivity : BaseActivity() {
                     "coin_level_four_in_app" -> {
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_23)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_m, null)
+
+                        ImageManager.getBitmap(this, itemData.icon) {
+                            itemBinding.ivIcon.setImageBitmap(it)
+                        }
                     }
 
                     "coin_level_five" -> {
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_27)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_b, null)
                         itemBinding.root.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_a, null)
+
+                        ImageManager.getBitmap(this, itemData.icon) {
+                            itemBinding.ivIcon.setImageBitmap(it)
+                        }
                     }
 
                     "coin_level_six" -> {
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_29)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_m, null)
+
+                        ImageManager.getBitmap(this, itemData.icon) {
+                            itemBinding.ivIcon.setImageBitmap(it)
+                        }
                     }
 
                     "coin_level_seven" -> {
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_32)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_b, null)
                         itemBinding.root.background = ResourcesCompat.getDrawable(resources, R.drawable.hybg_a, null)
+
+                        ImageManager.getBitmap(this, itemData.icon) {
+                            itemBinding.ivIcon.setImageBitmap(it)
+                        }
                     }
                 }
 
@@ -235,8 +262,8 @@ class StoreActivity : BaseActivity() {
                                 return@queryProductDetailsAsync
                             }
 
-                            JLog.i("result = $result")
-                            JLog.i("productDetailsList = $productDetailsList")
+//                            JLog.i("result = $result")
+//                            JLog.i("productDetailsList = $productDetailsList")
 
                             for (productDetails in productDetailsList) {
                                 if (!productDetails.subscriptionOfferDetails.isNullOrEmpty()) {
@@ -301,7 +328,7 @@ class StoreActivity : BaseActivity() {
 
     private fun getUserInfo() {
         DataManager.getUserInfo {
-            binding.tvCoin.typeface = Typeface.createFromAsset(assets, "fonts/DINPro-Bold.otf")
+            binding.tvCoin.typeface = Typeface.createFromAsset(assets, "fonts/din_b.otf")
             binding.tvCoin.text = it.coin.toString()
         }
     }
@@ -323,6 +350,14 @@ class StoreActivity : BaseActivity() {
 
         if (currentServer == null) {
             return
+        }
+
+        if (currentServer!!.code.isBlank()) {
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "purchase_begin_click", "free")
+            ReportManager.appsFlyerCustomLog(this, "purchase_begin_click", "free")
+        } else {
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "purchase_begin_click", currentServer!!.code)
+            ReportManager.appsFlyerCustomLog(this, "purchase_begin_click", currentServer!!.code)
         }
 
         when (currentServer!!.type) {
@@ -369,6 +404,8 @@ class StoreActivity : BaseActivity() {
                             override fun failed(msg: String) {
                                 runOnUiThread {
                                     ToastUtil.showShort(c, msg)
+                                    ReportManager.firebaseCustomLog(firebaseAnalytics, "purchase_cancel", "purchase cancel")
+                                    ReportManager.appsFlyerCustomLog(this@StoreActivity, "purchase_cancel", "purchase cancel")
                                 }
                             }
                         })
@@ -397,6 +434,8 @@ class StoreActivity : BaseActivity() {
                             override fun failed(msg: String) {
                                 runOnUiThread {
                                     ToastUtil.showShort(c, msg)
+                                    ReportManager.firebaseCustomLog(firebaseAnalytics, "purchase_cancel", "purchase cancel")
+                                    ReportManager.appsFlyerCustomLog(this@StoreActivity, "purchase_cancel", "purchase cancel")
                                 }
                             }
                         })

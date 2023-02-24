@@ -348,7 +348,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     }
                 })
             }
-
         }
     }
 

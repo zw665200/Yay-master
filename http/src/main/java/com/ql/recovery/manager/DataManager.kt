@@ -1009,6 +1009,36 @@ object DataManager {
     }
 
     /**
+     * 获得主播在线时长
+     */
+    @SuppressLint("CheckResult")
+    fun getAnchorOnlineTime(result: (OnlineTime) -> Unit) {
+        thread {
+            BaseLoader.getAnchorOnlineTime()
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {})
+        }
+    }
+
+    /**
+     * 统计在线时长
+     */
+    @SuppressLint("CheckResult")
+    fun addAnchorOnlineTime(startAt: Long, leaveAt: Long, result: (Boolean) -> Unit) {
+        thread {
+            BaseLoader.addAnchorOnlineTime(startAt, leaveAt)
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {})
+        }
+    }
+
+    /**
      * 获得收益详情
      */
     @SuppressLint("CheckResult")

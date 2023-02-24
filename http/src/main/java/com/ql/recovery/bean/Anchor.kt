@@ -14,7 +14,9 @@ data class Anchor(
     var nickname: String,
     var sex: Int,
     var online: Boolean = false,
-    var isPlaying: Boolean = false
+    var isPlaying: Boolean = false,
+    var local_pic_url: String?,
+    var local_video_url: String?
 ) : Parcelable
 
 /**
@@ -41,4 +43,9 @@ data class Income(
 data class ReChargeRecord(
     var amount: Int,
     var date: Long
+)
+
+data class OnlineTime(
+    var answer_count: Int,
+    var duration: Long
 )

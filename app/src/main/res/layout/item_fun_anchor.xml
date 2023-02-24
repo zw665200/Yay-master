@@ -33,11 +33,6 @@
                 app:surface_type="texture_view"
                 app:use_controller="false" />
 
-<!--            <VideoView-->
-<!--                android:id="@+id/vv_player"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"/>-->
-
             <ImageView
                 android:id="@+id/iv_photo"
                 android:layout_width="match_parent"

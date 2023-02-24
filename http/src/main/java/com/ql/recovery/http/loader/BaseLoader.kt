@@ -585,6 +585,25 @@ object BaseLoader {
     }
 
     /**
+     * 获得主播在线时长
+     */
+    fun getAnchorOnlineTime(): Observable<Response<OnlineTime>> {
+        return RetrofitServiceManager.get().baseService.getAnchorOnlineTime(Config.CLIENT_TOKEN)
+    }
+
+    /**
+     * 统计在线时长
+     */
+    fun addAnchorOnlineTime(startAt: Long, leaveAt: Long): Observable<Response<Boolean>> {
+        val map = ArrayMap<String, Any>()
+        map["start_at"] = startAt
+        map["leave_at"] = leaveAt
+        val json = GsonUtils.toJson(map)
+        val request = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+        return RetrofitServiceManager.get().baseService.addAnchorOnlineTime(Config.CLIENT_TOKEN, request)
+    }
+
+    /**
      * 获得收益详情
      */
     fun getIncome(type: String): Observable<Response<List<Income>>> {
