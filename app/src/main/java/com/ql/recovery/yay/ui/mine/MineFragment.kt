@@ -264,7 +264,7 @@ class MineFragment : BaseFragment() {
                 if (itemData.isBlank()) {
                     itemBinding.ivUpload.visibility = View.VISIBLE
                 } else {
-                    Glide.with(requireActivity()).load(itemData).into(itemBinding.ivPic)
+                    Glide.with(requireActivity()).load(itemData).placeholder(R.drawable.placeholder).into(itemBinding.ivPic)
                 }
 
                 itemView.setOnClickListener {
@@ -315,6 +315,7 @@ class MineFragment : BaseFragment() {
                     Glide.with(requireActivity())
                         .setDefaultRequestOptions(RequestOptions().frame(0).centerCrop())
                         .load(itemData)
+                        .placeholder(R.drawable.placeholder)
                         .into(itemBinding.ivPic)
                 }
 

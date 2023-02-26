@@ -8,12 +8,15 @@ import com.ql.recovery.bean.Countries
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
+import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityStartBinding
 import com.ql.recovery.yay.ui.base.BaseActivity
+import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.util.GsonUtils
 import com.ql.recovery.yay.util.JLog
+import com.ql.recovery.yay.util.ToastUtil
 import com.tencent.mmkv.MMKV
 import io.branch.referral.Branch
 import java.io.ByteArrayOutputStream
@@ -65,7 +68,11 @@ class StartActivity : BaseActivity() {
                 if (userInfo == null) {
                     openLoginPage()
                 } else {
-                    openMainPage()
+                    if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank()) {
+                        openGuidePage()
+                    } else {
+                        openMainPage()
+                    }
                 }
             }
 
@@ -101,7 +108,7 @@ class StartActivity : BaseActivity() {
 
     private fun initAppsFlyer() {
         AppsFlyerLib.getInstance().start(this.applicationContext)
-        AppsFlyerLib.getInstance().setDebugLog(true)
+        AppsFlyerLib.getInstance().setDebugLog(false)
     }
 
     private fun initBranch() {
@@ -134,6 +141,13 @@ class StartActivity : BaseActivity() {
     private fun openLoginPage() {
         val intent = Intent()
         intent.setClass(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun openGuidePage() {
+        val intent = Intent()
+        intent.setClass(this, GuideActivity::class.java)
         startActivity(intent)
         finish()
     }

@@ -477,16 +477,11 @@ class GuideActivity : BaseActivity() {
     }
 
     private fun chooseTags() {
-        val width = AppUtil.getScreenWidth(this)
         mTagAdapter = DataAdapter.Builder<Tag>()
             .setData(mTagList)
             .setLayoutId(R.layout.item_guide_tag)
             .addBindView { itemView, itemData, position ->
                 val itemGuideTagBinding = ItemGuideTagBinding.bind(itemView)
-                val layout = itemView.layoutParams
-                layout.width = width / 3
-//                layout.height = width / 4
-//                itemView.layoutParams = layout
 
                 itemGuideTagBinding.tvName.text = itemData.name
                 if (mTargetList.contains(itemData.id)) {

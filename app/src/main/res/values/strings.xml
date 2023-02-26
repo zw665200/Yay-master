@@ -15,10 +15,10 @@
     <string name="login_google_web_client_id_local">771687555433-gab5npokh0sj3rqiovt1qvuv6shpri73.apps.googleusercontent.com</string>
     <string name="login_google_web_client_id">771687555433-oupof2l886igrk43i9vvt6jf5e67cs32.apps.googleusercontent.com</string>
     <string name="login_failed">login failed</string>
-    <string name="login_success">Successful login</string>
-    <string name="login_facebook">Log in With Facebook</string>
-    <string name="login_whatsapp">Log in with Test(Demo)</string>
-    <string name="login_google">Log in with Google</string>
+    <string name="login_success">login success</string>
+    <string name="login_facebook">Login With Facebook</string>
+    <string name="login_whatsapp">Login with Test(Demo)</string>
+    <string name="login_google">Login with Google</string>
     <string name="login_phone_register">Register by phone</string>
     <string name="login_phone_login">Login by phone</string>
     <string name="login_input_number">Enter the phone number</string>

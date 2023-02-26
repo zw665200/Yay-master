@@ -53,6 +53,7 @@ class PhoneLoginActivity : BaseActivity() {
             binding.flPwdAgain.visibility = View.GONE
             binding.tvPwdForget.visibility = View.GONE
             binding.tvRegister.visibility = View.GONE
+            binding.llAgreement.visibility = View.VISIBLE
             binding.tvLoginOrRegisterTitle.text = getString(R.string.login_phone_register)
             binding.tvLoginOrRegister.text = getString(R.string.login_sign_up)
         }
@@ -64,7 +65,8 @@ class PhoneLoginActivity : BaseActivity() {
             binding.flPwd.visibility = View.GONE
             binding.flPwdAgain.visibility = View.GONE
             binding.tvPwdForget.visibility = View.GONE
-            binding.tvRegister.visibility = View.VISIBLE
+            binding.tvRegister.visibility = View.GONE
+            binding.llAgreement.visibility = View.INVISIBLE
             binding.tvLoginOrRegisterTitle.text = getString(R.string.login_pwd_get)
             binding.tvLoginOrRegister.text = getString(R.string.login_next_step)
         }
@@ -204,10 +206,10 @@ class PhoneLoginActivity : BaseActivity() {
             }
 
             Type.GetPassword -> {
-//                if (!isSent) {
-//                    binding.tvCodeError.visibility = View.VISIBLE
-//                    return
-//                }
+                if (!isSent) {
+                    binding.tvCodeError.visibility = View.VISIBLE
+                    return
+                }
 
                 binding.llPhone.visibility = View.GONE
                 binding.flCode.visibility = View.GONE

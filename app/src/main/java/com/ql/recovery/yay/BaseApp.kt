@@ -2,12 +2,14 @@ package com.ql.recovery.yay
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.*
 import com.appsflyer.AppsFlyerLib
 import com.blongho.country_data.World
+import com.danikula.videocache.HttpProxyCacheServer
 import com.google.gson.reflect.TypeToken
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
@@ -49,6 +51,7 @@ import java.lang.ref.WeakReference
  * @date : 2022/11/8 17:46
  */
 class BaseApp : Application() {
+    private var proxy: WeakReference<HttpProxyCacheServer>? = null
     private var currentActivity: WeakReference<Activity>? = null
     private var dialog: MatchVideoDialog? = null
     private var timer: CountDownTimer? = null
@@ -59,6 +62,17 @@ class BaseApp : Application() {
     private var lastReportDate = 0L
     private var startAt = 0L
     private var leaveAt = 0L
+
+    companion object {
+        fun getProxy(context: Context): HttpProxyCacheServer? {
+            val app = context.applicationContext as BaseApp
+            if (app.proxy == null) {
+                app.proxy = WeakReference<HttpProxyCacheServer>(app.newProxy())
+            }
+
+            return app.proxy!!.get()
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -95,6 +109,11 @@ class BaseApp : Application() {
         }
 
         initTimer()
+    }
+
+    private fun newProxy(): HttpProxyCacheServer {
+        return HttpProxyCacheServer.Builder(this.applicationContext)
+            .build()
     }
 
     private fun initHandler() {

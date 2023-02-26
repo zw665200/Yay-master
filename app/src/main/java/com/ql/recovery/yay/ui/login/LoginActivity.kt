@@ -30,6 +30,7 @@ import com.ql.recovery.yay.databinding.ActivityLoginBinding
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseActivity
+import com.ql.recovery.yay.ui.dialog.WaitingDialog
 import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.mine.AgreementActivity
 import com.ql.recovery.yay.util.JLog
@@ -48,6 +49,7 @@ class LoginActivity : BaseActivity() {
     private var facebookCallback: FacebookCallback<LoginResult>? = null
     private var facebookManager: CallbackManager? = null
     private var exoPlayer: ExoPlayer? = null
+    private var waitingDialog: WaitingDialog? = null
     private var uri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/login.mp4"
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
@@ -65,7 +67,7 @@ class LoginActivity : BaseActivity() {
 
     override fun initData() {
         initGoogleLoginService()
-
+        waitingDialog = WaitingDialog(this)
         firebaseAnalytics = Firebase.analytics
 
         exoPlayer = ExoPlayer.Builder(this).build()
@@ -130,6 +132,8 @@ class LoginActivity : BaseActivity() {
             ToastUtil.showShort(this, getString(R.string.login_agreement))
             return
         }
+
+        waitingDialog?.show()
 
         ReportManager.firebaseCustomLog(firebaseAnalytics, "google_login_click", "login before")
         ReportManager.appsFlyerCustomLog(this, "google_login_click", "login before")
@@ -204,6 +208,8 @@ class LoginActivity : BaseActivity() {
             return
         }
 
+        waitingDialog?.show()
+
         ReportManager.firebaseCustomLog(firebaseAnalytics, "facebook_login_click", "login before")
         ReportManager.appsFlyerPurchaseLog(this, "facebook_login_click", "login before")
 
@@ -271,6 +277,9 @@ class LoginActivity : BaseActivity() {
     @Deprecated("")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        waitingDialog?.cancel()
+
         facebookManager?.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {

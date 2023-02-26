@@ -220,6 +220,7 @@ class RecordFragment : BaseFragment() {
 
         binding?.rcVisitList?.adapter = mVisitorAdapter
         binding?.rcVisitList?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding?.rcVisitList?.itemAnimator?.changeDuration = 0L
     }
 
     private fun initRecordList() {
@@ -295,6 +296,7 @@ class RecordFragment : BaseFragment() {
 
         binding?.rcRecordList?.adapter = mAdapter
         binding?.rcRecordList?.layoutManager = LinearLayoutManager(requireContext())
+        binding?.rcRecordList?.itemAnimator?.changeDuration = 0L
     }
 
     private fun changeTag() {
