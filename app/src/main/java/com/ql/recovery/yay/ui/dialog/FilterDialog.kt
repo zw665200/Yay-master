@@ -213,7 +213,7 @@ class FilterDialog(
                 itemBinding.tvCountryName.text = itemData.en
 
                 if (itemData.locale.isBlank()) {
-                    Glide.with(activity).load("file:///android_asset/images/GLOBAL.png").into(itemBinding.ivCountryIcon)
+                    Glide.with(activity).load(R.drawable.global).into(itemBinding.ivCountryIcon)
                 } else {
                     val flag = World.getFlagOf(itemData.locale)
                     itemBinding.ivCountryIcon.setImageResource(flag)

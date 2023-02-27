@@ -29,8 +29,9 @@ class ScoreActivity : BaseActivity() {
 
     private fun getGradeDetail() {
         getUserInfo { userInfo ->
-            binding.tvScore.text = String.format(getString(R.string.club_score), userInfo.grace_score)
-            binding.tvCurrentScore.text = String.format("%.1f", userInfo.grace_score)
+            val score = String.format("%.1f", userInfo.grace_score)
+            binding.tvScore.text = String.format(getString(R.string.club_score), score)
+            binding.tvCurrentScore.text = score
             binding.progress.progress = (userInfo.grace_score * 100).toInt()
 
             val width = AppUtil.getScreenWidth(this)
@@ -40,7 +41,7 @@ class ScoreActivity : BaseActivity() {
             JLog.i("left = $left")
 
             val lp = FrameLayout.LayoutParams(binding.tvCurrentScore.layoutParams)
-            lp.setMargins(left.toInt() - AppUtil.dp2px(this, 30f), 0, 0, 0)
+            lp.setMargins(left.toInt() - AppUtil.dp2px(this, 10f), 0, 0, 0)
             binding.tvCurrentScore.layoutParams = lp
         }
     }

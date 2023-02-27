@@ -6,6 +6,7 @@ import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivitySettingBinding
 import com.ql.recovery.yay.ui.base.BaseActivity
+import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.JLog
 
 class SettingActivity : BaseActivity() {
@@ -36,6 +37,8 @@ class SettingActivity : BaseActivity() {
         } else {
             binding.ivBlurChoose.setImageResource(R.drawable.filter_close)
         }
+
+        showVersion()
     }
 
     private fun changeBlur() {
@@ -77,6 +80,12 @@ class SettingActivity : BaseActivity() {
 
         JLog.i("$anchorUrl?token=$token")
         startActivity(intent)
+    }
+
+    private fun showVersion() {
+        val name = AppUtil.getPackageVersionName(this, packageName)
+        val code = AppUtil.getPackageVersionCode(this, packageName)
+        binding.tvVersion.text = "$name($code)"
     }
 
 }
