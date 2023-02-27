@@ -332,16 +332,16 @@ class HomeFragment : BaseFragment() {
                 getBasePrice {
                     when (type) {
                         ChooseType.Gender -> {
-                            ReportManager.firebaseCustomLog(firebaseAnalytics, "gender_filter", "gender filter")
-                            ReportManager.appsFlyerCustomLog(requireContext(), "gender_filter", "gender filter")
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "gender_filter_click", "gender filter")
+                            ReportManager.appsFlyerCustomLog(requireContext(), "gender_filter_click", "gender filter")
                             FilterDialog(requireActivity(), userInfo, it, getMatchConfig(), ChooseType.Gender) {
                                 flushConfig()
                             }
                         }
 
                         ChooseType.Region -> {
-                            ReportManager.firebaseCustomLog(firebaseAnalytics, "region_filter", "region filter")
-                            ReportManager.appsFlyerCustomLog(requireContext(), "region_filter", "region filter")
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "region_filter_click", "region filter")
+                            ReportManager.appsFlyerCustomLog(requireContext(), "region_filter_click", "region filter")
                             FilterDialog(requireActivity(), userInfo, it, getMatchConfig(), ChooseType.Region) {
                                 flushConfig()
                             }

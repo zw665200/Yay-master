@@ -18,9 +18,8 @@ class DataAdapter<T> private constructor() : RecyclerView.Adapter<DataAdapter<T>
     private var addBindView2: ((itemView: View, itemData: T, position: Int) -> Unit)? = null
     private var addBindView3: ((itemView: View, itemData: T, position: Int, payloads: MutableList<Any>) -> Unit)? = null
 
-    private var attachView: ((itemView: View) -> Unit)? = null
-    private var detachView: ((itemView: View) -> Unit)? = null
-
+    private var attachView: ((itemView: View, position: Int) -> Unit)? = null
+    private var detachView: ((itemView: View, position: Int) -> Unit)? = null
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): MyViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(mLayoutId!!, p0, false)
@@ -32,10 +31,10 @@ class DataAdapter<T> private constructor() : RecyclerView.Adapter<DataAdapter<T>
         return mDataList?.size ?: -1
     }
 
-
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         addBindView?.invoke(holder.itemView, mDataList?.get(position)!!)
         addBindView2?.invoke(holder.itemView, mDataList?.get(position)!!, position)
+        addBindView3?.invoke(holder.itemView, mDataList?.get(position)!!, position, mutableListOf())
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int, payloads: MutableList<Any>) {
@@ -47,12 +46,12 @@ class DataAdapter<T> private constructor() : RecyclerView.Adapter<DataAdapter<T>
 
     override fun onViewAttachedToWindow(holder: MyViewHolder) {
         super.onViewAttachedToWindow(holder)
-        attachView?.invoke(holder.itemView)
+        attachView?.invoke(holder.itemView, holder.layoutPosition)
     }
 
     override fun onViewDetachedFromWindow(holder: MyViewHolder) {
         super.onViewDetachedFromWindow(holder)
-        detachView?.invoke(holder.itemView)
+        detachView?.invoke(holder.itemView, holder.layoutPosition)
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -112,12 +111,12 @@ class DataAdapter<T> private constructor() : RecyclerView.Adapter<DataAdapter<T>
             return this
         }
 
-        fun onViewAttachedToWindow(method: (itemView: View) -> Unit): Builder<B> {
+        fun onViewAttachedToWindow(method: (itemView: View, position: Int) -> Unit): Builder<B> {
             adapter.attachView = method
             return this
         }
 
-        fun onViewDetachToWindow(method: (itemView: View) -> Unit): Builder<B> {
+        fun onViewDetachToWindow(method: (itemView: View, position: Int) -> Unit): Builder<B> {
             adapter.detachView = method
             return this
         }

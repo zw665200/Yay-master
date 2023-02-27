@@ -176,7 +176,7 @@ class PhoneLoginActivity : BaseActivity() {
                             loadUserInfo()
 
                             ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_login_success", "after login")
-                            ReportManager.appsFlyerPurchaseLog(this, "phone_login_success", "after login")
+                            ReportManager.appsFlyerCustomLog(this, "phone_login_success", "after login")
                         }
                     }
                 }
@@ -325,7 +325,6 @@ class PhoneLoginActivity : BaseActivity() {
                 ReportManager.branchLoginLog(this, userInfo.uid, userInfo.nickname)
                 ReportManager.appsFlyerLoginLog(this, userInfo.uid)
             }
-
 
             val guide = getLocalStorage().decodeBool("guide_finish", false)
             if (!guide) {

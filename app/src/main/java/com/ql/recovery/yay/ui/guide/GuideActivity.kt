@@ -203,7 +203,7 @@ class GuideActivity : BaseActivity() {
                 }
 
                 updateUserInfo(null, null, null, mIsMale, mFindIsMale, null, null)
-                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_gender", "modify gender")
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_gender_click", "modify gender")
             }
 
             Step.Birthday -> {
@@ -225,7 +225,7 @@ class GuideActivity : BaseActivity() {
                 }
 
                 updateUserInfo(null, mBirthday, null, null, null, null, null)
-                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_birthday", "modify birthday")
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_birthday_click", "modify birthday")
             }
 
             Step.NickName -> {
@@ -237,7 +237,7 @@ class GuideActivity : BaseActivity() {
                     }
                     mNickname = nickname
                     updateUserInfo(null, null, nickname, null, null, null, null)
-                    ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_nickname", "modify nickname")
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_nickname_click", "modify nickname")
 
                     //更新用户资料
                     val fields = HashMap<UserInfoFieldEnum, Any>()
@@ -252,7 +252,7 @@ class GuideActivity : BaseActivity() {
                     return
                 }
                 updateUserInfo(mAvatar, null, null, null, null, null, null)
-                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_avatar", "modify avatar")
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_avatar_click", "modify avatar")
             }
 
             Step.Album -> {
@@ -261,7 +261,7 @@ class GuideActivity : BaseActivity() {
                     return
                 }
                 updateUserInfo(null, null, null, null, null, mAlbumList, null)
-                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_pic", "modify pics")
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_pic_click", "modify pics")
             }
 
             Step.Tags -> {
@@ -270,7 +270,7 @@ class GuideActivity : BaseActivity() {
                     return
                 }
                 updateUserInfo(null, null, null, null, null, null, mTargetList)
-                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_short_video", "modify short videos")
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_tags_click", "modify tags")
             }
         }
     }
@@ -569,8 +569,8 @@ class GuideActivity : BaseActivity() {
                 finish()
             }
 
-            ReportManager.firebaseCustomLog(firebaseAnalytics, "guide_force_leave", "leave guide page")
-            ReportManager.appsFlyerCustomLog(this, "guide_force_leave", "leave guide page")
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "guide_force_leave_success", "leave guide page")
+            ReportManager.appsFlyerCustomLog(this, "guide_force_leave_success", "leave guide page")
         }
     }
 

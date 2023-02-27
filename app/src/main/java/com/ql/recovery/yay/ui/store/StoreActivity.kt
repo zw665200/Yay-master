@@ -62,9 +62,6 @@ class StoreActivity : BaseActivity() {
         loadServerList()
         getUserInfo()
         firebaseAnalytics = Firebase.analytics
-
-        ReportManager.firebaseCustomLog(firebaseAnalytics, "open_store_click", "open store")
-        ReportManager.appsFlyerCustomLog(this, "open_store_click", "open store")
     }
 
     private fun initServerList() {
@@ -461,23 +458,11 @@ class StoreActivity : BaseActivity() {
                 ReportManager.facebookPurchaseLog(this, currentServer!!.currency!!, currentServer!!.price)
                 ReportManager.branchPurchaseLog(this, currentServer!!.name, currentServer!!.currency!!, currentServer!!.price)
                 ReportManager.appsFlyerPurchaseLog(this, currentServer!!.code, currentServer!!.price)
-
-//                val map = HashMap<String, String>()
-//                map["currency"] = currentServer!!.currency!!
-//                map["price"] = currentServer!!.price
-//
-//                ReportManager.branchCustomLog(this, "purchased", map)
             } else {
                 ReportManager.firebasePurchaseLog(firebaseAnalytics, "USD", currentServer!!.price)
                 ReportManager.facebookPurchaseLog(this, "USD", currentServer!!.price)
                 ReportManager.branchPurchaseLog(this, currentServer!!.name, "USD", currentServer!!.price)
                 ReportManager.appsFlyerPurchaseLog(this, currentServer!!.code, currentServer!!.price)
-
-//                val map = HashMap<String, String>()
-//                map["currency"] = "USD"
-//                map["price"] = currentServer!!.price
-//
-//                ReportManager.branchCustomLog(this, "purchased", map)
             }
         }
 

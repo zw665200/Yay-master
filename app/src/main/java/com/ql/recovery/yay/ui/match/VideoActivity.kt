@@ -549,8 +549,8 @@ class VideoActivity : BaseActivity() {
                         }
                     }
 
-                    ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", addition.type)
-                    ReportManager.appsFlyerCustomLog(this@VideoActivity, "add_time_success", addition.type)
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "video_add_time_success", addition.type)
+                    ReportManager.appsFlyerCustomLog(this@VideoActivity, "video_add_time_success", addition.type)
                 }
             }
         }
@@ -602,8 +602,8 @@ class VideoActivity : BaseActivity() {
                         isEnough = false
                     }
 
-                    ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", list[0].type)
-                    ReportManager.appsFlyerCustomLog(this@VideoActivity, "add_time_success", list[0].type)
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "video_add_time_success", list[0].type)
+                    ReportManager.appsFlyerCustomLog(this@VideoActivity, "video_add_time_success", list[0].type)
                 }
             }
         }
@@ -769,6 +769,9 @@ class VideoActivity : BaseActivity() {
         if (!DoubleUtils.isFastDoubleClick()) {
             DataManager.getTemplateList {
                 ReportDialog(this, mRoom!!.room_id, mUser!!.uid, it)
+
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "video_report_click", "report click")
+                ReportManager.appsFlyerCustomLog(this@VideoActivity, "video_report_click", "report click")
             }
         }
     }

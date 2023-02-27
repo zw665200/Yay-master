@@ -17,11 +17,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.netease.yunxin.kit.adapters.MutableDataAdapter
 import com.ql.recovery.bean.*
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.*
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
@@ -40,6 +44,7 @@ class GameDialog(
     private var handler = android.os.Handler(Looper.getMainLooper())
     private lateinit var adapter: MutableDataAdapter<LotteryGift>
     private lateinit var recordAdapter: MutableDataAdapter<LotteryRecord>
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var waitingDialog: WaitingDialog? = null
     private var giftList = arrayListOf<LotteryGift>()
     private var recordList = arrayListOf<LotteryRecord>()
@@ -63,6 +68,7 @@ class GameDialog(
         setCancelable(true)
 
         waitingDialog = WaitingDialog(activity)
+        firebaseAnalytics = Firebase.analytics
 
         binding.ivClose.setOnClickListener { cancel() }
         binding.llDrawOnce.setOnClickListener { changeDrawType("once") }
@@ -578,6 +584,9 @@ class GameDialog(
                     waitingDialog?.cancel()
                     if (it != null) {
                         ToastUtil.showShort(activity, activity.getString(R.string.match_game_wait_lottery))
+
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "send_ticket_success", "send ticket success")
+                        ReportManager.appsFlyerCustomLog(activity, "send_ticket_success", "send ticket success")
                     }
                 }
                 return@checkTickets

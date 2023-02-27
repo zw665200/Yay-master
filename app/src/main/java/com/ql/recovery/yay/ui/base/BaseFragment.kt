@@ -131,6 +131,9 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                 waitingDialog?.cancel()
                 success()
                 DataManager.updateCountry(address.countryCode) {}
+
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_success", "get location success")
+                ReportManager.appsFlyerCustomLog(requireContext(), "home_get_location_success", "get location success")
             }
 
             override fun onFailed() {
@@ -138,6 +141,9 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                     waitingDialog?.cancel()
                     ToastUtil.showShort(requireContext(), "get location failed, please check your country")
                     startActivity(Intent(requireActivity(), CountryActivity::class.java))
+
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_failed", "get location failed")
+                    ReportManager.appsFlyerCustomLog(requireContext(), "home_get_location_failed", "get location failed")
                 }
             }
         })
@@ -178,9 +184,31 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
 
         requestPermission(permissions) {
             when (it) {
-                "grant" -> success()
+                "grant" -> {
+                    success()
+
+                    val permission = getLocalStorage().decodeBool("home_video_permission", false)
+                    if (!permission) {
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_video_permission_success", "get permission success")
+                        ReportManager.appsFlyerCustomLog(requireContext(), "home_video_permission_success", "get permission success")
+                    }
+                }
+
                 "deny" -> {
                     PermissionPageUtils(requireContext()).jumpPermissionPage()
+                    val permission = getLocalStorage().decodeBool("home_video_permission", false)
+                    if (!permission) {
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_video_permission_failed", "get permission failed")
+                        ReportManager.appsFlyerCustomLog(requireContext(), "home_video_permission_failed", "get permission failed")
+                    }
+                }
+
+                else -> {
+                    val permission = getLocalStorage().decodeBool("home_video_permission", false)
+                    if (!permission) {
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_video_permission_failed", "get permission failed")
+                        ReportManager.appsFlyerCustomLog(requireContext(), "home_video_permission_failed", "get permission failed")
+                    }
                 }
             }
         }

@@ -2,6 +2,8 @@ package com.ql.recovery.yay.ui.login
 
 import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.result.contract.ActivityResultContracts
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
@@ -46,11 +48,12 @@ class LoginActivity : BaseActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var googleSignInOptions: GoogleSignInOptions
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var handler = Handler(Looper.getMainLooper())
     private var facebookCallback: FacebookCallback<LoginResult>? = null
     private var facebookManager: CallbackManager? = null
     private var exoPlayer: ExoPlayer? = null
     private var waitingDialog: WaitingDialog? = null
-    private var uri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/login.mp4"
+    private var uri = "file:///android_asset/videos/login.mp4"
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityLoginBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -67,16 +70,16 @@ class LoginActivity : BaseActivity() {
 
     override fun initData() {
         initGoogleLoginService()
+        exoPlayer = ExoPlayer.Builder(this).build()
         waitingDialog = WaitingDialog(this)
         firebaseAnalytics = Firebase.analytics
 
-        exoPlayer = ExoPlayer.Builder(this).build()
         val mediaItem = MediaItem.fromUri(uri)
+        exoPlayer?.setMediaItem(mediaItem)
+        exoPlayer?.repeatMode = Player.REPEAT_MODE_ALL
+        exoPlayer?.prepare()
+        exoPlayer?.playWhenReady = true
         binding.playerView.player = exoPlayer
-        exoPlayer!!.setMediaItem(mediaItem)
-        exoPlayer!!.repeatMode = Player.REPEAT_MODE_ALL
-        exoPlayer!!.prepare()
-        exoPlayer!!.playWhenReady = true
     }
 
     private fun initGoogleLoginService() {
@@ -211,7 +214,7 @@ class LoginActivity : BaseActivity() {
         waitingDialog?.show()
 
         ReportManager.firebaseCustomLog(firebaseAnalytics, "facebook_login_click", "login before")
-        ReportManager.appsFlyerPurchaseLog(this, "facebook_login_click", "login before")
+        ReportManager.appsFlyerCustomLog(this, "facebook_login_click", "login before")
 
         //检查登录状态
         val currentToken = AccessToken.getCurrentAccessToken()
@@ -224,10 +227,14 @@ class LoginActivity : BaseActivity() {
         facebookCallback = object : FacebookCallback<LoginResult> {
             override fun onCancel() {
                 JLog.i("onCancel")
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "facebook_login_cancel", "login before")
+                ReportManager.appsFlyerCustomLog(this@LoginActivity, "facebook_login_cancel", "login before")
             }
 
             override fun onError(error: FacebookException) {
                 JLog.i("error = ${error.message}")
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "facebook_login_error", "login before")
+                ReportManager.appsFlyerCustomLog(this@LoginActivity, "facebook_login_error", "login before")
             }
 
             override fun onSuccess(result: LoginResult) {
@@ -259,7 +266,7 @@ class LoginActivity : BaseActivity() {
 
     private fun toPhoneLoginPage() {
         ReportManager.firebaseCustomLog(firebaseAnalytics, "phone_login_click", "login before")
-        ReportManager.appsFlyerPurchaseLog(this, "phone_login_click", "login before")
+        ReportManager.appsFlyerCustomLog(this, "phone_login_click", "login before")
 
         startActivity(
             Intent(this, PhoneLoginActivity::class.java),

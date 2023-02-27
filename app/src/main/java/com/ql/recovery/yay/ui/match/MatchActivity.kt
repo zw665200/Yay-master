@@ -51,8 +51,6 @@ class MatchActivity : BaseActivity() {
     private var mWaitingDialog: WaitingDialog? = null
     private var mRtcEventHandler = object : IRtcEngineEventHandler() {}
 
-    //    private var videoUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_video.mp4"
-//    private var audioUri = "https://picpro-cn.oss-cn-shenzhen.aliyuncs.com/feedback/match_audio.mp4"
     private var videoUri = "file:///android_asset/videos/match_video.mp4"
     private var audioUri = "file:///android_asset/videos/match_audio.mp4"
 
@@ -74,6 +72,7 @@ class MatchActivity : BaseActivity() {
         exoPlayer = ExoPlayer.Builder(this).build()
         firebaseAnalytics = Firebase.analytics
         mWaitingDialog = WaitingDialog(this)
+
         flushConfig()
         initLocalSurface()
 
@@ -111,7 +110,7 @@ class MatchActivity : BaseActivity() {
                     initMatchServer(type)
                     initTimer(type)
                     initNotice(type)
-                    initReport(userInfo)
+//                    initReport(userInfo)
 //                    }
                 }
             }
@@ -124,6 +123,7 @@ class MatchActivity : BaseActivity() {
                 val mediaItem = MediaItem.fromUri(videoUri)
                 exoPlayer?.setMediaItem(mediaItem)
             }
+
             "voice" -> {
                 val mediaItem = MediaItem.fromUri(audioUri)
                 exoPlayer?.setMediaItem(mediaItem)
@@ -684,12 +684,6 @@ class MatchActivity : BaseActivity() {
     override fun onStop() {
         super.onStop()
 
-        val type = intent.getStringExtra("type")
-        if (type == "video" || type == "voice") {
-            timer?.cancel()
-            closeService()
-        }
-
         Config.mainHandler?.sendEmptyMessage(0x10006)
         Config.subscriberHandler?.sendEmptyMessage(0x10001)
     }
@@ -699,6 +693,12 @@ class MatchActivity : BaseActivity() {
 
         exoPlayer?.stop()
         exoPlayer?.release()
+
+        val type = intent.getStringExtra("type")
+        if (type == "video" || type == "voice") {
+            timer?.cancel()
+            closeService()
+        }
     }
 
     private fun closeService() {

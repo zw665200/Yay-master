@@ -1504,12 +1504,6 @@ public class FileUtil {
 //            JLog.i("download url = " + url);
             URL u = new URL(url);
             HttpURLConnection httpURLConnection = (HttpURLConnection) u.openConnection();
-            httpURLConnection.setRequestProperty("Accept-Encoding", "identity");
-//            int length = httpURLConnection.getContentLength();
-//            if (length > 5 * 1024 * 1024) {
-                httpURLConnection.setRequestProperty("Range", "bytes=0-4999999"); // 设置Range头，获取前500KB数据
-//            }
-
             InputStream is = httpURLConnection.getInputStream();
             File rootFile = context.getExternalFilesDir("video");
             if (rootFile == null) return;

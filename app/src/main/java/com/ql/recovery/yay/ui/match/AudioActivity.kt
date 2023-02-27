@@ -521,8 +521,8 @@ class AudioActivity : BaseActivity() {
                 initTimer(room.duration * 1000L)
                 timer?.start()
 
-                ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", addition.type)
-                ReportManager.appsFlyerCustomLog(this, "add_time_success", addition.type)
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "voice_add_time_success", addition.type)
+                ReportManager.appsFlyerCustomLog(this, "voice_add_time_success", addition.type)
             }
         }
     }
@@ -563,8 +563,8 @@ class AudioActivity : BaseActivity() {
                         }
                     }
 
-                    ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", addition.type)
-                    ReportManager.appsFlyerCustomLog(this, "add_time_success", addition.type)
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "voice_add_time_success", addition.type)
+                    ReportManager.appsFlyerCustomLog(this, "voice_add_time_success", addition.type)
                 }
             }
         }

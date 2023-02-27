@@ -10,12 +10,16 @@ import android.view.WindowManager
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.ql.recovery.bean.Gift
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.DialogGiftBinding
 import com.ql.recovery.yay.databinding.ItemGiftBinding
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.ToastUtil
@@ -29,6 +33,7 @@ class GiftDialog(
 ) : Dialog(activity, R.style.app_dialog2) {
     private lateinit var binding: DialogGiftBinding
     private lateinit var adapter: DataAdapter<Gift>
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var currentPos = -1
     private var currentGift: Gift? = null
 
@@ -40,6 +45,8 @@ class GiftDialog(
         binding = DialogGiftBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setCancelable(true)
+
+        firebaseAnalytics = Firebase.analytics
 
         binding.tvCoin.text = coin.toString()
         binding.ivClose.setOnClickListener { cancel() }
@@ -117,6 +124,9 @@ class GiftDialog(
                 ToastUtil.showShort(activity, "send successful")
                 cancel()
                 func(currentGift!!)
+
+                ReportManager.firebaseCustomLog(firebaseAnalytics, "send_gift_success", "send gift")
+                ReportManager.appsFlyerCustomLog(activity, "send_gift_success", "send gift")
             }
         }
     }
