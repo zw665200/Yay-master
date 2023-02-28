@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -163,7 +164,7 @@ public class ExoPlayerView extends PlayerView {
                 .setDataSourceFactory(dataSourceFactory);
 
         ExoPlayer exoPlayer = new ExoPlayer.Builder(mContext)
-//                .setRenderersFactory(new DefaultRenderersFactory(mContext).setEnableDecoderFallback(true))
+                .setRenderersFactory(new DefaultRenderersFactory(mContext).setEnableDecoderFallback(true))
                 .setMediaSourceFactory(mediaSourceFactory)
                 .setLoadControl(loadControl)
                 .build();

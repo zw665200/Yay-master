@@ -1,65 +1,65 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:8:1-27:12
-INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:8:1-27:12
-INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:8:1-27:12
+ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:8:1-27:12
+INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:8:1-27:12
+INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:8:1-27:12
 	package
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:10:5-56
-		INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:10:5-56
+		INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
 	xmlns:tools
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:9:5-51
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:9:5-51
 	xmlns:android
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:8:11-69
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:8:11-69
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:12:5-79
+ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:12:5-79
 	android:name
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:12:22-76
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:12:22-76
 application
-ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:13:5-25:19
+ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:13:5-25:19
 provider#com.netease.yunxin.kit.corekit.startup.InitializationProvider
-ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:14:9-22:20
+ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:14:9-22:20
 	tools:node
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:18:13-31
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:18:13-31
 	android:authorities
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:16:13-64
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:16:13-64
 	android:exported
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:17:13-37
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:17:13-37
 	android:name
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:15:13-89
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:15:13-89
 meta-data#com.netease.yunxin.kit.conversationkit.ui.ConversationUIService
-ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:19:13-21:48
+ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:19:13-21:48
 	android:value
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:21:17-45
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:21:17-45
 	android:name
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:20:17-95
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:20:17-95
 activity#com.netease.yunxin.kit.conversationkit.ui.page.ConversationSelectActivity
-ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:9-130
+ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:9-130
 	android:screenOrientation
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:67-103
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:67-103
 	android:exported
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:104-128
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:104-128
 	android:name
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:19-66
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:23:19-66
 activity#com.netease.yunxin.kit.conversationkit.ui.page.ConversationActivity
-ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:9-124
+ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:9-124
 	android:screenOrientation
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:61-97
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:61-97
 	android:exported
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:98-122
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:98-122
 	android:name
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:19-60
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml:24:19-60
 uses-sdk
-INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
-INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
-INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
-INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
-		ADDED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\ASUS\StudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Administrator\AndroidStudioProjects\Yay-master\conversationkit-ui\src\main\AndroidManifest.xml
