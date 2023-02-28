@@ -7,19 +7,22 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ql.recovery.bean.Subscriber
+import com.ql.recovery.bean.UsageStatus
 import com.ql.recovery.config.Config
 import com.ql.recovery.yay.model.dao.SubscriberDao
+import com.ql.recovery.yay.model.dao.UsageDao
 
 
 @Database(
-    entities = [Subscriber::class],
-    version = 1,
+    entities = [Subscriber::class, UsageStatus::class],
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     //获取数据表操作实例
     abstract fun subscriberDao(): SubscriberDao
+    abstract fun usageDao(): UsageDao
 
     //单例模式
     companion object {
@@ -36,16 +39,23 @@ abstract class AppDatabase : RoomDatabase() {
                 instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java, Config.ROOM_DB_NAME
-                ).addMigrations(migration)
-                    .fallbackToDestructiveMigration()
+                ).fallbackToDestructiveMigration()
                     .build()
                 return instance!!
             }
         }
 
         //数据库升级用的
-        var migration: Migration = object : Migration(0, 1) {
+        var migration1: Migration = object : Migration(0, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
+//                database.execSQL("CREATE TABLE usage()")
+            }
+        }
+
+        var migration2: Migration = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+//                database.execSQL("ALTER TABLE Repo"
+//                        + " ADD COLUMN age INTEGER ")
             }
         }
     }

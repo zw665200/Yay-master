@@ -121,6 +121,8 @@ class RecordFragment : BaseFragment() {
         setMatcherOnline(uid, online)
     }
 
+    override fun refreshOnlineTime() {}
+
     private fun initVisitorList() {
         val width = AppUtil.getScreenWidth(requireContext())
         mVisitorAdapter = DataAdapter.Builder<UserInfo>()
@@ -497,7 +499,7 @@ class RecordFragment : BaseFragment() {
         }
     }
 
-    override fun flushUserInfo() {
+    override fun refreshUserInfo() {
         getUserInfo()
     }
 

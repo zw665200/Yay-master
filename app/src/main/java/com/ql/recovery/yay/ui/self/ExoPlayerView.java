@@ -8,22 +8,28 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.FileDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.ql.recovery.yay.databinding.ItemFunAnchorBinding;
 import com.ql.recovery.yay.util.JLog;
 
 public class ExoPlayerView extends PlayerView {
     private ExoPlayer mExoPlayer;
     private Context mContext;
+    private SimpleCache simpleCache;
 
     public ExoPlayerView(Context context) {
         this(context, null);
@@ -38,9 +44,9 @@ public class ExoPlayerView extends PlayerView {
         mContext = context;
     }
 
-    public void initPlayer() {
+    public void initPlayer(String url) {
         // 创建ExoPlayer实例
-        mExoPlayer = getPlayer();
+        mExoPlayer = getPlayer(url);
         setShutterBackgroundColor(Color.TRANSPARENT);
         setPlayer(mExoPlayer);
         mExoPlayer.setPlayWhenReady(false);
@@ -57,23 +63,22 @@ public class ExoPlayerView extends PlayerView {
 
     public void setMediaSource(String url, ItemFunAnchorBinding itemBinding) {
         if (mExoPlayer != null) {
-            // 创建 SimpleCache，指定缓存路径和缓存大小
-//            SimpleCache simpleCache = new SimpleCache(new File(mContext.getExternalCacheDir(), "media"), new LeastRecentlyUsedCacheEvictor(1024 * 1024 * 3));
-//            CacheDataSource cacheDataSource = new CacheDataSource.Factory().setCache(simpleCache).createDataSource();
+
+            // 创建 CacheDataSink 对象
+//            CacheDataSink.Factory cacheDataSinkFactory = new CacheDataSink.Factory()
+//                    .setCache(simpleCache)
+//                    .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
+//                    .setBufferSize(CacheDataSink.DEFAULT_BUFFER_SIZE);
 
             MediaItem mediaItem = new MediaItem.Builder()
                     .setUri(url)
                     .build();
 
-//            CacheDataSourceFactory dataSourceFactory = new CacheDataSourceFactory(
-//                    cache, new DefaultHttpDataSourceFactory(userAgent));
-//            ProgressiveMediaExtractor progressiveMediaExtractor = new ProgressiveMediaExtractor(0, 3000);
-//            DataSpec dataSpec = new DataSpec(uri);
-//            CacheUtil.cache(dataSpec, dataSourceFactory, new SimpleCacheUtilListener(),
-//                    new CachingCounters(), null, null, progressiveMediaExtractor);
+            DataSource.Factory dataSourceFactory = new FileDataSource.Factory();
 
             ProgressiveMediaSource mediaSource = new ProgressiveMediaSource
-                    .Factory(new DefaultDataSourceFactory(mContext))
+//                    .Factory((DataSource.Factory) () -> new DefaultHttpDataSource.Factory().createDataSource())
+                    .Factory(dataSourceFactory)
                     .createMediaSource(mediaItem);
 
             mExoPlayer.setMediaSource(mediaSource);
@@ -124,18 +129,42 @@ public class ExoPlayerView extends PlayerView {
         }
     }
 
-    public ExoPlayer getPlayer() {
+    public ExoPlayer getPlayer(String url) {
         DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
                 .setBufferDurationsMs(3000, 4000, 250, 500)
                 .build();
 
-//        val mediaSourceFactory = DefaultMediaSourceFactory(requireContext())
-//            .setDataSourceFactory(cacheDataSourceFactory)
-//            .setLocalAdInsertionComponents(adsLoaderProvider, playerView)
+//        File file = new File(mContext.getExternalCacheDir(), "media/" + AppUtil.md5Encode(url));
+
+        // 创建 SimpleCache，指定缓存路径和缓存大小
+//        if (simpleCache == null) {
+//            simpleCache = new SimpleCache(file, new LeastRecentlyUsedCacheEvictor(1024 * 1024 * 3));
+//        }
+
+        DataSource.Factory cacheDataSourceFactory = new CacheDataSource.Factory()
+                .setCache(simpleCache)
+                .setUpstreamDataSourceFactory(new DefaultHttpDataSource.Factory())
+                .setEventListener(new CacheDataSource.EventListener() {
+                    @Override
+                    public void onCachedBytesRead(long cacheSizeBytes, long cachedBytesRead) {
+                        JLog.i("cacheSizeBytes = " + cacheSizeBytes);
+                        JLog.i("cachedBytesRead = " + cachedBytesRead);
+                    }
+
+                    @Override
+                    public void onCacheIgnored(int reason) {
+                        JLog.i("reason = " + reason);
+                    }
+                });
+
+        DataSource.Factory dataSourceFactory = new FileDataSource.Factory();
+
+        MediaSource.Factory mediaSourceFactory = new DefaultMediaSourceFactory(mContext)
+                .setDataSourceFactory(dataSourceFactory);
 
         ExoPlayer exoPlayer = new ExoPlayer.Builder(mContext)
 //                .setRenderersFactory(new DefaultRenderersFactory(mContext).setEnableDecoderFallback(true))
-                .setMediaSourceFactory(new DefaultMediaSourceFactory(mContext))
+                .setMediaSourceFactory(mediaSourceFactory)
                 .setLoadControl(loadControl)
                 .build();
 

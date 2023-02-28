@@ -91,7 +91,7 @@ public class AppUtil {
         return debuggable;
     }
 
-    public static String MD5Encode(String origin) {
+    public static String md5Encode(String origin) {
         String resultString = null;
         try {
             resultString = new String(origin);
@@ -103,7 +103,7 @@ public class AppUtil {
         return resultString;
     }
 
-    public static String MD5Encode(byte[] origin) {
+    public static String md5Encode(byte[] origin) {
         String resultString = null;
         try {
             resultString = new String(origin);

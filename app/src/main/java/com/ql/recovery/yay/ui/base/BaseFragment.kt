@@ -47,8 +47,8 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = initView(inflater, container, savedInstanceState)
-        initHandler()
         initData()
+        initHandler()
         firebaseAnalytics = Firebase.analytics
 
         waitingDialog = WaitingDialog(requireActivity())
@@ -65,13 +65,14 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
     protected abstract fun initData()
     protected abstract fun setOnlineStatus(uid: String, online: Boolean)
     protected abstract fun click(v: View)
-    protected abstract fun flushUserInfo()
+    protected abstract fun refreshUserInfo()
+    protected abstract fun refreshOnlineTime()
 
     protected fun getLocalStorage(): MMKV {
         return mk
     }
 
-    private fun initHandler() {
+    protected fun initHandler() {
         Config.subscriberHandler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
@@ -90,7 +91,11 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                     }
 
                     0x10001 -> {
-                        flushUserInfo()
+                        refreshUserInfo()
+                    }
+
+                    0x10002 -> {
+                        refreshOnlineTime()
                     }
                 }
             }

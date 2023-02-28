@@ -9,6 +9,7 @@ import android.os.Message
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
@@ -140,6 +141,9 @@ class VideoActivity : BaseActivity() {
 
     override fun initView() {
         setStatusBarLight()
+        //设置屏幕常亮
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         binding.includeTitle.ivBack.setOnClickListener { onBackPressed() }
         binding.includeTitle.ivAvatar.setOnClickListener { showProfileDialog() }
         binding.includeTitle.tvFollow.setOnClickListener { checkFollow() }
@@ -900,6 +904,9 @@ class VideoActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        //清除屏幕常亮
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         Config.roomHandler = null
         timer?.cancel()
 

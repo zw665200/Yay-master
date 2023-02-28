@@ -144,10 +144,12 @@ class HomeFragment : BaseFragment() {
     override fun setOnlineStatus(uid: String, online: Boolean) {
     }
 
-    override fun flushUserInfo() {
+    override fun refreshUserInfo() {
         getUserInfo()
         flushConfig()
     }
+
+    override fun refreshOnlineTime() {}
 
     private fun flushConfig() {
         val config = getMatchConfig()

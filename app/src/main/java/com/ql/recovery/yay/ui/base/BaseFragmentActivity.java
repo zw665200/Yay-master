@@ -4,7 +4,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,23 +14,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.Observer;
-import com.netease.nimlib.sdk.event.EventSubscribeServiceObserver;
-import com.netease.nimlib.sdk.event.model.Event;
-import com.ql.recovery.bean.Subscriber;
-import com.ql.recovery.config.Config;
 import com.ql.recovery.yay.R;
 import com.ql.recovery.yay.databinding.ActivityBaseBinding;
-import com.ql.recovery.yay.manager.DBManager;
-import com.ql.recovery.yay.util.JLog;
-import com.tencent.mmkv.MMKV;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -106,6 +92,7 @@ abstract public class BaseFragmentActivity extends BaseActivity {
                 } else {
                     ft.show(fragments[index]);
                     fragments[index].initData();
+                    fragments[index].initHandler();
                     fragments[index].onResume();
                 }
             } else if (fragments[i] != null) {
@@ -172,7 +159,7 @@ abstract public class BaseFragmentActivity extends BaseActivity {
     protected void flushUserInfo() {
         for (BaseFragment f : fragments) {
             try {
-                f.flushUserInfo();
+                f.refreshUserInfo();
             } catch (Exception ex) {
             }
         }

@@ -926,7 +926,7 @@ public class FileUtil {
         File rootFile = context.getExternalFilesDir("video");
         if (rootFile == null) return;
 
-        String target = rootFile.getAbsolutePath() + File.separator + AppUtil.MD5Encode(fileName) + ".jpg";
+        String target = rootFile.getAbsolutePath() + File.separator + AppUtil.md5Encode(fileName) + ".jpg";
 
         File file = new File(target);
         if (file.exists()) {
@@ -1469,7 +1469,7 @@ public class FileUtil {
             File rootFile = context.getExternalFilesDir("video");
             if (rootFile == null) return;
 
-            String target = rootFile + File.separator + AppUtil.MD5Encode(url) + ".mp4";
+            String target = rootFile + File.separator + AppUtil.md5Encode(url) + ".mp4";
             File file = new File(target);
             if (file.exists()) {
                 callback.onSuccess(target);
@@ -1508,7 +1508,7 @@ public class FileUtil {
             File rootFile = context.getExternalFilesDir("video");
             if (rootFile == null) return;
 
-            String target = rootFile + File.separator + AppUtil.MD5Encode(url) + ".mp4";
+            String target = rootFile + File.separator + AppUtil.md5Encode(url) + ".mp4";
             File file = new File(target);
             if (file.exists()) {
                 callback.onSuccess(target);

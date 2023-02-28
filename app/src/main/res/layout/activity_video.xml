@@ -18,13 +18,8 @@
         <FrameLayout
             android:id="@+id/fl_remote"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TextureView
-            android:id="@+id/surface_remote"
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:keepScreenOn="true"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"

@@ -6,7 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.os.*
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import com.appsflyer.AppsFlyerLib
 import com.blongho.country_data.World
 import com.danikula.videocache.HttpProxyCacheServer
@@ -54,7 +57,6 @@ class BaseApp : Application() {
     private var proxy: WeakReference<HttpProxyCacheServer>? = null
     private var currentActivity: WeakReference<Activity>? = null
     private var dialog: MatchVideoDialog? = null
-    private var timer: CountDownTimer? = null
     private var handler = Handler(Looper.getMainLooper())
     private var activityCount = 0
     private var isForeground = false
@@ -107,12 +109,10 @@ class BaseApp : Application() {
         if (AppUtil.isDebugger(this)) {
             Config.isDebug = true
         }
-
-        initTimer()
     }
 
     private fun newProxy(): HttpProxyCacheServer {
-        return HttpProxyCacheServer.Builder(this.applicationContext)
+        return HttpProxyCacheServer.Builder(this.applicationContext).maxCacheSize(3 * 1024 * 1024L)
             .build()
     }
 
@@ -214,7 +214,10 @@ class BaseApp : Application() {
                     }
 
                     0x10006 -> {
-                        addAnchorOnlineTime()
+                        val activity = currentActivity?.get()
+                        if (activity != null) {
+                            addUsageToDatabase(activity)
+                        }
                     }
 
                 }
@@ -342,7 +345,6 @@ class BaseApp : Application() {
 
     private fun registerOtherClientStatus() {
         NIMClient.getService(AuthServiceObserver::class.java).observeOtherClients({ onlineClients ->
-            JLog.i("client online = $onlineClients")
             if (onlineClients.isNullOrEmpty()) return@observeOtherClients
 
             for (client in onlineClients) {
@@ -411,6 +413,8 @@ class BaseApp : Application() {
             }
 
             override fun onActivityResumed(activity: Activity) {
+                JLog.i("onActivityResumed : ${activity::class.java.simpleName}")
+
                 currentActivity = if (activity.parent != null) {
                     WeakReference<Activity>(activity.parent)
                 } else {
@@ -420,32 +424,29 @@ class BaseApp : Application() {
                 //保证对话框能在所有页面弹出
                 initVideoDialog(activity)
 
-                activityCount++
-                if (startAt == 0L) {
+                val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
+                if (userInfo != null && userInfo.role == "anchor") {
+                    activityCount++
                     startAt = System.currentTimeMillis() / 1000L
-                }
 
-                isForeground = true
-                isScreenOff = false
-
-                JLog.i("time = " + (System.currentTimeMillis() - lastReportDate).toString())
-
-                if (lastReportDate == 0L || System.currentTimeMillis() - lastReportDate > 5000L) {
-                    lastReportDate = System.currentTimeMillis()
-                    timer?.start()
+                    isForeground = true
+                    isScreenOff = false
                 }
             }
 
             override fun onActivityPaused(activity: Activity) {
+                JLog.i("onActivityPaused: ${activity::class.java.simpleName}")
+                addUsageToDatabase(activity)
             }
 
             override fun onActivityStopped(activity: Activity) {
+//                JLog.i("onActivityStopped")
                 activityCount--
 
                 //退到后台立即上报
                 if (activityCount == 0) {
                     isForeground = false
-                    addAnchorOnlineTime()
+//                    addAnchorOnlineTime()
                 }
             }
 
@@ -674,37 +675,43 @@ class BaseApp : Application() {
         }
     }
 
-    private fun initTimer() {
-        timer = object : CountDownTimer(5000L, 1000L) {
-            override fun onFinish() {
-                addAnchorOnlineTime()
-            }
+    private fun addUsageToDatabase(activity: Activity) {
+        val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
+        if (userInfo != null && userInfo.role == "anchor" && startAt != 0L) {
+            leaveAt = System.currentTimeMillis() / 1000L
+            val activityName = activity::class.java.simpleName
+            val usageStatus = UsageStatus(activityName, startAt, leaveAt, userInfo.uid)
 
-            override fun onTick(millisUntilFinished: Long) {
+            //记录到数据库
+            DBManager.insert(activity, usageStatus) {
+                //上报时长
+                addAnchorOnlineTime(activity)
+
+                //重置记录开始的时间
+                startAt = System.currentTimeMillis() / 1000L
             }
         }
     }
 
-    private fun addAnchorOnlineTime() {
-        val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java) ?: return
-        if (userInfo.role != "anchor") return
+    private fun addAnchorOnlineTime(activity: Activity) {
+        val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
+        if (userInfo != null && userInfo.role == "anchor") {
+            DBManager.findAllUsageStatus(activity) { usageList ->
+                if (!usageList.isNullOrEmpty()) {
+                    for (usage in usageList) {
+                        JLog.i("usage = $usage")
+                        if (usage.startAt != 0L && usage.leaveAt != 0L && usage.uid == userInfo.uid) {
+                            DataManager.addAnchorOnlineTime(usage.startAt, usage.leaveAt) {
+                                if (it) {
+                                    Config.subscriberHandler?.sendEmptyMessage(0x10002)
 
-        if (startAt == 0L) return
-
-        leaveAt = System.currentTimeMillis() / 1000L
-        DataManager.addAnchorOnlineTime(startAt, leaveAt) {
-            if (it) {
-                JLog.i("report success")
-                startAt = if (activityCount == 0) {
-                    0L
-                } else {
-                    System.currentTimeMillis() / 1000L
+                                    //上报成功则删除这条数据
+                                    DBManager.delete(activity, usage)
+                                }
+                            }
+                        }
+                    }
                 }
-
-                leaveAt = 0L
-                lastReportDate = System.currentTimeMillis()
-
-                Config.subscriberHandler?.sendEmptyMessage(0x10001)
             }
         }
     }

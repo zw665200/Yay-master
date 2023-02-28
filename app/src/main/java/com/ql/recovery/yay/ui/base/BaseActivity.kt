@@ -46,8 +46,8 @@ abstract class BaseActivity : FragmentActivity() {
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         baseBinding = ActivityBaseBinding.inflate(layoutInflater)
-        setContentView(baseBinding.root)
         getViewBinding(baseBinding)
+        setContentView(baseBinding.root)
 
         setStatusBarLight()
         initView()

@@ -11,8 +11,8 @@ android {
         applicationId "com.ql.recovery.yay"
         minSdk 21
         targetSdk 31
-        versionCode 18
-        versionName "1.0.8"
+        versionCode 19
+        versionName "1.0.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -24,16 +24,16 @@ android {
 
     signingConfigs {
         debug {
-//            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
-            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
+            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
+//            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
             storePassword 'abcd@1234'
             keyAlias 'key'
             keyPassword 'abcd@1234'
         }
 
         release {
-//            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
-            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
+            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
+//            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
             storePassword 'abcd@1234'
             keyAlias 'key'
             keyPassword 'abcd@1234'

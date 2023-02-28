@@ -151,6 +151,8 @@ class NotificationsFragment : BaseFragment() {
         setVisitorOnline(uid, online)
     }
 
+    override fun refreshOnlineTime() {}
+
     private fun initConversationList() {
         conversationAdapter = DataAdapter.Builder<Conversation>()
             .setData(conversationList)
@@ -443,7 +445,7 @@ class NotificationsFragment : BaseFragment() {
         }
     }
 
-    override fun flushUserInfo() {
+    override fun refreshUserInfo() {
         getUserInfo()
         getConversationList()
     }

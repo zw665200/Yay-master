@@ -61,7 +61,7 @@ class MineFragment : BaseFragment() {
         binding!!.refreshLayout.setOnRefreshListener { refreshLayout ->
             refreshLayout.finishRefresh()
             getUserInfo()
-            getAnchorOnline()
+            requestToUpdateOnlineTime()
             loadFunction()
         }
 
@@ -75,10 +75,14 @@ class MineFragment : BaseFragment() {
             loadFunction()
         }
 
-        getAnchorOnline()
+        requestToUpdateOnlineTime()
     }
 
     override fun setOnlineStatus(uid: String, online: Boolean) {
+    }
+
+    override fun refreshOnlineTime() {
+        getAnchorOnline()
     }
 
     private fun loadFunction() {
@@ -392,9 +396,8 @@ class MineFragment : BaseFragment() {
         startActivityForResult(intent, 0x1002)
     }
 
-    override fun flushUserInfo() {
+    override fun refreshUserInfo() {
         getUserInfo()
-        getAnchorOnline()
     }
 
     private fun showPrimeDialog() {

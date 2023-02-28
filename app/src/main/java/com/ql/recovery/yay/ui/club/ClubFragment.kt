@@ -11,12 +11,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.ql.recovery.bean.Anchor
 import com.ql.recovery.bean.Cate
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.manager.DataManager
+import com.ql.recovery.yay.BaseApp
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.FileCallback
 import com.ql.recovery.yay.databinding.FragmentClubBinding
@@ -152,8 +152,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 
                 if (!itemData.local_video_url.isNullOrBlank()) {
                     launch {
-                        JLog.i("name = ${itemData.nickname}")
-                        itemBinding.playerView.initPlayer()
+                        itemBinding.playerView.initPlayer(itemData.cover_url!!)
                         itemBinding.playerView.setMediaSource(itemData.local_video_url, itemBinding)
                     }
                     return@onViewAttachedToWindow
@@ -161,9 +160,8 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 
                 if (itemData.cover_url!!.contains(".mp4") || itemData.cover_url!!.contains("type=video")) {
                     launch {
-                        JLog.i("name = ${itemData.nickname}")
-                        itemBinding.playerView.initPlayer()
-//                        itemBinding.playerView.setMediaSource(itemData.cover_url, itemBinding)
+                        itemBinding.playerView.initPlayer(itemData.cover_url)
+//                        itemBinding.playerView.setMediaSource(url, itemBinding)
                         downloadVideo(itemBinding, itemData, position)
                     }
                 } else {
@@ -205,7 +203,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     //裁剪视频
                     RtcManager.cutVideo(requireActivity(), filePath) { localPath ->
                         binding?.rcAnchorList?.post {
-//                            JLog.i("localPath = $localPath")
                             itemData.local_video_url = localPath
                             itemBinding.playerView.setMediaSource(localPath, itemBinding)
                         }
@@ -388,9 +385,11 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
         }
     }
 
-    override fun flushUserInfo() {
+    override fun refreshUserInfo() {
         getUserInfo()
     }
+
+    override fun refreshOnlineTime() {}
 
     private fun toStorePage() {
         if (!DoubleUtils.isFastDoubleClick()) {

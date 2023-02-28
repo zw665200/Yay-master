@@ -138,7 +138,7 @@ class LoginActivity : BaseActivity() {
 
         waitingDialog?.show()
 
-        ReportManager.firebaseCustomLog(firebaseAnalytics, "google_login_click", "login before")
+        ReportManager.firebaseCustomLog(firebaseAnalytics, "goo_login_click", "login before")
         ReportManager.appsFlyerCustomLog(this, "google_login_click", "login before")
 
         //检查用户是否已经登录
@@ -355,7 +355,7 @@ class LoginActivity : BaseActivity() {
             MMKV.defaultMMKV()?.encode("token", it.access_token)
             loadUserInfo()
 
-            ReportManager.firebaseCustomLog(firebaseAnalytics, "google_login_success", "after login")
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "goo_login_success", "after login")
             ReportManager.appsFlyerCustomLog(this, "google_login_success", "after login")
         }
     }

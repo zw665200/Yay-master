@@ -73,7 +73,7 @@ public class DeviceUtil {
                     builder.append("-");
                 }
             }
-            deviceId = AppUtil.MD5Encode(builder.toString());
+            deviceId = AppUtil.md5Encode(builder.toString());
         }
 
         return deviceId;
