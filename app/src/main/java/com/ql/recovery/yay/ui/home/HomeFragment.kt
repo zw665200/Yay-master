@@ -1,10 +1,16 @@
 package com.ql.recovery.yay.ui.home
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -257,6 +263,7 @@ class HomeFragment : BaseFragment() {
                 startActivity(Intent(requireActivity(), GuideActivity::class.java))
                 return@getUserInfo
             }
+
 
             if (userInfo.country.isBlank()) {
                 //检查定位权限

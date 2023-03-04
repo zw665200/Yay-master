@@ -2,6 +2,8 @@ package com.ql.recovery.yay.ui.mine
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import com.netease.yunxin.kit.corekit.im.IMKitClient
+import com.netease.yunxin.kit.corekit.im.login.LoginCallback
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
 import com.ql.recovery.yay.R
@@ -52,6 +54,14 @@ class AccountDeleteActivity : BaseActivity() {
         getLocalStorage().remove("user_info")
         getLocalStorage().remove("access_token")
         getLocalStorage().remove("token")
+
+        IMKitClient.logoutIM(object : LoginCallback<Void> {
+            override fun onError(errorCode: Int, errorMsg: String) {
+            }
+
+            override fun onSuccess(data: Void?) {
+            }
+        })
 
         startActivity(Intent(this, LoginActivity::class.java))
     }

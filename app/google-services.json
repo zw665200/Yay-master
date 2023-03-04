@@ -14,19 +14,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "771687555433-896nkf2bpms5pt58ababbknocdaupta4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ql.recovery.yay",
-            "certificate_hash": "e492a3b7e99c8eb83d523d45bc72165adc88be9c"
-          }
-        },
-        {
           "client_id": "771687555433-8m21bkngvhtapd6phkvtifbrh6ptq04j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ql.recovery.yay",
             "certificate_hash": "e51a39a298ea3ec63e4a7e993459f7256233c476"
+          }
+        },
+        {
+          "client_id": "771687555433-gab5npokh0sj3rqiovt1qvuv6shpri73.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ql.recovery.yay",
+            "certificate_hash": "e492a3b7e99c8eb83d523d45bc72165adc88be9c"
           }
         },
         {

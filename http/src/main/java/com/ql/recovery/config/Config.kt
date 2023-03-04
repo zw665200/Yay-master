@@ -20,11 +20,6 @@ object Config {
     //全局
     var mHandler: Handler? = null
 
-    var baseHandler: Handler? = null
-
-    var startAt = 0L
-    var leaveAt = 0L
-
     var ROM = ""
     const val ROM_MIUI = "MIUI"
     const val ROM_EMUI = "EMUI"
@@ -49,34 +44,11 @@ object Config {
     //NetEasy IM
     var NIM_APP_KEY = "db7ef9b2ee547446080d64c2dd65f387"
     var NIM_APP_SECRET = "9ac8ed8c99a5"
+    var NIM_CERTIFICATE_NAME = "yay push"
 
     //umeng key
     var umengKey = "63f86e9bd64e68613937cfd8"
 
     //appsflyer
     var APPS_FLYER_KEY = "DPLpZK4xzXEXfi9gcgGgpm"
-
-    //百度01 3
-    //头条 4
-    //UC 5
-    //搜狗 6
-    //HUAWEI 7
-    //VIVO 8
-    //应用宝 9
-    //OPPO 10
-    //小米 11
-    //百度02 12
-    //百度03 13
-    fun getChannelName(channelId: Int): String {
-        var channelName = "unknown"
-        when (channelId) {
-            3 -> channelName = "百度01"
-            7 -> channelName = "华为"
-            8 -> channelName = "VIVO"
-            10 -> channelName = "OPPO"
-            12 -> channelName = "百度02"
-            13 -> channelName = "百度03"
-        }
-        return channelName
-    }
 }

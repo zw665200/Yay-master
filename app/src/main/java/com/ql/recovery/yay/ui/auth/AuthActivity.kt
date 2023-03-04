@@ -3,11 +3,15 @@ package com.ql.recovery.yay.ui.auth
 import android.Manifest
 import android.content.Intent
 import android.location.Address
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.LocationCallback
 import com.ql.recovery.yay.databinding.ActivityAuthBinding
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.util.AppUtil
@@ -15,6 +19,7 @@ import com.ql.recovery.yay.util.ToastUtil
 
 class AuthActivity : BaseActivity() {
     private lateinit var binding: ActivityAuthBinding
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityAuthBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -28,6 +33,7 @@ class AuthActivity : BaseActivity() {
     }
 
     override fun initData() {
+        firebaseAnalytics = Firebase.analytics
     }
 
     private fun checkPermission() {
@@ -58,26 +64,59 @@ class AuthActivity : BaseActivity() {
             ToastUtil.showShort(this, getString(R.string.permission_choose))
         }
 
-        requestPermission(list.toTypedArray()) {
-            getLocalStorage().encode("show_permission", true)
-            toMainPage()
-
-            getUserInfo { userInfo ->
-                if (userInfo.country.isBlank()) {
-                    //定位设置国家和地区
-                    AppUtil.getLocation(this, object : LocationCallback {
-                        override fun onSuccess(address: Address) {
-                            DataManager.updateCountry(address.countryCode) {}
+        getUserInfo { userInfo ->
+            if (userInfo.country.isBlank()) {
+                checkLocationPermissions {
+                    when (it) {
+                        "grant" -> {
+                            getLocation()
+                            checkVideoPermissions()
                         }
 
-                        override fun onFailed() {
-                            runOnUiThread {
-                                ToastUtil.showShort(this@AuthActivity, "get location failed, please check your network")
-                            }
+                        "rationale", "deny" -> {
+                            checkVideoPermissions()
                         }
-                    })
+                    }
+                }
+            } else {
+                checkVideoPermissions()
+            }
+        }
+    }
+
+    /**
+     * 定位设置国家和地区
+     */
+    private fun getLocation() {
+        AppUtil.getLocation(this, object : LocationCallback {
+            override fun onSuccess(address: Address) {
+                DataManager.updateCountry(address.countryCode) {}
+
+                val permission = getLocalStorage().decodeBool("home_get_location_success", false)
+                if (!permission) {
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_success", "get location success")
+                    ReportManager.appsFlyerCustomLog(this@AuthActivity, "home_get_location_success", "get location success")
                 }
             }
+
+            override fun onFailed() {
+                runOnUiThread {
+                    ToastUtil.showShort(this@AuthActivity, "get location failed, please check your network")
+
+                    val permission = getLocalStorage().decodeBool("home_get_location_failed", false)
+                    if (!permission) {
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_failed", "get location failed")
+                        ReportManager.appsFlyerCustomLog(this@AuthActivity, "home_get_location_failed", "get location failed")
+                    }
+                }
+            }
+        })
+    }
+
+    private fun checkVideoPermissions() {
+        checkVideoPermissions {
+            getLocalStorage().encode("show_permission", true)
+            toMainPage()
         }
     }
 

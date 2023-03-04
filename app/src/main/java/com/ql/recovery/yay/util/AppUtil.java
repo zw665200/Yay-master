@@ -34,6 +34,7 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -49,6 +50,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.ql.recovery.bean.BirthDay;
 import com.ql.recovery.yay.BuildConfig;
 import com.ql.recovery.yay.R;
@@ -505,7 +511,7 @@ public class AppUtil {
         //兼容Android8.0
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String id = "my_channel_01";
-            int importance = NotificationManager.IMPORTANCE_LOW;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             CharSequence name = "notice";
             NotificationChannel mChannel = new NotificationChannel(id, name, importance);
             mChannel.enableLights(true);
@@ -884,6 +890,46 @@ public class AppUtil {
             return;
         }
 
+//        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+//        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+//                    JLog.i("location = " + location);
+//                    if (location != null) {
+//                        getAddress(context, location.getLatitude(), location.getLongitude(), locationCallback, locManager);
+//                        return;
+//                    }
+//
+//                    LocationRequest request = LocationRequest.create();
+//                    request.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+//                    fusedLocationProviderClient.getLocationAvailability().addOnCompleteListener(availabilityTask -> {
+//                        if (availabilityTask.getResult() != null) {
+//                            JLog.i("is location available " + availabilityTask.getResult().isLocationAvailable());
+//
+//                        }
+//                    });
+
+
+//                    fusedLocationProviderClient.requestLocationUpdates(request, new com.google.android.gms.location.LocationCallback() {
+//                        @Override
+//                        public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
+//                            super.onLocationAvailability(locationAvailability);
+//                            JLog.i("locationAvailability = " + locationAvailability);
+//                        }
+//
+//                        @Override
+//                        public void onLocationResult(@NonNull LocationResult locationResult) {
+//                            super.onLocationResult(locationResult);
+//                            JLog.i("LocationResult = " + locationResult);
+//                            List<Location> list = locationResult.getLocations();
+//                            if (!list.isEmpty()) {
+//                                getAddress(context, list.get(0).getLatitude(), list.get(0).getLongitude(), locationCallback, locManager);
+//                            }
+//                        }
+//                    }, Looper.getMainLooper());
+//                }
+//        );
+
+
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
@@ -901,8 +947,11 @@ public class AppUtil {
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
+                JLog.i("provider status = " + status);
             }
-        };
+        }
+
+        ;
 
         List<String> list = locManager.getAllProviders();
         if (list.isEmpty()) {
@@ -912,15 +961,16 @@ public class AppUtil {
 
         for (String c : list) {
             if (c.contains("network")) {
-                //通过网络定位。对定位精度度不高或省点情况可考虑使用
+                //通过网络定位,对定位精度度不高或省点情况可考虑使用
                 LocationProvider netProvider = locManager.getProvider(LocationManager.NETWORK_PROVIDER);
                 if (netProvider != null) {
-                    locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0F, locationListener);
+                    locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, locationListener);
                 } else {
                     locationCallback.onFailed();
                 }
             }
         }
+
     }
 
 
@@ -937,7 +987,6 @@ public class AppUtil {
             locationCallback.onFailed();
             locManager.removeUpdates(locationListener);
         }
-
 
         if (addList != null && addList.size() > 0) {
             Address ad = addList.get(0);

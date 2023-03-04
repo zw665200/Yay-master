@@ -42,3 +42,10 @@
 
 #如果你开启数据库功能，需要加入
 -keep class net.sqlcipher.** {*;}
+
+-dontwarn com.google.**
+-keep class com.google.** {*;}
+
+#com.yanzhenjie:album
+-dontwarn com.yanzhenjie.album.**
+-dontwarn com.yanzhenjie.mediascanner.**

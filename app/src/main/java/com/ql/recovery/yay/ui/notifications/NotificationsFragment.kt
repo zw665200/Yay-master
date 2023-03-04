@@ -200,6 +200,7 @@ class NotificationsFragment : BaseFragment() {
             }
             .create()
 
+        binding?.rcConversation?.itemAnimator?.changeDuration = 0L
         binding?.rcConversation?.adapter = conversationAdapter
         binding?.rcConversation?.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -300,6 +301,7 @@ class NotificationsFragment : BaseFragment() {
             }
             .create()
 
+        binding?.rcVisitList?.itemAnimator?.changeDuration = 0L
         binding?.rcVisitList?.adapter = mAdapter
         binding?.rcVisitList?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }

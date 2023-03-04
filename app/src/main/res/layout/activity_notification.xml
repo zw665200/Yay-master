@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient_notification"
+    android:background="@color/color_light_grey"
     android:fitsSystemWindows="false"
     android:orientation="vertical">
 

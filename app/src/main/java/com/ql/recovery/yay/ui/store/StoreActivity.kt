@@ -29,18 +29,17 @@ import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.mine.FeedbackActivity
 import com.ql.recovery.yay.ui.mine.ShareActivity
-import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
 
 class StoreActivity : BaseActivity() {
     private lateinit var binding: ActivityStoreBinding
     private lateinit var mAdapter: DataAdapter<Server>
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var billingClient: BillingClient
 
     private var mList = arrayListOf<Server>()
     private var currentServer: Server? = null
     private var lastClickTime: Long = 0L
-    private var firstLoad = false
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityStoreBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -59,9 +58,19 @@ class StoreActivity : BaseActivity() {
     }
 
     override fun initData() {
+        initGoogleClient()
         loadServerList()
         getUserInfo()
         firebaseAnalytics = Firebase.analytics
+    }
+
+    private fun initGoogleClient() {
+        val listener = PurchasesUpdatedListener { _, _ -> }
+
+        billingClient = BillingClient.newBuilder(this)
+            .setListener(listener)
+            .enablePendingPurchases()
+            .build()
     }
 
     private fun initServerList() {
@@ -175,8 +184,16 @@ class StoreActivity : BaseActivity() {
             }
             .create()
 
+        binding.rvProduct.itemAnimator?.changeDuration = 0L
         binding.rvProduct.layoutManager = GridLayoutManager(this, 2)
         binding.rvProduct.adapter = mAdapter
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (currentServer != null) {
+            PayManager.get().checkConsumePurchased(billingClient, currentServer!!.id)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -186,146 +203,14 @@ class StoreActivity : BaseActivity() {
             mList.addAll(list)
             mAdapter.notifyDataSetChanged()
 
-            if (!firstLoad) {
-                firstLoad = true
-                getSubProductList(list)
+            PayManager.get().getSubProductList(this, billingClient, list) { position ->
+                mAdapter.notifyItemChanged(position)
             }
-        }
-    }
-
-    private fun getSubProductList(serverList: List<Server>) {
-        val listener = PurchasesUpdatedListener { _, _ -> }
-
-        val billingClient = BillingClient.newBuilder(this)
-            .setListener(listener)
-            .enablePendingPurchases()
-            .build()
-
-        if (serverList.isNotEmpty()) {
-            billingClient.startConnection(object : BillingClientStateListener {
-                override fun onBillingServiceDisconnected() {
-                    // Try to restart the connection on the next request to
-                    // Google Play by calling the startConnection() method.
-                    JLog.i("onBillingServiceDisconnected")
-                }
-
-                override fun onBillingSetupFinished(billingResult: BillingResult) {
-                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                        // The BillingClient is ready. You can query purchases here.
-                        JLog.i("onBillingSetupFinished")
-                        JLog.i("serverList = $serverList")
-                        JLog.i("serverList = ${serverList.size}")
-
-                        val subList = serverList.filter { it.type == "sub" }
-                        val consumeList = serverList.filter { it.type == "lemon" }
-
-                        val subListProductList = arrayListOf<QueryProductDetailsParams.Product>()
-                        for (server in subList) {
-                            JLog.i("server type = ${server.type}")
-                            subListProductList.add(
-                                QueryProductDetailsParams.Product.newBuilder()
-                                    .setProductId(server.code)
-                                    .setProductType(BillingClient.ProductType.SUBS)
-                                    .build()
-                            )
-                        }
-
-                        val consumeProductList = arrayListOf<QueryProductDetailsParams.Product>()
-                        for (server in consumeList) {
-                            JLog.i("server type = ${server.type}")
-                            consumeProductList.add(
-                                QueryProductDetailsParams.Product.newBuilder()
-                                    .setProductId(server.code)
-                                    .setProductType(BillingClient.ProductType.INAPP)
-                                    .build()
-                            )
-                        }
-
-                        val querySubProductDetailsParams =
-                            QueryProductDetailsParams.newBuilder()
-                                .setProductList(subListProductList)
-                                .build()
-
-                        val queryConsumeProductDetailsParams =
-                            QueryProductDetailsParams.newBuilder()
-                                .setProductList(consumeProductList)
-                                .build()
-
-                        billingClient.queryProductDetailsAsync(querySubProductDetailsParams) { result, productDetailsList ->
-                            // check billingResult
-                            // process returned productDetailsList
-                            if (productDetailsList.isEmpty()) {
-                                JLog.i("no goods found")
-                                return@queryProductDetailsAsync
-                            }
-
-//                            JLog.i("result = $result")
-//                            JLog.i("productDetailsList = $productDetailsList")
-
-                            for (productDetails in productDetailsList) {
-                                if (!productDetails.subscriptionOfferDetails.isNullOrEmpty()) {
-                                    for (productDetail in productDetails.subscriptionOfferDetails!!) {
-                                        val pricingPhases = productDetails.subscriptionOfferDetails!![0].pricingPhases
-                                        for (item in pricingPhases.pricingPhaseList) {
-//                                            JLog.i("price = ${item.formattedPrice}")
-//                                            JLog.i("code = ${item.priceCurrencyCode}")
-                                            runOnUiThread {
-                                                val server = mList.find { it.code == productDetails.productId }
-                                                if (server != null) {
-                                                    val position = mList.indexOf(server)
-                                                    mList[position].change_Price = item.formattedPrice
-                                                    mList[position].currency = item.priceCurrencyCode
-                                                    mAdapter.notifyItemChanged(position)
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        billingClient.queryProductDetailsAsync(queryConsumeProductDetailsParams) { result, productDetailsList ->
-                            // check billingResult
-                            // process returned productDetailsList
-                            if (productDetailsList.isEmpty()) {
-                                JLog.i("no goods found")
-                                return@queryProductDetailsAsync
-                            }
-
-                            JLog.i("result = $result")
-
-                            for (productDetails in productDetailsList) {
-//                                JLog.i("productDetails = $productDetails")
-                                val details = productDetails.oneTimePurchaseOfferDetails
-                                if (details != null) {
-//                                    JLog.i("price = ${details.formattedPrice}")
-//                                    JLog.i("code = ${details.priceCurrencyCode}")
-                                    runOnUiThread {
-                                        val server = mList.find { it.code == productDetails.productId }
-                                        if (server != null) {
-                                            val position = mList.indexOf(server)
-                                            mList[position].change_Price = details.formattedPrice
-                                            mList[position].currency = details.priceCurrencyCode
-                                            mAdapter.notifyItemChanged(position)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    } else {
-                        JLog.i("error code = ${billingResult.responseCode},${billingResult.debugMessage}")
-                        when (billingResult.responseCode) {
-                        }
-                    }
-                }
-            })
         }
     }
 
     private fun getUserInfo() {
         DataManager.getUserInfo {
-            binding.tvCoin.typeface = Typeface.createFromAsset(assets, "fonts/din_b.otf")
             binding.tvCoin.text = it.coin.toString()
         }
     }
@@ -358,9 +243,9 @@ class StoreActivity : BaseActivity() {
         }
 
         when (currentServer!!.type) {
-            "free" -> doPay(this, 0)
-            "sub" -> doPay(this, 1)
-            "lemon" -> doPay(this, 2)
+            "free" -> doPay(this, userInfo, 0)
+            "sub" -> doPay(this, userInfo, 1)
+            "lemon" -> doPay(this, userInfo, 2)
         }
     }
 
@@ -368,7 +253,7 @@ class StoreActivity : BaseActivity() {
      *  发起支付
      *  @param index 1：google订阅 2：google支付
      */
-    private fun doPay(c: Activity, index: Int) {
+    private fun doPay(c: Activity, userInfo: UserInfo, index: Int) {
         when (index) {
             0 -> {
                 DataManager.createOrder(currentServer!!.id) {
@@ -380,8 +265,8 @@ class StoreActivity : BaseActivity() {
             }
 
             1 -> {
-                DataManager.createOrder(currentServer!!.id) {
-                    if (it.is_paid) {
+                DataManager.createOrder(currentServer!!.id) { orderParam ->
+                    if (orderParam.is_paid) {
                         paySuccess(true)
                         return@createOrder
                     }
@@ -390,7 +275,9 @@ class StoreActivity : BaseActivity() {
                         c,
                         currentServer!!.code,
                         "acknowledge",
-                        it.order_id,
+                        orderParam.order_id,
+                        orderParam.order_no,
+                        userInfo.uid,
                         object : PayCallback {
                             override fun success(token: String) {
                                 runOnUiThread {
@@ -410,8 +297,8 @@ class StoreActivity : BaseActivity() {
             }
 
             2 -> {
-                DataManager.createOrder(currentServer!!.id) {
-                    if (it.is_paid) {
+                DataManager.createOrder(currentServer!!.id) { orderParam ->
+                    if (orderParam.is_paid) {
                         paySuccess(true)
                         return@createOrder
                     }
@@ -420,7 +307,9 @@ class StoreActivity : BaseActivity() {
                         c,
                         currentServer!!.code,
                         "consume",
-                        it.order_id,
+                        orderParam.order_id,
+                        orderParam.order_no,
+                        userInfo.uid,
                         object : PayCallback {
                             override fun success(token: String) {
                                 runOnUiThread {

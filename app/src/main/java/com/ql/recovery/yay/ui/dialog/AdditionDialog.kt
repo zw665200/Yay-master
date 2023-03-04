@@ -127,7 +127,7 @@ class AdditionDialog(
             gravity = Gravity.BOTTOM
             width = AppUtil.getScreenWidth(context)
             height = WindowManager.LayoutParams.WRAP_CONTENT
-            windowAnimations = R.style.translate_up_down
+            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
             dimAmount = 0.5f
         }
 

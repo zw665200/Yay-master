@@ -2,7 +2,6 @@ package com.ql.recovery.yay
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -12,7 +11,6 @@ import android.os.Looper
 import android.os.Message
 import com.appsflyer.AppsFlyerLib
 import com.blongho.country_data.World
-import com.danikula.videocache.HttpProxyCacheServer
 import com.google.gson.reflect.TypeToken
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
@@ -21,6 +19,8 @@ import com.netease.nimlib.sdk.auth.AuthService
 import com.netease.nimlib.sdk.auth.AuthServiceObserver
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.netease.nimlib.sdk.event.EventSubscribeServiceObserver
+import com.netease.nimlib.sdk.mixpush.MixPushConfig
+import com.netease.nimlib.sdk.mixpush.MixPushServiceObserve
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum
@@ -44,6 +44,8 @@ import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.match.VideoActivity
 import com.ql.recovery.yay.util.*
 import com.tencent.mmkv.MMKV
+import com.yanzhenjie.album.Album
+import com.yanzhenjie.album.AlbumConfig
 import io.branch.referral.Branch
 import java.lang.ref.WeakReference
 
@@ -54,27 +56,15 @@ import java.lang.ref.WeakReference
  * @date : 2022/11/8 17:46
  */
 class BaseApp : Application() {
-    private var proxy: WeakReference<HttpProxyCacheServer>? = null
     private var currentActivity: WeakReference<Activity>? = null
     private var dialog: MatchVideoDialog? = null
     private var handler = Handler(Looper.getMainLooper())
     private var activityCount = 0
     private var isForeground = false
     private var isScreenOff = false
-    private var lastReportDate = 0L
     private var startAt = 0L
     private var leaveAt = 0L
 
-    companion object {
-        fun getProxy(context: Context): HttpProxyCacheServer? {
-            val app = context.applicationContext as BaseApp
-            if (app.proxy == null) {
-                app.proxy = WeakReference<HttpProxyCacheServer>(app.newProxy())
-            }
-
-            return app.proxy!!.get()
-        }
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -102,6 +92,12 @@ class BaseApp : Application() {
 //            Branch.enableTestMode()
             // Branch object initialization
             Branch.getAutoInstance(this)
+
+            Album.initialize(
+                AlbumConfig.newBuilder(this)
+                    .setAlbumLoader(MediaLoader())
+                    .build()
+            )
         }
     }
 
@@ -109,11 +105,6 @@ class BaseApp : Application() {
         if (AppUtil.isDebugger(this)) {
             Config.isDebug = true
         }
-    }
-
-    private fun newProxy(): HttpProxyCacheServer {
-        return HttpProxyCacheServer.Builder(this.applicationContext).maxCacheSize(3 * 1024 * 1024L)
-            .build()
     }
 
     private fun initHandler() {
@@ -138,7 +129,7 @@ class BaseApp : Application() {
                                 }
 
                                 val activity = currentActivity?.get()
-                                if (activity != null) {
+                                if (activity != null && activity::class.java.simpleName != "LoginActivity") {
                                     startActivity(Intent(activity, LoginActivity::class.java))
                                 }
                             }
@@ -242,8 +233,14 @@ class BaseApp : Application() {
     }
 
     private fun initNIM() {
+        //配置PUSH
+        val config = MixPushConfig()
+        config.fcmCertificateName = Config.NIM_CERTIFICATE_NAME
+
         val options = SDKOptions()
         options.appKey = Config.NIM_APP_KEY
+        options.mixPushConfig = config
+
         IMKitClient.init(this, null, options)
     }
 
@@ -283,6 +280,12 @@ class BaseApp : Application() {
 //                NIMClient.getService(MsgService::class.java).clearMsgDatabase(true)
 //                NIMClient.getService(MsgService::class.java).clearChattingHistory(userInfo.uid.toString(), SessionTypeEnum.P2P)
 //                NIMClient.getService(MsgService::class.java).clearServerHistory(userInfo.uid.toString(), SessionTypeEnum.P2P, true, "")
+
+                //开启通知
+                NIMClient.toggleNotification(true)
+
+                //注册Push监听
+                registerPushListener()
 
                 //注册消息监听
                 registerMsgStatusListener()
@@ -334,31 +337,46 @@ class BaseApp : Application() {
                 }
 
                 //更新未读消息
-                if (Config.mainHandler != null) {
-                    Config.mainHandler!!.sendEmptyMessage(0x10001)
-                }
+                Config.mainHandler?.sendEmptyMessage(0x10001)
             }
         }
 
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
     }
 
+    private fun registerPushListener() {
+        NIMClient.getService(MixPushServiceObserve::class.java)
+            .observeMixPushToken({ mixPushToken ->
+                JLog.i("pushType = ${mixPushToken.pushType}")
+
+            }, true)
+    }
+
+    private fun unregisterPushListener() {
+        NIMClient.getService(MixPushServiceObserve::class.java).observeMixPushToken({}, false)
+    }
+
     private fun registerOtherClientStatus() {
-        NIMClient.getService(AuthServiceObserver::class.java).observeOtherClients({ onlineClients ->
-            if (onlineClients.isNullOrEmpty()) return@observeOtherClients
+        NIMClient.getService(AuthServiceObserver::class.java)
+            .observeOtherClients({ onlineClients ->
+                if (onlineClients.isNullOrEmpty()) return@observeOtherClients
 
-            for (client in onlineClients) {
-                //踢出其他登录端
-                NIMClient.getService(AuthService::class.java).kickOtherClient(client)
-            }
+                for (client in onlineClients) {
+                    //踢出其他登录端
+                    NIMClient.getService(AuthService::class.java).kickOtherClient(client)
+                }
 
-        }, true)
+            }, true)
+    }
+
+    private fun unregisterOtherClientStatus() {
+        NIMClient.getService(AuthServiceObserver::class.java).observeOtherClients({}, false)
     }
 
     private fun registerOnlineClientStatus() {
         NIMClient.getService(AuthServiceObserver::class.java).observeOnlineStatus(
             { statusCode ->
-                JLog.i("statusCode = $statusCode")
+//                JLog.i("statusCode = $statusCode")
                 if (statusCode.wontAutoLogin()) {
                     //被踢出、账号被禁用、密码错误等情况，自动登录失败，需要返回到登录界面进行重新登录操作
                     Config.mHandler?.sendEmptyMessage(0x10003)
@@ -376,6 +394,8 @@ class BaseApp : Application() {
             for (event in it) {
                 val uid = event.publisherAccount
                 val online = event.eventValue == 1
+
+                JLog.i("uid = $uid, online = $online")
 
                 //save temp Subscriber
                 val subscriber = Subscriber(uid, online)
@@ -413,7 +433,7 @@ class BaseApp : Application() {
             }
 
             override fun onActivityResumed(activity: Activity) {
-                JLog.i("onActivityResumed : ${activity::class.java.simpleName}")
+//                JLog.i("onActivityResumed : ${activity::class.java.simpleName}")
 
                 currentActivity = if (activity.parent != null) {
                     WeakReference<Activity>(activity.parent)
@@ -435,7 +455,7 @@ class BaseApp : Application() {
             }
 
             override fun onActivityPaused(activity: Activity) {
-                JLog.i("onActivityPaused: ${activity::class.java.simpleName}")
+//                JLog.i("onActivityPaused: ${activity::class.java.simpleName}")
                 addUsageToDatabase(activity)
             }
 
@@ -667,6 +687,17 @@ class BaseApp : Application() {
                             }
                         }
                     }
+
+                    else -> {
+                        val info = GsonUtils.fromJson(json, PushMessageInfo::class.java)
+                        if (info != null) {
+                            if (info.content == null) {
+                                AppUtil.sendNotification(this, info.type, "you have a new message")
+                            } else {
+                                AppUtil.sendNotification(this, info.type, info.content as String)
+                            }
+                        }
+                    }
                 }
             }
 
@@ -719,6 +750,8 @@ class BaseApp : Application() {
     override fun onTerminate() {
         JLog.i("onTerminate")
         super.onTerminate()
+        unregisterPushListener()
+        unregisterOtherClientStatus()
         unRegisterUserOnlineStatus()
         unregisterOnlineClientStatus()
     }

@@ -25,6 +25,7 @@ import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
 import com.ql.recovery.yay.ui.dialog.UnlockDialog
+import com.ql.recovery.yay.ui.pop.MenuPop
 import com.ql.recovery.yay.ui.self.BlurTransformation
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
@@ -59,6 +60,7 @@ class RecordFragment : BaseFragment() {
         binding?.llCoin?.setOnClickListener { toStorePage() }
         binding?.llTitleTop?.setOnClickListener { changeTag() }
         binding?.includeNoData?.tvToMatch?.setOnClickListener { (requireActivity() as MainActivity).changeFragment(0) }
+        binding?.llTitleTop?.setOnClickListener { showMenuDialog() }
 
         return binding!!.root
     }
@@ -514,6 +516,22 @@ class RecordFragment : BaseFragment() {
         PrimeDialog(requireActivity(), userInfo.is_vip) {
             getUserInfo()
             getVisitorInfoList()
+        }
+    }
+
+    private fun showMenuDialog() {
+        when (mType) {
+            TagType.Visitor -> {
+                MenuPop(requireActivity(), getString(R.string.record_game_matcher)) {
+                    changeTag()
+                }.showAsDropDown(binding?.llTitleTop, 0, 0)
+            }
+
+            TagType.Gamer -> {
+                MenuPop(requireActivity(), getString(R.string.record_visitor)) {
+                    changeTag()
+                }.showAsDropDown(binding?.llTitleTop, 0, 0)
+            }
         }
     }
 

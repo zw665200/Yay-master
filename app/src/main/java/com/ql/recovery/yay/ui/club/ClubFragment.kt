@@ -16,7 +16,6 @@ import com.ql.recovery.bean.Anchor
 import com.ql.recovery.bean.Cate
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.manager.DataManager
-import com.ql.recovery.yay.BaseApp
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.FileCallback
 import com.ql.recovery.yay.databinding.FragmentClubBinding
@@ -29,7 +28,6 @@ import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.FileUtil
-import com.ql.recovery.yay.util.JLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -140,16 +138,18 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 val itemData = mList[position]
                 val itemBinding = ItemFunAnchorBinding.bind(itemView)
 
-                //加载略缩图
+                //如果展示图为空，则加载头像
                 if (itemData.cover_url.isNullOrBlank()) {
                     itemBinding.ivPhoto.visibility = View.VISIBLE
                     Glide.with(requireActivity()).load(itemData.avatar).placeholder(R.drawable.placeholder).into(itemBinding.ivPhoto)
                     return@onViewAttachedToWindow
                 }
 
+                //加载略缩图
                 itemBinding.ivPhoto.visibility = View.VISIBLE
                 Glide.with(requireActivity()).load(itemData.cover_url).placeholder(R.drawable.placeholder).into(itemBinding.ivPhoto)
 
+                //如果本地文件地址不为空，则加载本地文件
                 if (!itemData.local_video_url.isNullOrBlank()) {
                     launch {
                         itemBinding.playerView.initPlayer(itemData.cover_url!!)
@@ -158,6 +158,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     return@onViewAttachedToWindow
                 }
 
+                //下载视频
                 if (itemData.cover_url!!.contains(".mp4") || itemData.cover_url!!.contains("type=video")) {
                     launch {
                         itemBinding.playerView.initPlayer(itemData.cover_url)
@@ -169,13 +170,12 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     itemBinding.playerView.visibility = View.GONE
                     Glide.with(requireActivity()).load(itemData.cover_url).placeholder(R.drawable.placeholder).into(itemBinding.ivPhoto)
                 }
+
             }
             .onViewDetachToWindow { itemView, position ->
                 val itemBinding = ItemFunAnchorBinding.bind(itemView)
                 itemBinding.playerView.releasePlayer()
-            }
-
-            .create()
+            }.create()
 
 
         binding!!.rcAnchorList.itemAnimator?.changeDuration = 0

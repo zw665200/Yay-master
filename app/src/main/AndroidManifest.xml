@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <!-- 对于 Android 12.0 及以上设备，还需要添加如下权限：-->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
@@ -29,6 +30,7 @@
         android:name="com.google.android.gms.permission.AD_ID"
         tools:node="remove" />
 
+    <!--facebook快捷登录-->
     <queries>
         <package android:name="com.facebook.katana" />
         <provider
@@ -95,6 +97,15 @@
         <meta-data
             android:name="io.branch.sdk.TestMode"
             android:value="false" />
+
+        <!--设置收到 fcm 通知展示的图标和颜色-->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher_round" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/black" />
+
 
         <activity
             android:name=".ui.StartActivity"
@@ -274,6 +285,16 @@
 
         <service android:name=".service.SosWebSocketClientService" />
 
+        <!-- fcm -->
+        <service
+            android:name="com.netease.nimlib.mixpush.fcm.FCMTokenService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!--facebook-->
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />

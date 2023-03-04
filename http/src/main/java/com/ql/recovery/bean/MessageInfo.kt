@@ -53,7 +53,8 @@ data class Reason(
     val reason: String
 ) : Parcelable
 
-data class Attachment(
+data class PushMessageInfo(
     val type: String,
-    val content: Any
+    val content: Any?,
+    val event: String
 ) : java.io.Serializable

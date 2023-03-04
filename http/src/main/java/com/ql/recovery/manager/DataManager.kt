@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import com.ql.recovery.bean.*
+import com.ql.recovery.callback.Upload2Callback
 import com.ql.recovery.callback.UploadCallback
 import com.ql.recovery.config.Config
 import com.ql.recovery.http.loader.BaseLoader
@@ -793,7 +794,7 @@ object DataManager {
     }
 
     /**
-     * 上传文件
+     * 上传单个文件
      */
     fun uploadFileToOss(context: Context, filePath: String, result: (String) -> Unit) {
         JLog.i("filePath = $filePath")
@@ -802,6 +803,25 @@ object DataManager {
                 override fun onSuccess(path: String) {
                     JLog.i("oss path = $path")
                     result(path)
+                }
+
+                override fun onFailed(msg: String) {
+//                    result(msg)
+                }
+            })
+        }
+    }
+
+    /**
+     * 上传多个文件
+     */
+    fun uploadFileListToOss(context: Context, fileList: List<String>, result: (List<String>) -> Unit) {
+        getOSSToken {
+            OSSManager.get().uploadFileToFix(context, it, fileList, object : Upload2Callback {
+
+                override fun onSuccess(pathList: List<String>) {
+                    JLog.i("oss pathList = $pathList")
+                    result(pathList)
                 }
 
                 override fun onFailed(msg: String) {

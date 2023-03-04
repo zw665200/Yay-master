@@ -137,13 +137,13 @@ class OSSManager private constructor() {
             stsModel.security_token
         )
 
-        val data = AppUtil.timeStamp2Date(System.currentTimeMillis(), "yyyy-MM-dd")
-        val objectKey = "yay/$data/${Config.USER_ID}_" + System.currentTimeMillis().toString() + ".jpg"
         val ossClient = OSSClient(context.applicationContext, stsModel.endpoint, credentialProvider, clientConfiguration)
 
         val size = filePathList.size
         val list = arrayListOf<String>()
         for (child in filePathList) {
+            val data = AppUtil.timeStamp2Date(System.currentTimeMillis(), "yyyy-MM-dd")
+            val objectKey = "yay/$data/${Config.USER_ID}_" + System.currentTimeMillis().toString() + ".jpg"
             val put = PutObjectRequest(stsModel.bucket_name, objectKey, child)
             beginUpload(stsModel, objectKey, put, ossClient, object : UploadCallback {
                 override fun onSuccess(path: String) {

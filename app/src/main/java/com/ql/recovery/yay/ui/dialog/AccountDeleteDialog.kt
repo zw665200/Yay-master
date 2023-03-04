@@ -43,8 +43,10 @@ class AccountDeleteDialog(
         window!!.decorView.setPadding(0, 0, 0, 0)
         window!!.attributes = window!!.attributes.apply {
             gravity = Gravity.CENTER
-            width = AppUtil.getScreenWidth(context) - 50
+            width = AppUtil.getScreenWidth(context) * 3 / 4
             height = WindowManager.LayoutParams.WRAP_CONTENT
+            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
+            dimAmount = 0.5f
         }
         super.show()
     }

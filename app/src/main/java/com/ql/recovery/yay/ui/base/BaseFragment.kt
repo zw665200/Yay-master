@@ -91,11 +91,15 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                     }
 
                     0x10001 -> {
-                        refreshUserInfo()
+                        if (!requireActivity().isFinishing && !requireActivity().isDestroyed) {
+                            refreshUserInfo()
+                        }
                     }
 
                     0x10002 -> {
-                        refreshOnlineTime()
+                        if (!requireActivity().isFinishing && !requireActivity().isDestroyed) {
+                            refreshOnlineTime()
+                        }
                     }
                 }
             }
@@ -131,14 +135,18 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
      */
     protected fun getLocation(success: () -> Unit) {
         waitingDialog?.show()
+
         AppUtil.getLocation(requireContext(), object : LocationCallback {
             override fun onSuccess(address: Address) {
                 waitingDialog?.cancel()
                 success()
                 DataManager.updateCountry(address.countryCode) {}
 
-                ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_success", "get location success")
-                ReportManager.appsFlyerCustomLog(requireContext(), "home_get_location_success", "get location success")
+                val permission = getLocalStorage().decodeBool("home_get_location_success", false)
+                if (!permission) {
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_success", "get location success")
+                    ReportManager.appsFlyerCustomLog(requireContext(), "home_get_location_success", "get location success")
+                }
             }
 
             override fun onFailed() {
@@ -147,8 +155,11 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                     ToastUtil.showShort(requireContext(), "get location failed, please check your country")
                     startActivity(Intent(requireActivity(), CountryActivity::class.java))
 
-                    ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_failed", "get location failed")
-                    ReportManager.appsFlyerCustomLog(requireContext(), "home_get_location_failed", "get location failed")
+                    val permission = getLocalStorage().decodeBool("home_get_location_failed", false)
+                    if (!permission) {
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_failed", "get location failed")
+                        ReportManager.appsFlyerCustomLog(requireContext(), "home_get_location_failed", "get location failed")
+                    }
                 }
             }
         })
@@ -172,7 +183,7 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         requestPermission(permissions) {
             when (it) {
                 "grant" -> success()
-                "deny" -> {
+                "rationale", "deny" -> {
                     PermissionPageUtils(requireContext()).jumpPermissionPage()
                 }
             }
@@ -232,7 +243,7 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         requestPermission(permissions) {
             when (it) {
                 "grant" -> success()
-                "deny" -> {
+                "rationale", "deny" -> {
                     PermissionPageUtils(requireContext()).jumpPermissionPage()
                 }
             }

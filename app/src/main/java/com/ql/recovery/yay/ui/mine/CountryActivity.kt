@@ -73,8 +73,6 @@ class CountryActivity : BaseActivity() {
                 itemBinding.ivCountryIcon.setImageResource(flag)
                 itemBinding.tvCountryName.text = itemData.name
 
-                JLog.i("name = ${itemData.name}")
-
                 if (itemData.iso == currentCountry) {
                     itemBinding.ivCheck.visibility = View.VISIBLE
                 } else {

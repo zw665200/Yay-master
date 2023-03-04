@@ -100,16 +100,6 @@ class MainActivity : BaseFragmentActivity() {
 //        }
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        //刷新消息状态
-        if (Config.subscriberHandler != null) {
-            Config.subscriberHandler!!.sendEmptyMessage(0x10001)
-        }
-    }
-
-
     override fun putFragments(): Array<Class<out BaseFragment>> {
         return FRAGMENT_CLASS_ARRAY
     }

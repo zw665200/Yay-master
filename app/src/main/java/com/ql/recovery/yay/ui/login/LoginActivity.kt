@@ -5,10 +5,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.result.contract.ActivityResultContracts
-import com.facebook.AccessToken
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
+import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.exoplayer2.ExoPlayer
@@ -244,6 +241,18 @@ class LoginActivity : BaseActivity() {
                 getAuthFromFacebook(token)
             }
         }
+
+//        LoginManager.getInstance().retrieveLoginStatus(this, object : LoginStatusCallback {
+//            override fun onCompleted(accessToken: AccessToken) {
+//                JLog.i("accessToken = $accessToken")
+//            }
+//
+//            override fun onError(exception: Exception) {
+//            }
+//
+//            override fun onFailure() {
+//            }
+//        })
 
         LoginManager.getInstance().registerCallback(facebookManager, facebookCallback)
         LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))

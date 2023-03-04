@@ -2,7 +2,6 @@ package com.ql.recovery.yay.ui.mine
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.provider.MediaStore
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -36,6 +35,7 @@ import com.ql.recovery.yay.ui.self.OnRecyclerItemClickListener
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.FileUtil
 import com.ql.recovery.yay.util.ToastUtil
+import com.yanzhenjie.album.Album
 import java.util.*
 
 class ProfileActivity : BaseActivity() {
@@ -43,6 +43,8 @@ class ProfileActivity : BaseActivity() {
     private lateinit var waitingDialog: WaitingDialog
     private lateinit var picAdapter: DataAdapter<String>
     private lateinit var videoAdapter: DataAdapter<String>
+    private var mPicList = arrayListOf<String>()
+    private var mVideoList = arrayListOf<String>()
     private var mUserInfo: UserInfo? = null
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
@@ -114,13 +116,9 @@ class ProfileActivity : BaseActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun loadPicList(userInfo: UserInfo) {
-        val list = arrayListOf<String>()
-        list.addAll(userInfo.photos)
-        list.add("")
-
         val width = AppUtil.getScreenWidth(this)
         picAdapter = DataAdapter.Builder<String>()
-            .setData(list)
+            .setData(mPicList)
             .setLayoutId(R.layout.item_wallpaper)
             .addBindView { itemView, itemData, position ->
                 //限制item的宽高
@@ -144,7 +142,7 @@ class ProfileActivity : BaseActivity() {
 
                 itemBinding.ivDelete.setOnClickListener {
                     val tempList = arrayListOf<String>()
-                    tempList.addAll(list)
+                    tempList.addAll(mPicList)
                     tempList.remove(itemData)
                     tempList.removeLast()
 
@@ -159,10 +157,11 @@ class ProfileActivity : BaseActivity() {
                     if (itemData.isBlank()) {
                         getImageFromAlbum(0x1002)
                     } else {
-                        val intent = Intent(this, ImagePreviewActivity::class.java)
-                        intent.putExtra("pic_list", userInfo.photos as ArrayList<String>)
-                        intent.putExtra("position", position)
-                        startActivity(intent)
+                        Album.gallery(this)
+                            .checkedList(mPicList.filter { it != "" } as ArrayList<String>?)
+                            .checkable(false)
+                            .currentPosition(position)
+                            .onResult { }.start()
                     }
                 }
             }
@@ -170,12 +169,16 @@ class ProfileActivity : BaseActivity() {
 
         binding.rcPhotoWallList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rcPhotoWallList.adapter = picAdapter
-        picAdapter.notifyDataSetChanged()
-        binding.rcPhotoWallList.scrollToPosition(list.size - 1)
 
-        val itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(picAdapter, list) {
+        mPicList.clear()
+        mPicList.addAll(userInfo.photos)
+        mPicList.add("")
+        picAdapter.notifyDataSetChanged()
+        binding.rcPhotoWallList.scrollToPosition(mPicList.size - 1)
+
+        val itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(picAdapter, mPicList) {
             val tempList = arrayListOf<String>()
-            tempList.addAll(list)
+            tempList.addAll(mPicList)
             tempList.removeLast()
 
             DataManager.updateImage(tempList) {
@@ -192,7 +195,7 @@ class ProfileActivity : BaseActivity() {
         binding.rcPhotoWallList.addOnItemTouchListener(object : OnRecyclerItemClickListener(binding.rcPhotoWallList) {
             override fun onItemLongClick(vh: RecyclerView.ViewHolder) {
                 //假设item不是最后一个，则执行拖拽
-                if (vh.layoutPosition != list.size - 1) {
+                if (vh.layoutPosition != mPicList.size - 1) {
                     itemTouchHelper.startDrag(vh)
                 }
             }
@@ -204,13 +207,9 @@ class ProfileActivity : BaseActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun loadVideoList(userInfo: UserInfo) {
-        val list = arrayListOf<String>()
-        list.addAll(userInfo.videos)
-        list.add("")
-
         val width = AppUtil.getScreenWidth(this)
         videoAdapter = DataAdapter.Builder<String>()
-            .setData(list)
+            .setData(mVideoList)
             .setLayoutId(R.layout.item_video)
             .addBindView { itemView, itemData, position ->
                 //限制item的宽高
@@ -223,8 +222,12 @@ class ProfileActivity : BaseActivity() {
                 if (itemData.isBlank()) {
                     itemBinding.ivPlay.setImageResource(R.drawable.grzx_sc)
                     itemBinding.ivPic.visibility = View.GONE
+                    itemBinding.ivMask.visibility = View.GONE
                 } else {
                     itemBinding.ivDelete.visibility = View.VISIBLE
+                    itemBinding.ivPlay.setImageResource(R.drawable.gezx_bf)
+                    itemBinding.ivPic.visibility = View.VISIBLE
+                    itemBinding.ivMask.visibility = View.VISIBLE
 
                     Glide.with(this)
                         .setDefaultRequestOptions(RequestOptions().frame(0).centerCrop())
@@ -250,7 +253,7 @@ class ProfileActivity : BaseActivity() {
 
                 itemBinding.ivDelete.setOnClickListener {
                     val tempList = arrayListOf<String>()
-                    tempList.addAll(list)
+                    tempList.addAll(mVideoList)
                     tempList.remove(itemData)
                     tempList.removeLast()
 
@@ -263,10 +266,10 @@ class ProfileActivity : BaseActivity() {
 
                 itemView.setOnClickListener {
                     if (itemData.isBlank()) {
-                        getVideoFromAlbum()
+                        getVideoFromAlbum(0x1001)
                     } else {
                         val intent = Intent(this, VideoPreviewActivity::class.java)
-                        intent.putExtra("video_list", userInfo.videos as ArrayList<String>)
+                        intent.putExtra("video_list", mVideoList.filter { it != "" } as ArrayList<String>?)
                         intent.putExtra("position", position)
                         startActivity(intent)
                     }
@@ -276,12 +279,16 @@ class ProfileActivity : BaseActivity() {
 
         binding.rcShortVideoList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rcShortVideoList.adapter = videoAdapter
-        videoAdapter.notifyDataSetChanged()
-        binding.rcShortVideoList.scrollToPosition(list.size - 1)
 
-        val itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(videoAdapter, list) {
+        mVideoList.clear()
+        mVideoList.addAll(userInfo.videos)
+        mVideoList.add("")
+        videoAdapter.notifyDataSetChanged()
+        binding.rcShortVideoList.scrollToPosition(mVideoList.size - 1)
+
+        val itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(videoAdapter, mVideoList) {
             val tempList = arrayListOf<String>()
-            tempList.addAll(list)
+            tempList.addAll(mVideoList)
             tempList.removeLast()
 
             DataManager.updateVideo(tempList) {
@@ -298,7 +305,7 @@ class ProfileActivity : BaseActivity() {
         binding.rcShortVideoList.addOnItemTouchListener(object : OnRecyclerItemClickListener(binding.rcShortVideoList) {
             override fun onItemLongClick(vh: RecyclerView.ViewHolder) {
                 //item是最后一个拒绝拖拽
-                if (vh.layoutPosition != list.size - 1) {
+                if (vh.layoutPosition != mVideoList.size - 1) {
                     itemTouchHelper.startDrag(vh)
                 }
             }
@@ -308,18 +315,100 @@ class ProfileActivity : BaseActivity() {
         })
     }
 
-    private fun getVideoFromAlbum() {
-        val intent = Intent()
-        intent.action = Intent.ACTION_PICK
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "video/*")
-        startActivityForResult(intent, 0x1001)
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getVideoFromAlbum(code: Int) {
+//        val intent = Intent()
+//        intent.action = Intent.ACTION_PICK
+//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "video/*")
+//        startActivityForResult(intent, code)
+
+        Album.video(this)
+            .multipleChoice()
+            .camera(false)
+            .columnCount(2)
+            .selectCount(6)
+            .filterSize(null)
+            .filterMimeType(null)
+            .afterFilterVisibility(true)
+            .onResult { albumList ->
+                for (item in albumList) {
+                    waitingDialog.show()
+                    //压缩视频
+                    RtcManager.compressVideo(this, item.path) { compressPath ->
+                        //上传视频
+                        DataManager.uploadFileToOss(this, compressPath) { ossPath ->
+                            if (ossPath.isNotBlank()) {
+                                val l = arrayListOf<String>()
+                                l.addAll(mVideoList.filter { it != "" })
+                                l.add(ossPath)
+                                DataManager.updateVideo(l) {
+                                    waitingDialog.cancel()
+                                    if (it) {
+                                        mVideoList.clear()
+                                        mVideoList.addAll(l)
+                                        mVideoList.add("")
+                                        videoAdapter.notifyDataSetChanged()
+                                        binding.rcShortVideoList.scrollToPosition(mVideoList.size - 1)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }.start()
     }
 
-    private fun getImageFromAlbum(requestCode: Int) {
-        val intent = Intent()
-        intent.action = Intent.ACTION_PICK
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-        startActivityForResult(intent, requestCode)
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getImageFromAlbum(code: Int) {
+//        val intent = Intent()
+//        intent.action = Intent.ACTION_PICK
+//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+//        startActivityForResult(intent, code)
+
+        Album.image(this)
+            .multipleChoice()
+            .camera(false)
+            .columnCount(2)
+            .selectCount(6)
+            .filterSize(null)
+            .filterMimeType(null)
+            .afterFilterVisibility(true)
+            .onResult { albumList ->
+                waitingDialog.show()
+
+                val list = arrayListOf<String>()
+                for (item in albumList) {
+                    //压缩图片
+                    CManager.compress(this, item.path, object : FileCallback {
+                        override fun onSuccess(filePath: String) {
+                            list.add(filePath)
+                        }
+
+                        override fun onFailed(message: String) {
+                        }
+                    })
+                }
+
+                //上传图片
+                DataManager.uploadFileListToOss(this, list) { ossPathList ->
+                    if (ossPathList.isNotEmpty()) {
+                        val l = arrayListOf<String>()
+                        l.addAll(mPicList.filter { it != "" })
+                        l.addAll(ossPathList)
+                        DataManager.updateImage(l) {
+                            waitingDialog.cancel()
+                            if (it) {
+                                mPicList.clear()
+                                mPicList.addAll(l)
+                                mPicList.add("")
+                                picAdapter.notifyDataSetChanged()
+                                binding.rcPhotoWallList.scrollToPosition(mPicList.size - 1)
+                            }
+                        }
+                    }
+                }
+            }.start()
     }
 
     private fun modifyNickname() {
@@ -389,6 +478,7 @@ class ProfileActivity : BaseActivity() {
                     val realPath = FileUtil.getRealPathFromUri(this, uri)
                     if (realPath != null) {
                         waitingDialog.show()
+
                         //压缩视频
                         RtcManager.compressVideo(this, realPath) { compressPath ->
                             DataManager.uploadFileToOss(this, compressPath) { ossPath ->

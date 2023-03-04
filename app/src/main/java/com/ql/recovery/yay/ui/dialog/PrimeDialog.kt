@@ -13,7 +13,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.android.billingclient.api.*
-import com.google.common.collect.ImmutableList
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -21,6 +20,7 @@ import com.netease.yunxin.kit.adapters.DataAdapter
 import com.netease.yunxin.kit.common.utils.ThreadUtils.runOnUiThread
 import com.ql.recovery.bean.Prime
 import com.ql.recovery.bean.Server
+import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
@@ -30,8 +30,8 @@ import com.ql.recovery.yay.databinding.ItemPrimeBinding
 import com.ql.recovery.yay.manager.PayManager
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.util.AppUtil
-import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
+import com.tencent.mmkv.MMKV
 
 class PrimeDialog(
     private val activity: Activity,
@@ -195,61 +195,15 @@ class PrimeDialog(
             .enablePendingPurchases()
             .build()
 
-        DataManager.getProductList("sub") {
-            if (it.isNotEmpty()) {
-                currentServer = it[0]
+        DataManager.getProductList("sub") { serverList ->
+            if (serverList.isNotEmpty()) {
+                currentServer = serverList[0]
                 binding.tvPrice.text = "$${currentServer!!.price}"
 
-                billingClient.startConnection(object : BillingClientStateListener {
-                    override fun onBillingServiceDisconnected() {
-                        // Try to restart the connection on the next request to
-                        // Google Play by calling the startConnection() method.
-                        JLog.i("onBillingServiceDisconnected")
-                    }
-
-                    override fun onBillingSetupFinished(billingResult: BillingResult) {
-                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                            // The BillingClient is ready. You can query purchases here.
-                            JLog.i("onBillingSetupFinished")
-
-                            val queryProductDetailsParams =
-                                QueryProductDetailsParams.newBuilder()
-                                    .setProductList(
-                                        ImmutableList.of(
-                                            QueryProductDetailsParams.Product.newBuilder()
-                                                .setProductId(it[0].code)
-                                                .setProductType(BillingClient.ProductType.SUBS)
-                                                .build()
-                                        )
-                                    )
-                                    .build()
-
-                            billingClient.queryProductDetailsAsync(queryProductDetailsParams) { _, productDetailsList ->
-                                // check billingResult
-                                // process returned productDetailsList
-                                if (productDetailsList.isEmpty()) {
-                                    JLog.i("no goods found")
-                                    return@queryProductDetailsAsync
-                                }
-
-                                for (productDetails in productDetailsList) {
-//                                    JLog.i("product = $productDetails")
-                                    if (!productDetails.subscriptionOfferDetails.isNullOrEmpty()) {
-                                        val pricingPhases = productDetails.subscriptionOfferDetails!![0].pricingPhases
-                                        for (item in pricingPhases.pricingPhaseList) {
-//                                            JLog.i("price = ${item.formattedPrice}")
-//                                            JLog.i("code = ${item.priceCurrencyCode}")
-                                            runOnUiThread {
-                                                binding.tvPrice.text = item.formattedPrice
-                                                currentServer!!.currency = item.priceCurrencyCode
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                })
+                PayManager.get().getSubProductList(activity, billingClient, serverList) { position ->
+                    currentServer = serverList[position]
+                    binding.tvPrice.text = "${currentServer!!.change_Price}"
+                }
             }
         }
     }
@@ -304,6 +258,8 @@ class PrimeDialog(
             return
         }
 
+        val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java) ?: return
+
         lastClickTime = System.currentTimeMillis()
 
         if (currentServer!!.code.isBlank()) {
@@ -314,8 +270,8 @@ class PrimeDialog(
             ReportManager.appsFlyerCustomLog(activity, "purchase_begin_click", currentServer!!.code)
         }
 
-        DataManager.createOrder(currentServer!!.id) {
-            if (it.is_paid) {
+        DataManager.createOrder(currentServer!!.id) { orderParam ->
+            if (orderParam.is_paid) {
                 cancel()
                 func()
                 return@createOrder
@@ -325,7 +281,9 @@ class PrimeDialog(
                 activity,
                 currentServer!!.code,
                 "acknowledge",
-                it.order_id,
+                orderParam.order_id,
+                orderParam.order_no,
+                userInfo.uid,
                 object : PayCallback {
                     override fun success(token: String) {
                         runOnUiThread {
@@ -342,23 +300,11 @@ class PrimeDialog(
                                 ReportManager.facebookPurchaseLog(activity, currentServer!!.currency!!, currentServer!!.price)
                                 ReportManager.branchPurchaseLog(activity, currentServer!!.name, currentServer!!.currency!!, currentServer!!.price)
                                 ReportManager.appsFlyerPurchaseLog(activity, currentServer!!.code, currentServer!!.price)
-
-                                val map = HashMap<String, String>()
-                                map["currency"] = currentServer!!.currency!!
-                                map["price"] = currentServer!!.price
-
-                                ReportManager.branchCustomLog(activity, "purchased", map)
                             } else {
                                 ReportManager.firebasePurchaseLog(firebaseAnalytics, "USD", currentServer!!.price)
                                 ReportManager.facebookPurchaseLog(activity, "USD", currentServer!!.price)
                                 ReportManager.branchPurchaseLog(activity, currentServer!!.name, "USD", currentServer!!.price)
                                 ReportManager.appsFlyerPurchaseLog(activity, currentServer!!.code, currentServer!!.price)
-
-                                val map = HashMap<String, String>()
-                                map["currency"] = "USD"
-                                map["price"] = currentServer!!.price
-
-                                ReportManager.branchCustomLog(activity, "purchased", map)
                             }
                         }
                     }

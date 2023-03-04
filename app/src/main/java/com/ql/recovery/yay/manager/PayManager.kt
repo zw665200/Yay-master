@@ -1,13 +1,13 @@
 package com.ql.recovery.yay.manager
 
 import android.app.Activity
-import android.content.Context
 import com.android.billingclient.api.*
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.common.collect.ImmutableList
+import com.ql.recovery.bean.Server
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.PayCallback
@@ -45,13 +45,127 @@ class PayManager private constructor() {
     }
 
     /**
-     * 检查会员权限
-     * @param pay
+     * 查询谷歌商品信息
      */
-    fun checkPay(context: Context, pay: (Boolean) -> Unit) {
+    fun getSubProductList(activity: Activity, billingClient: BillingClient, serverList: List<Server>, func: (position: Int) -> Unit) {
+        if (serverList.isNotEmpty()) {
+            billingClient.startConnection(object : BillingClientStateListener {
+                override fun onBillingServiceDisconnected() {
+                    // Try to restart the connection on the next request to
+                    // Google Play by calling the startConnection() method.
+//                    JLog.i("onBillingServiceDisconnected")
+                }
 
+                override fun onBillingSetupFinished(billingResult: BillingResult) {
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                        // The BillingClient is ready. You can query purchases here.
+//                        JLog.i("onBillingSetupFinished")
+//                        JLog.i("serverList = $serverList")
+//                        JLog.i("serverList = ${serverList.size}")
+
+                        val subList = serverList.filter { it.type == "sub" }
+                        val consumeList = serverList.filter { it.type == "lemon" }
+
+                        val subListProductList = arrayListOf<QueryProductDetailsParams.Product>()
+                        for (server in subList) {
+//                            JLog.i("server type = ${server.code}")
+                            subListProductList.add(
+                                QueryProductDetailsParams.Product.newBuilder()
+                                    .setProductId(server.code)
+                                    .setProductType(BillingClient.ProductType.SUBS)
+                                    .build()
+                            )
+                        }
+
+                        val querySubProductDetailsParams =
+                            QueryProductDetailsParams.newBuilder()
+                                .setProductList(subListProductList)
+                                .build()
+
+                        billingClient.queryProductDetailsAsync(querySubProductDetailsParams) { result, productDetailsList ->
+                            // check billingResult, process returned productDetailsList
+                            if (productDetailsList.isEmpty()) {
+                                JLog.i("no goods found")
+                                return@queryProductDetailsAsync
+                            }
+
+                            for (productDetails in productDetailsList) {
+                                if (!productDetails.subscriptionOfferDetails.isNullOrEmpty()) {
+                                    for (productDetail in productDetails.subscriptionOfferDetails!!) {
+                                        val pricingPhases = productDetails.subscriptionOfferDetails!![0].pricingPhases
+                                        for (item in pricingPhases.pricingPhaseList) {
+//                                            JLog.i("price = ${item.formattedPrice}")
+//                                            JLog.i("code = ${item.priceCurrencyCode}")
+                                            activity.runOnUiThread {
+                                                val server = serverList.find { it.code == productDetails.productId }
+                                                if (server != null) {
+                                                    val position = serverList.indexOf(server)
+                                                    serverList[position].change_Price = item.formattedPrice
+                                                    serverList[position].currency = item.priceCurrencyCode
+                                                    func(position)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        val consumeProductList = arrayListOf<QueryProductDetailsParams.Product>()
+                        for (server in consumeList) {
+//                            JLog.i("server type = ${server.type}")
+                            consumeProductList.add(
+                                QueryProductDetailsParams.Product.newBuilder()
+                                    .setProductId(server.code)
+                                    .setProductType(BillingClient.ProductType.INAPP)
+                                    .build()
+                            )
+                        }
+
+                        val queryConsumeProductDetailsParams =
+                            QueryProductDetailsParams.newBuilder()
+                                .setProductList(consumeProductList)
+                                .build()
+
+
+                        billingClient.queryProductDetailsAsync(queryConsumeProductDetailsParams) { result, productDetailsList ->
+                            // check billingResult
+                            // process returned productDetailsList
+                            if (productDetailsList.isEmpty()) {
+                                JLog.i("no goods found")
+                                return@queryProductDetailsAsync
+                            }
+
+//                            JLog.i("result = $result")
+
+                            for (productDetails in productDetailsList) {
+//                                JLog.i("productDetails = $productDetails")
+                                val details = productDetails.oneTimePurchaseOfferDetails
+                                if (details != null) {
+//                                    JLog.i("price = ${details.formattedPrice}")
+//                                    JLog.i("code = ${details.priceCurrencyCode}")
+                                    activity.runOnUiThread {
+                                        val server = serverList.find { it.code == productDetails.productId }
+                                        if (server != null) {
+                                            val position = serverList.indexOf(server)
+                                            serverList[position].change_Price = details.formattedPrice
+                                            serverList[position].currency = details.priceCurrencyCode
+                                            func(position)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    } else {
+                        JLog.i("error code = ${billingResult.responseCode},${billingResult.debugMessage}")
+                        when (billingResult.responseCode) {
+                        }
+                    }
+                }
+            })
+        }
     }
-
 
     fun doGooglePay(activity: Activity, callback: PayCallback) {
         selectedGarment = fetchRandomGarment(activity)
@@ -105,6 +219,62 @@ class PayManager private constructor() {
     }
 
     /**
+     * 检查消耗型订单掉单的情况
+     */
+    fun checkConsumePurchased(client: BillingClient, produceId: Int) {
+        val queryParam = QueryPurchasesParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP).build()
+
+        client.queryPurchasesAsync(queryParam) { _, purchaseList ->
+            for (purchase in purchaseList) {
+                JLog.i("GoogleOrderId = ${purchase.orderId}")
+                JLog.i("GooglePurchaseState = ${purchase.purchaseState}")
+
+                if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                    //在自己服务器创建订单
+                    DataManager.createOrder(produceId) { orderParam ->
+                        //发起验证
+                        DataManager.googleValidate(orderParam.order_id, purchase.purchaseToken) {
+                            if (it) {
+                                //发放成功则消耗
+                                consumePurchase(purchase)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 检查订阅订单掉单的情况
+     */
+    fun checkSubPurchased(client: BillingClient, produceId: Int) {
+        val queryParam = QueryPurchasesParams.newBuilder()
+            .setProductType(BillingClient.ProductType.SUBS).build()
+
+        client.queryPurchasesAsync(queryParam) { _, purchaseList ->
+            for (purchase in purchaseList) {
+                JLog.i("GoogleOrderId = ${purchase.orderId}")
+                JLog.i("GooglePurchaseState = ${purchase.purchaseState}")
+
+                if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
+                    //在自己服务器创建订单
+                    DataManager.createOrder(produceId) { orderParam ->
+                        //发起验证
+                        DataManager.googleValidate(orderParam.order_id, purchase.purchaseToken) {
+                            if (it) {
+                                //确认订阅
+                                acknowledgePurchase(purchase)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Google Pay
      * @param productId productId of Google Play
      */
@@ -113,23 +283,23 @@ class PayManager private constructor() {
         productId: String,
         productType: String,
         orderId: Int,
+        orderNo: String,
+        uid: Int,
         callback: PayCallback
     ) {
         val listener = PurchasesUpdatedListener { billingResult, purchases ->
             when (billingResult.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
-                    JLog.i("pay success")
-
                     if (purchases != null) {
                         activity.runOnUiThread {
                             for (purchase in purchases) {
                                 if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                                    JLog.i("pay success")
                                     validatePay(orderId, purchase, productType, callback)
                                 }
                             }
                         }
                     }
-
                 }
 
                 BillingClient.BillingResponseCode.USER_CANCELED -> {
@@ -138,14 +308,14 @@ class PayManager private constructor() {
 
                 else -> {
                     JLog.i("unknown message")
-
                     val queryParam = QueryPurchasesParams.newBuilder()
                         .setProductType(BillingClient.ProductType.INAPP).build()
+
                     billingClient.queryPurchasesAsync(queryParam) { _, purchaseList ->
                         for (purchase in purchaseList) {
                             JLog.i("orderId = ${purchase.orderId}")
                             JLog.i("orderId = ${purchase.purchaseState}")
-                            consumePurchase(purchase, callback)
+                            consumePurchase(purchase)
                         }
                     }
                 }
@@ -156,7 +326,6 @@ class PayManager private constructor() {
             .setListener(listener)
             .enablePendingPurchases()
             .build()
-
 
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingServiceDisconnected() {
@@ -189,8 +358,7 @@ class PayManager private constructor() {
                             .build()
 
                     billingClient.queryProductDetailsAsync(queryProductDetailsParams) { result, productDetailsList ->
-                        // check billingResult
-                        // process returned productDetailsList
+                        // check billingResult, process returned productDetailsList
                         if (productDetailsList.isEmpty()) {
                             callback.failed("no goods found")
                             return@queryProductDetailsAsync
@@ -207,27 +375,21 @@ class PayManager private constructor() {
                                         return@runOnUiThread
                                     }
 
-                                    val offerToken =
-                                        productDetails.subscriptionOfferDetails?.get(index)?.offerToken
-                                            ?: ""
+                                    val offerToken = productDetails.subscriptionOfferDetails?.get(index)?.offerToken ?: ""
                                     val productDetailsParamsList = listOf(
                                         BillingFlowParams.ProductDetailsParams.newBuilder()
-                                            // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
                                             .setProductDetails(productDetails)
-                                            // to get an offer token, call ProductDetails.subscriptionOfferDetails()
-                                            // for a list of offers that are available to the user
                                             .setOfferToken(offerToken)
                                             .build()
                                     )
 
                                     val flowParams = BillingFlowParams.newBuilder()
                                         .setProductDetailsParamsList(productDetailsParamsList)
+                                        .setObfuscatedAccountId(uid.toString())
+                                        .setObfuscatedProfileId(orderNo)
                                         .build()
 
-                                    val responseCode = billingClient.launchBillingFlow(
-                                        activity,
-                                        flowParams
-                                    ).responseCode
+                                    val responseCode = billingClient.launchBillingFlow(activity, flowParams).responseCode
                                     if (responseCode == BillingClient.BillingResponseCode.OK) {
                                         JLog.i("sku is normal")
                                     }
@@ -237,22 +399,18 @@ class PayManager private constructor() {
                             if (productType == "consume") {
                                 val productDetailsParamsList = listOf(
                                     BillingFlowParams.ProductDetailsParams.newBuilder()
-                                        // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
                                         .setProductDetails(productDetails)
-                                        // to get an offer token, call ProductDetails.subscriptionOfferDetails()
-                                        // for a list of offers that are available to the user
                                         .setOfferToken("")
                                         .build()
                                 )
 
                                 val flowParams = BillingFlowParams.newBuilder()
                                     .setProductDetailsParamsList(productDetailsParamsList)
+                                    .setObfuscatedAccountId(uid.toString())
+                                    .setObfuscatedProfileId(orderNo)
                                     .build()
 
-                                val responseCode = billingClient.launchBillingFlow(
-                                    activity,
-                                    flowParams
-                                ).responseCode
+                                val responseCode = billingClient.launchBillingFlow(activity, flowParams).responseCode
                                 if (responseCode == BillingClient.BillingResponseCode.OK) {
                                     JLog.i("sku is normal")
                                 }
@@ -277,28 +435,41 @@ class PayManager private constructor() {
         productType: String,
         callback: PayCallback
     ) {
+        //消耗商品
+//        when (productType) {
+//            "acknowledge" -> {
+//                if (!purchase.isAcknowledged) {
+//                    acknowledgePurchase(purchase, callback)
+//                }
+//            }
+//
+//            "consume" -> consumePurchase(purchase, callback)
+//        }
+
         if (DoubleUtils.isFastDoubleClick()) return
 
         JLog.i("orderId = ${purchase.orderId}")
 
         DataManager.googleValidate(orderId, purchase.purchaseToken) {
             if (it) {
+                callback.success(purchase.purchaseToken)
+
                 when (productType) {
                     "acknowledge" -> {
                         if (!purchase.isAcknowledged) {
-                            acknowledgePurchase(purchase, callback)
+                            acknowledgePurchase(purchase)
                         } else {
                             callback.success(purchase.purchaseToken)
                         }
                     }
 
-                    "consume" -> consumePurchase(purchase, callback)
+                    "consume" -> consumePurchase(purchase)
                 }
             }
         }
     }
 
-    private fun consumePurchase(purchase: Purchase, callback: PayCallback) {
+    private fun consumePurchase(purchase: Purchase) {
         //consume purchase
         val consumeParams =
             ConsumeParams.newBuilder()
@@ -315,19 +486,17 @@ class PayManager private constructor() {
                     JLog.i("packName = $packName")
                     JLog.i("purchaseToken = $purchaseToken")
                     JLog.i("consume success")
-                    callback.success(purchaseToken)
                 }
             }
         }
     }
 
-    private fun acknowledgePurchase(purchase: Purchase, callback: PayCallback) {
+    private fun acknowledgePurchase(purchase: Purchase) {
         //subscription purchase
         val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
-        billingClient.acknowledgePurchase(
-            acknowledgePurchaseParams.build()
-        ) {
+
+        billingClient.acknowledgePurchase(acknowledgePurchaseParams.build()) {
             when (it.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
                     val packName = purchase.packageName
@@ -335,7 +504,6 @@ class PayManager private constructor() {
                     JLog.i("packName = $packName")
                     JLog.i("purchaseToken = $purchaseToken")
                     JLog.i("acknowledge success")
-                    callback.success(purchaseToken)
                 }
             }
         }

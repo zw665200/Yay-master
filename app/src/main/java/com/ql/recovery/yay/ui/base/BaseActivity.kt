@@ -127,25 +127,75 @@ abstract class BaseActivity : FragmentActivity() {
         requestPermission(permissions) { isPermitted() }
     }
 
-    protected fun requestPermission(permissions: Array<out String>, method: () -> Unit) {
+    protected fun checkLocationPermissions(success: (String) -> Unit) {
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        requestPermission(permissions) { success(it) }
+    }
+
+    protected fun checkVideoPermissions(success: () -> Unit) {
+        val permissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+
+        requestPermission(permissions) {
+            when (it) {
+                "grant" -> {
+                    success()
+
+                    val permission = getLocalStorage().decodeBool("home_video_permission", false)
+                    if (!permission) {
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_video_permission_success", "get permission success")
+                        ReportManager.appsFlyerCustomLog(this, "home_video_permission_success", "get permission success")
+                    }
+                }
+
+                "deny" -> {
+                    success()
+                    val permission = getLocalStorage().decodeBool("home_video_permission", false)
+                    if (!permission) {
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_video_permission_failed", "get permission failed")
+                        ReportManager.appsFlyerCustomLog(this, "home_video_permission_failed", "get permission failed")
+                    }
+                }
+
+                else -> {
+                    success()
+                    val permission = getLocalStorage().decodeBool("home_video_permission", false)
+                    if (!permission) {
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_video_permission_failed", "get permission failed")
+                        ReportManager.appsFlyerCustomLog(this, "home_video_permission_failed", "get permission failed")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestPermission(permissions: Array<out String>, method: (String) -> Unit) {
         LivePermissions(this)
             .request(permissions)
             .observe(this) {
                 when (it) {
                     is PermissionResult.Grant -> {
-                        method()
+                        method("grant")
                     }
 
                     is PermissionResult.Rationale -> {
                         //权限拒绝
                         ToastUtil.showShort(this, "please open the related permissions")
-                        method()
+                        method("rationale")
                     }
 
                     is PermissionResult.Deny -> {
                         ToastUtil.showShort(this, "please open the related permissions")
                         //权限拒绝，且勾选了不再询问
-                        method()
+                        method("deny")
                     }
                 }
             }

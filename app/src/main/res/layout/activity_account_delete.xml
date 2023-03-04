@@ -87,31 +87,33 @@
         android:layout_marginBottom="@dimen/dp_20"
         android:orientation="vertical">
 
-        <Button
+        <TextView
             android:id="@+id/submit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_45"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="@dimen/sp_16"
             android:layout_marginEnd="@dimen/sp_16"
             android:background="@drawable/shape_rectangle_red"
+            android:gravity="center"
             android:lineSpacingExtra="@dimen/dp_5"
             android:text="@string/account_delete_sure"
             android:textColor="@color/color_red"
             android:textSize="@dimen/sp_16" />
 
-        <Button
+        <TextView
             android:id="@+id/refuse"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_45"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="@dimen/sp_16"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_marginEnd="@dimen/sp_16"
-            android:background="@drawable/shape_corner_blue"
+            android:background="@drawable/shape_corner_light_grey_e6e6e6"
+            android:gravity="center"
             android:lineSpacingExtra="@dimen/dp_5"
             android:text="@string/account_delete_refuse"
-            android:textColor="@color/color_white"
+            android:textColor="@color/color_content"
             android:textSize="@dimen/sp_16" />
 
 

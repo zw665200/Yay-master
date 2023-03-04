@@ -1,8 +1,8 @@
 package com.ql.recovery.yay.ui.mine
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,12 +37,16 @@ import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.FileUtil
 import com.ql.recovery.yay.util.JLog
+import com.yanzhenjie.album.Album
 
 class MineFragment : BaseFragment() {
     private var binding: FragmentMineBinding? = null
     private lateinit var mAdapter: DataAdapter<Resource>
+    private lateinit var mPicAdapter: DataAdapter<String>
+    private lateinit var mVideoAdapter: DataAdapter<String>
     private lateinit var waitingDialog: WaitingDialog
-    private var firstLoad = false
+    private var mPicList = arrayListOf<String>()
+    private var mVideoList = arrayListOf<String>()
 
     override fun initView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMineBinding.inflate(inflater, container, false)
@@ -58,6 +62,10 @@ class MineFragment : BaseFragment() {
         binding!!.includeUser.tvScore.setOnClickListener { toScorePage() }
         binding!!.ivRefresh.setOnClickListener { requestToUpdateOnlineTime() }
 
+        waitingDialog = WaitingDialog(requireActivity())
+        getUserInfo()
+        loadFunction()
+
         binding!!.refreshLayout.setOnRefreshListener { refreshLayout ->
             refreshLayout.finishRefresh()
             getUserInfo()
@@ -69,12 +77,6 @@ class MineFragment : BaseFragment() {
     }
 
     override fun initData() {
-        if (!firstLoad) {
-            waitingDialog = WaitingDialog(requireActivity())
-            getUserInfo()
-            loadFunction()
-        }
-
         requestToUpdateOnlineTime()
     }
 
@@ -214,7 +216,9 @@ class MineFragment : BaseFragment() {
                 }
             }
 
+            //刷新金币数量和收入
             mAdapter.notifyItemChanged(1)
+            mAdapter.notifyItemChanged(2)
 
             loadPicList(userInfo)
             loadVideoList(userInfo)
@@ -242,20 +246,11 @@ class MineFragment : BaseFragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadPicList(userInfo: UserInfo) {
-        val list = arrayListOf<String>()
-        list.addAll(userInfo.photos)
-        list.add("")
-
-//        if (userInfo.photos.isEmpty()) {
-//            list.add("")
-//        } else {
-//            list.addAll(userInfo.photos)
-//        }
-
         val width = AppUtil.getScreenWidth(requireContext()) / 3
-        val adapter = DataAdapter.Builder<String>()
-            .setData(list)
+        mPicAdapter = DataAdapter.Builder<String>()
+            .setData(mPicList)
             .setLayoutId(R.layout.item_wallpaper)
             .addBindView { itemView, itemData, position ->
                 //限制item的宽高
@@ -268,6 +263,7 @@ class MineFragment : BaseFragment() {
                 if (itemData.isBlank()) {
                     itemBinding.ivUpload.visibility = View.VISIBLE
                 } else {
+                    itemBinding.ivUpload.visibility = View.GONE
                     Glide.with(requireActivity()).load(itemData).placeholder(R.drawable.placeholder).into(itemBinding.ivPic)
                 }
 
@@ -275,34 +271,32 @@ class MineFragment : BaseFragment() {
                     if (itemData.isBlank()) {
                         getImageFromAlbum()
                     } else {
-                        val intent = Intent(requireActivity(), ImagePreviewActivity::class.java)
-                        intent.putExtra("pic_list", userInfo.photos as ArrayList<String>)
-                        intent.putExtra("position", position)
-                        startActivity(intent)
+
+                        Album.gallery(requireContext())
+                            .checkedList(mPicList.filter { it != "" } as java.util.ArrayList<String>?)
+                            .checkable(false)
+                            .currentPosition(position)
+                            .onResult { }.start()
                     }
                 }
             }
             .create()
 
+        binding?.rcPhotoWallList?.itemAnimator?.changeDuration = 0L
         binding?.rcPhotoWallList?.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-        binding?.rcPhotoWallList?.adapter = adapter
-        adapter.notifyItemRangeChanged(0, list.size)
+        binding?.rcPhotoWallList?.adapter = mPicAdapter
+
+        mPicList.clear()
+        mPicList.addAll(userInfo.photos)
+        mPicList.add("")
+        mPicAdapter.notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadVideoList(userInfo: UserInfo) {
-        val list = arrayListOf<String>()
-        list.addAll(userInfo.videos)
-        list.add("")
-
-//        if (userInfo.videos.isEmpty()) {
-//            list.add("")
-//        } else {
-//            list.addAll(userInfo.videos)
-//        }
-
         val width = (AppUtil.getScreenWidth(requireContext()) / 3.5).toInt()
-        val mAdapter = DataAdapter.Builder<String>()
-            .setData(list)
+        mVideoAdapter = DataAdapter.Builder<String>()
+            .setData(mVideoList)
             .setLayoutId(R.layout.item_video)
             .addBindView { itemView, itemData, position ->
                 //限制item的宽高
@@ -315,7 +309,12 @@ class MineFragment : BaseFragment() {
                 if (itemData.isBlank()) {
                     itemBinding.ivPlay.setImageResource(R.drawable.grzx_sc)
                     itemBinding.ivPic.visibility = View.GONE
+                    itemBinding.ivMask.visibility = View.GONE
                 } else {
+                    itemBinding.ivPlay.setImageResource(R.drawable.gezx_bf)
+                    itemBinding.ivPic.visibility = View.VISIBLE
+                    itemBinding.ivMask.visibility = View.VISIBLE
+
                     Glide.with(requireActivity())
                         .setDefaultRequestOptions(RequestOptions().frame(0).centerCrop())
                         .load(itemData)
@@ -328,7 +327,7 @@ class MineFragment : BaseFragment() {
                         getVideoFromAlbum()
                     } else {
                         val intent = Intent(requireActivity(), VideoPreviewActivity::class.java)
-                        intent.putExtra("video_list", userInfo.videos as ArrayList<String>)
+                        intent.putExtra("video_list", mVideoList.filter { it != "" } as java.util.ArrayList<String>?)
                         intent.putExtra("position", position)
                         startActivity(intent)
                     }
@@ -336,9 +335,14 @@ class MineFragment : BaseFragment() {
             }
             .create()
 
+        binding?.rcShortVideoList?.itemAnimator?.changeDuration = 0L
         binding?.rcShortVideoList?.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-        binding?.rcShortVideoList?.adapter = mAdapter
-        mAdapter.notifyItemRangeChanged(0, list.size)
+        binding?.rcShortVideoList?.adapter = mVideoAdapter
+
+        mVideoList.clear()
+        mVideoList.addAll(userInfo.videos)
+        mVideoList.add("")
+        mAdapter.notifyDataSetChanged()
     }
 
     private fun showUserDetail() {
@@ -382,18 +386,100 @@ class MineFragment : BaseFragment() {
         startActivity(Intent(requireActivity(), IncomeActivity::class.java))
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getVideoFromAlbum() {
-        val intent = Intent()
-        intent.action = Intent.ACTION_PICK
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "video/*")
-        startActivityForResult(intent, 0x1001)
+//        val intent = Intent()
+//        intent.action = Intent.ACTION_PICK
+//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "video/*")
+//        startActivityForResult(intent, 0x1001)
+
+        Album.video(this)
+            .multipleChoice()
+            .camera(false)
+            .columnCount(2)
+            .selectCount(6)
+            .filterSize(null)
+            .filterMimeType(null)
+            .afterFilterVisibility(true)
+            .onResult { albumList ->
+                for (item in albumList) {
+                    waitingDialog.show()
+                    //压缩视频
+                    RtcManager.compressVideo(requireActivity(), item.path) { compressPath ->
+                        //上传视频
+                        DataManager.uploadFileToOss(requireContext(), compressPath) { ossPath ->
+                            if (ossPath.isNotBlank()) {
+                                val l = arrayListOf<String>()
+                                l.addAll(mVideoList.filter { it != "" })
+                                l.add(ossPath)
+                                DataManager.updateVideo(l) {
+                                    waitingDialog.cancel()
+                                    if (it) {
+                                        mVideoList.clear()
+                                        mVideoList.addAll(l)
+                                        mVideoList.add("")
+                                        mVideoAdapter.notifyDataSetChanged()
+                                        binding?.rcShortVideoList?.scrollToPosition(mVideoList.size - 1)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }.start()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getImageFromAlbum() {
-        val intent = Intent()
-        intent.action = Intent.ACTION_PICK
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-        startActivityForResult(intent, 0x1002)
+//        val intent = Intent()
+//        intent.action = Intent.ACTION_PICK
+//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+//        startActivityForResult(intent, 0x1002)
+
+        Album.image(this)
+            .multipleChoice()
+            .camera(false)
+            .columnCount(2)
+            .selectCount(6)
+            .filterSize(null)
+            .filterMimeType(null)
+            .afterFilterVisibility(true)
+            .onResult { albumList ->
+                waitingDialog.show()
+
+                val list = arrayListOf<String>()
+                for (item in albumList) {
+                    //压缩图片
+                    CManager.compress(requireActivity(), item.path, object : FileCallback {
+                        override fun onSuccess(filePath: String) {
+                            list.add(filePath)
+                        }
+
+                        override fun onFailed(message: String) {
+                        }
+                    })
+                }
+
+                //上传图片
+                DataManager.uploadFileListToOss(requireContext(), list) { ossPathList ->
+                    if (ossPathList.isNotEmpty()) {
+                        val l = arrayListOf<String>()
+                        l.addAll(mPicList.filter { it != "" })
+                        l.addAll(ossPathList)
+                        DataManager.updateImage(l) {
+                            waitingDialog.cancel()
+                            if (it) {
+                                mPicList.clear()
+                                mPicList.addAll(l)
+                                mPicList.add("")
+                                mPicAdapter.notifyDataSetChanged()
+                                binding?.rcPhotoWallList?.scrollToPosition(mVideoList.size - 1)
+                            }
+                        }
+                    }
+                }
+            }.start()
     }
 
     override fun refreshUserInfo() {
@@ -461,7 +547,8 @@ class MineFragment : BaseFragment() {
                         CManager.compress(requireActivity(), realPath, object : FileCallback {
                             override fun onSuccess(filePath: String) {
                                 waitingDialog.show()
-                                DataManager.uploadFileToOss(requireContext(), realPath) { ossPath ->
+
+                                DataManager.uploadFileToOss(requireContext(), filePath) { ossPath ->
                                     waitingDialog.cancel()
                                     if (ossPath.isNotBlank()) {
                                         val list = arrayListOf<String>()

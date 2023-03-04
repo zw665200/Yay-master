@@ -3,16 +3,13 @@ package com.ql.recovery.yay.ui.dialog
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.graphics.BitmapFactory
 import android.view.Gravity
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -25,7 +22,6 @@ import com.ql.recovery.yay.databinding.DialogProfileBinding
 import com.ql.recovery.yay.databinding.ItemProfilePicBinding
 import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.util.AppUtil
-import com.ql.recovery.yay.util.JLog
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -183,7 +179,7 @@ class ProfileDialog(
                 } else {
                     itemBinding.ivPic.visibility = View.VISIBLE
                     itemBinding.playerView.visibility = View.GONE
-                    Glide.with(activity).load(itemData).into(itemBinding.ivPic)
+                    Glide.with(activity).load(itemData).placeholder(R.drawable.placeholder).into(itemBinding.ivPic)
                 }
             }
             .create()
