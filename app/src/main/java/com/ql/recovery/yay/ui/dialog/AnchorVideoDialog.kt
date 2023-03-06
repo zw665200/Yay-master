@@ -66,6 +66,8 @@ class AnchorVideoDialog(
             }
 
             override fun onTick(millisUntilFinished: Long) {
+                binding.progressView.progress = (millisUntilFinished * 100 / 45000L).toInt()
+                binding.progressView.bottomText = AppUtil.timeStamp2Date(millisUntilFinished, "ss")
                 if (millisUntilFinished in 14000L..15000L) {
                     //对方30秒不接听，发起者显示超时
                     if (from == From.MySelf) {
@@ -234,7 +236,7 @@ class AnchorVideoDialog(
     }
 
     override fun show() {
-//        timer?.start()
+        timer?.start()
 
         val w = AppUtil.getScreenWidth(activity)
         val h = AppUtil.getScreenHeight(activity)
@@ -243,6 +245,8 @@ class AnchorVideoDialog(
             gravity = Gravity.BOTTOM
             width = WindowManager.LayoutParams.MATCH_PARENT
             height = WindowManager.LayoutParams.WRAP_CONTENT
+            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
+            dimAmount = 0.5f
         }
 
         super.show()

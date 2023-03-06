@@ -336,8 +336,8 @@ class VideoActivity : BaseActivity() {
                 when (mType) {
                     "match" -> {
                         if (millisUntilFinished > 30000L) {
-                            timerDialog?.cancel()
-                            binding.includeTimer.root.visibility = View.INVISIBLE
+//                            timerDialog?.cancel()
+//                            binding.includeTimer.root.visibility = View.INVISIBLE
                         } else {
                             val pkg = mRoom?.`package`
                             if (pkg != null && pkg.type == "keep") {
