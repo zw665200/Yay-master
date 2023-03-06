@@ -63,6 +63,7 @@ class LoginActivity : BaseActivity() {
         binding.facebookLogin.setOnClickListener { loginWithFacebook() }
         binding.phoneLogin.setOnClickListener { toPhoneLoginPage() }
         binding.whatsAppLogin.setOnClickListener { loginWithTest() }
+        binding.llFastLogin.setOnClickListener { loginWithGuest() }
     }
 
     override fun initData() {
@@ -382,13 +383,27 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    fun loginWithPhone(password: String, phone: String, phoneCode: String, isSuccess: (Boolean) -> Unit) {
+    private fun loginWithPhone(password: String, phone: String, phoneCode: String, isSuccess: (Boolean) -> Unit) {
         DataManager.getAuthFromPhone(password, phone, phoneCode) {
             val accessToken = it.type + " " + it.access_token
             Config.CLIENT_TOKEN = accessToken
             MMKV.defaultMMKV()?.encode("access_token", accessToken)
             MMKV.defaultMMKV()?.encode("token", it.access_token)
             isSuccess(true)
+        }
+    }
+
+    private fun loginWithGuest() {
+        DataManager.getAuthFromGuest(this) {
+            val accessToken = it.type + " " + it.access_token
+            Config.CLIENT_TOKEN = accessToken
+            MMKV.defaultMMKV()?.encode("access_token", accessToken)
+            MMKV.defaultMMKV()?.encode("token", it.access_token)
+
+            loadUserInfo()
+
+            ReportManager.firebaseCustomLog(firebaseAnalytics, "guest_login_success", "after login")
+            ReportManager.appsFlyerCustomLog(this, "guest_login_success", "after login")
         }
     }
 
@@ -410,9 +425,7 @@ class LoginActivity : BaseActivity() {
                 ReportManager.appsFlyerLoginLog(this, userInfo.uid)
             }
 
-            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank()
-                || userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
-            ) {
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.country.isBlank()) {
                 val intent = Intent(this, GuideActivity::class.java)
                 intent.putExtra("home", true)
                 startActivity(intent)

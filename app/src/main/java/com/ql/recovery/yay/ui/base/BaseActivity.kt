@@ -52,17 +52,9 @@ abstract class BaseActivity : FragmentActivity() {
         setStatusBarLight()
         initView()
         initData()
+        checkFitsSystemWindow()
 
         firebaseAnalytics = Firebase.analytics
-
-        val different = AppUtil.getNavigationBarHeightIfRoom(this)
-        if (different != 0) {
-            baseBinding.divider.visibility = View.VISIBLE
-            baseBinding.divider.height = different
-        } else {
-            baseBinding.divider.visibility = View.GONE
-            baseBinding.divider.height = 0
-        }
     }
 
     protected fun setStatusBarLight() {
@@ -83,6 +75,17 @@ abstract class BaseActivity : FragmentActivity() {
             val controller = ViewCompat.getWindowInsetsController(baseBinding.root)
             controller?.show(WindowInsetsCompat.Type.statusBars())
             controller?.isAppearanceLightStatusBars = false
+        }
+    }
+
+    private fun checkFitsSystemWindow() {
+        val different = AppUtil.getNavigationBarHeightIfRoom(this)
+        if (different != 0) {
+            baseBinding.divider.visibility = View.VISIBLE
+            baseBinding.divider.height = different
+        } else {
+            baseBinding.divider.visibility = View.GONE
+            baseBinding.divider.height = 0
         }
     }
 

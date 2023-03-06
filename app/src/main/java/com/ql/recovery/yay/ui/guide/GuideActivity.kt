@@ -1,12 +1,16 @@
 package com.ql.recovery.yay.ui.guide
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
@@ -17,15 +21,13 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.uinfo.UserService
 import com.netease.nimlib.sdk.uinfo.constant.UserInfoFieldEnum
 import com.netease.yunxin.kit.adapters.DataAdapter
+import com.ql.recovery.bean.Region
 import com.ql.recovery.bean.Tag
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.FileCallback
-import com.ql.recovery.yay.databinding.ActivityBaseBinding
-import com.ql.recovery.yay.databinding.ActivityGuideBinding
-import com.ql.recovery.yay.databinding.ItemGuideTagBinding
-import com.ql.recovery.yay.databinding.ItemWallpaperBinding
+import com.ql.recovery.yay.databinding.*
 import com.ql.recovery.yay.manager.CManager
 import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.manager.ReportManager
@@ -58,16 +60,20 @@ class GuideActivity : BaseActivity() {
 
     private lateinit var mAdapter: DataAdapter<Bitmap>
     private lateinit var mTagAdapter: DataAdapter<Tag>
+    private lateinit var mCountryAdapter: DataAdapter<Region>
     private var mList = arrayListOf<Bitmap>()
     private var mTagList = arrayListOf<Tag>()
+    private var mCountryList = arrayListOf<Region>()
+    private var mSearchList = arrayListOf<Region>()
 
     private var dialog: WaitingDialog? = null
     private var jumpList = arrayListOf<String>()
-    private var stepList = arrayListOf<Step>()
+    private var currentCountry: String? = null
     private var step = Step.Gender
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityGuideBinding.inflate(layoutInflater, baseBinding.flBase, true)
+        baseBinding.divider.visibility = View.GONE
     }
 
     override fun initView() {
@@ -88,11 +94,11 @@ class GuideActivity : BaseActivity() {
     }
 
     private fun checkStep() {
-        DataManager.getUserInfo {
-            currentUserInfo = it
-            getLocalStorage().encode("user_info", it)
+        DataManager.getUserInfo { userInfo ->
+            currentUserInfo = userInfo
+            getLocalStorage().encode("user_info", userInfo)
 
-            if (it.sex == 0) {
+            if (userInfo.sex == 0) {
                 step = Step.Gender
                 binding.includeGender.root.visibility = View.VISIBLE
                 binding.includeHead.tvName.text = getString(R.string.guide_title_gender)
@@ -101,7 +107,7 @@ class GuideActivity : BaseActivity() {
                 binding.includeGender.root.visibility = View.GONE
             }
 
-            if (it.age == 0) {
+            if (userInfo.age == 0) {
                 step = Step.Birthday
                 binding.includeBirthday.root.visibility = View.VISIBLE
                 binding.includeHead.tvName.text = getString(R.string.guide_title_age)
@@ -111,44 +117,52 @@ class GuideActivity : BaseActivity() {
                 binding.includeBirthday.root.visibility = View.GONE
             }
 
-            if (it.nickname.isBlank()) {
-                step = Step.NickName
-                binding.includeNickname.root.visibility = View.VISIBLE
-                binding.includeHead.tvName.text = getString(R.string.guide_title_nickname)
+            if (userInfo.country.isBlank()) {
+                step = Step.Country
+                binding.includeCountry.root.visibility = View.VISIBLE
+                binding.includeHead.tvName.text = getString(R.string.guide_title_region)
+                chooseCountry()
                 return@getUserInfo
-            } else {
-                binding.includeNickname.root.visibility = View.GONE
             }
 
-            if (it.avatar.isBlank() && !jumpList.contains("avatar")) {
-                step = Step.Avatar
-                binding.includeAvatar.root.visibility = View.VISIBLE
-                binding.tvJump.visibility = View.VISIBLE
-                binding.includeHead.tvName.text = getString(R.string.guide_title_avatar)
-                return@getUserInfo
-            } else {
-                binding.includeAvatar.root.visibility = View.GONE
-            }
+//            if (it.nickname.isBlank()) {
+//                step = Step.NickName
+//                binding.includeNickname.root.visibility = View.VISIBLE
+//                binding.includeHead.tvName.text = getString(R.string.guide_title_nickname)
+//                return@getUserInfo
+//            } else {
+//                binding.includeNickname.root.visibility = View.GONE
+//            }
 
-            if (it.photos.isEmpty() && !jumpList.contains("albums")) {
-                step = Step.Album
-                binding.includeWallpaper.root.visibility = View.VISIBLE
-                binding.tvJump.visibility = View.VISIBLE
-                binding.includeHead.tvName.text = getString(R.string.guide_title_wallpaper)
-                chooseWallpaper()
-                return@getUserInfo
-            } else {
-                binding.includeWallpaper.root.visibility = View.GONE
-            }
+//            if (it.avatar.isBlank() && !jumpList.contains("avatar")) {
+//                step = Step.Avatar
+//                binding.includeAvatar.root.visibility = View.VISIBLE
+//                binding.tvJump.visibility = View.VISIBLE
+//                binding.includeHead.tvName.text = getString(R.string.guide_title_avatar)
+//                return@getUserInfo
+//            } else {
+//                binding.includeAvatar.root.visibility = View.GONE
+//            }
 
-            if (it.tags.isEmpty() && !jumpList.contains("tags")) {
-                step = Step.Tags
-                binding.includeTags.root.visibility = View.VISIBLE
-                binding.tvJump.visibility = View.VISIBLE
-                binding.includeHead.tvName.text = getString(R.string.guide_title_fun)
-                chooseTags()
-                return@getUserInfo
-            }
+//            if (it.photos.isEmpty() && !jumpList.contains("albums")) {
+//                step = Step.Album
+//                binding.includeWallpaper.root.visibility = View.VISIBLE
+//                binding.tvJump.visibility = View.VISIBLE
+//                binding.includeHead.tvName.text = getString(R.string.guide_title_wallpaper)
+//                chooseWallpaper()
+//                return@getUserInfo
+//            } else {
+//                binding.includeWallpaper.root.visibility = View.GONE
+//            }
+//
+//            if (it.tags.isEmpty() && !jumpList.contains("tags")) {
+//                step = Step.Tags
+//                binding.includeTags.root.visibility = View.VISIBLE
+//                binding.tvJump.visibility = View.VISIBLE
+//                binding.includeHead.tvName.text = getString(R.string.guide_title_fun)
+//                chooseTags()
+//                return@getUserInfo
+//            }
 
             getLocalStorage().encode("guide_finish", true)
 
@@ -226,6 +240,18 @@ class GuideActivity : BaseActivity() {
 
                 updateUserInfo(null, mBirthday, null, null, null, null, null)
                 ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_birthday_click", "modify birthday")
+            }
+
+            Step.Country -> {
+                if (currentCountry != null) {
+                    dialog?.show()
+                    DataManager.updateCountry(currentCountry!!) {
+                        dialog?.cancel()
+                        if (it) {
+                            checkStep()
+                        }
+                    }
+                }
             }
 
             Step.NickName -> {
@@ -442,6 +468,80 @@ class GuideActivity : BaseActivity() {
         })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun chooseCountry() {
+        val width = AppUtil.getScreenWidth(this)
+        mCountryAdapter = DataAdapter.Builder<Region>()
+            .setData(mCountryList)
+            .setLayoutId(R.layout.item_country_update)
+            .addBindView { itemView, itemData ->
+                val itemBinding = ItemCountryUpdateBinding.bind(itemView)
+
+                //设置item的宽高
+                val lp = itemView.layoutParams
+                lp.height = width * 5 / 24
+                itemView.layoutParams = lp
+
+                //设置icon的宽高
+                val iconLp = itemBinding.ivCountryIcon.layoutParams
+                iconLp.width = width / 11
+                iconLp.height = width / 12
+                itemBinding.ivCountryIcon.layoutParams = iconLp
+
+                val flag = World.getFlagOf(itemData.iso)
+                itemBinding.ivCountryIcon.setImageResource(flag)
+                itemBinding.tvCountryName.text = itemData.name
+
+                if (itemData.iso == currentCountry) {
+                    itemBinding.ivCheck.visibility = View.VISIBLE
+                } else {
+                    itemBinding.ivCheck.visibility = View.GONE
+                }
+
+                itemView.setOnClickListener {
+                    currentCountry = itemData.iso
+                    mCountryAdapter.notifyDataSetChanged()
+                }
+            }
+            .create()
+
+        binding.includeCountry.rcCountry.adapter = mCountryAdapter
+        binding.includeCountry.rcCountry.layoutManager = GridLayoutManager(this, 4)
+
+        binding.includeCountry.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
+            override fun afterTextChanged(s: Editable?) {
+                if (s != null) {
+                    val key = s.toString()
+                    var list = mSearchList.filter { it.name.lowercase().contains(key.lowercase()) }
+                    if (list.isEmpty()) {
+                        list = mSearchList.filter { it.iso.lowercase().contains(key.lowercase()) }
+                    }
+
+                    mCountryList.clear()
+                    mCountryList.addAll(list)
+                    mCountryAdapter.notifyDataSetChanged()
+                }
+            }
+        })
+
+        DataManager.getRegion { regions ->
+            regions.sortedBy { it.iso }
+            mCountryList.clear()
+            mSearchList.clear()
+            mCountryList.addAll(regions)
+            mSearchList.addAll(regions)
+            mCountryAdapter.notifyDataSetChanged()
+        }
+    }
+
     private fun chooseWallpaper() {
         val width = AppUtil.getScreenWidth(this)
         mAdapter = DataAdapter.Builder<Bitmap>()
@@ -557,7 +657,7 @@ class GuideActivity : BaseActivity() {
         ReportManager.appsFlyerCustomLog(this, "guide_force_leave_click", "leave guide page")
 
         getUserInfo { userInfo ->
-            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()) {
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.country.isBlank()) {
                 ToastUtil.showShort(this, "please finish your profile and enjoy more benefits")
                 return@getUserInfo
             }
@@ -637,5 +737,5 @@ class GuideActivity : BaseActivity() {
 
     enum class GenderType { Male, Female }
     enum class ChooseType { I, Find }
-    enum class Step { Gender, Birthday, NickName, Avatar, Album, Tags }
+    enum class Step { Gender, Birthday, Country, NickName, Avatar, Album, Tags }
 }

@@ -2,7 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/dp_5"
+    android:layout_marginStart="@dimen/dp_3"
+    android:layout_marginTop="@dimen/dp_5"
+    android:layout_marginEnd="@dimen/dp_3"
+    android:layout_marginBottom="@dimen/dp_5"
     android:background="@drawable/shape_corner_light_grey">
 
     <LinearLayout
@@ -15,7 +18,7 @@
             android:id="@+id/iv_country_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:id="@+id/tv_country_name"

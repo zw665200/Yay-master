@@ -130,7 +130,9 @@ class BaseApp : Application() {
 
                                 val activity = currentActivity?.get()
                                 if (activity != null && activity::class.java.simpleName != "LoginActivity") {
-                                    startActivity(Intent(activity, LoginActivity::class.java))
+                                    val intent = Intent(activity, LoginActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)
                                 }
                             }
 
@@ -589,15 +591,18 @@ class BaseApp : Application() {
                         val typeToken = object : TypeToken<MessageInfo<User>>() {}
                         val info = GsonUtils.fromJson<MessageInfo<User>>(json, typeToken.type)
                         if (info != null) {
-                            val activity = currentActivity?.get()!!.localClassName
-                            if (!activity.contains("VideoActivity")
-                                && !activity.contains("AudioActivity")
-                                && !activity.contains("GameActivity")
-                            ) {
-                                showVideoChat(info.content)
-                            } else {
-                                //自动拒绝对方的邀请
-                                DataManager.handlerVideoInvite(info.content.uid, false, "busy") {}
+                            val activity = currentActivity?.get()
+                            if (activity != null) {
+                                val name = activity.localClassName
+                                if (!name.contains("VideoActivity")
+                                    && !name.contains("AudioActivity")
+                                    && !name.contains("GameActivity")
+                                ) {
+                                    showVideoChat(info.content)
+                                } else {
+                                    //自动拒绝对方的邀请
+                                    DataManager.handlerVideoInvite(info.content.uid, false, "busy") {}
+                                }
                             }
                         }
                     }

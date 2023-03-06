@@ -7,9 +7,10 @@ import android.graphics.Color
 import android.os.*
 import android.view.View
 import com.bumptech.glide.Glide
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -125,16 +126,16 @@ class MatchActivity : BaseActivity() {
             }
 
             "voice" -> {
-                val mediaItem = MediaItem.fromUri(audioUri)
+                val mediaItem = MediaItem.Builder().setUri(audioUri).build()
                 exoPlayer?.setMediaItem(mediaItem)
             }
         }
 
         binding.playerView.setShutterBackgroundColor(Color.TRANSPARENT)
-        binding.playerView.player = exoPlayer
         exoPlayer!!.repeatMode = Player.REPEAT_MODE_ALL
-        exoPlayer!!.prepare()
         exoPlayer!!.playWhenReady = true
+        exoPlayer!!.prepare()
+        binding.playerView.player = exoPlayer
     }
 
     private fun flushConfig() {
@@ -572,6 +573,7 @@ class MatchActivity : BaseActivity() {
         bindIntent!!.putExtra("id", id)
         bindIntent!!.putExtra("type", type)
         bindIntent!!.putExtra("match_config", config)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(bindIntent)
         } else {

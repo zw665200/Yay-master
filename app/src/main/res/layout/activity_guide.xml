@@ -4,17 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_white"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="false">
 
     <include
         android:id="@+id/include_head"
-        layout="@layout/layout_title" />
+        layout="@layout/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:layout_marginTop="@dimen/dp_40" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_15"
-        android:layout_marginTop="@dimen/dp_60"
+        android:layout_marginTop="@dimen/dp_100"
         android:layout_marginEnd="@dimen/dp_15"
         android:orientation="vertical">
 
@@ -26,6 +29,11 @@
         <include
             android:id="@+id/include_birthday"
             layout="@layout/layout_birthday"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/include_country"
+            layout="@layout/layout_country"
             android:visibility="gone" />
 
         <include
@@ -56,16 +64,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/white"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_15">
 
         <TextView
             android:id="@+id/tv_next_step"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50"
             android:layout_gravity="bottom"
-            android:layout_marginStart="@dimen/dp_15"
-            android:layout_marginEnd="@dimen/dp_15"
-            android:layout_marginBottom="@dimen/dp_20"
             android:background="@drawable/background_gradient_yellow"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"

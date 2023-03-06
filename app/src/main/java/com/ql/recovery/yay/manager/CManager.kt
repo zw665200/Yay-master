@@ -123,21 +123,27 @@ object CManager {
             defaultFormat = Bitmap.CompressFormat.PNG
         }
 
-        val file = CompressHelper.Builder(activity)
-            .setMaxWidth(1500f)
-            .setMaxHeight(1500f)
-            .setQuality(80)
-            .setCompressFormat(defaultFormat)
-            .setFileName(System.currentTimeMillis().toString())
-            .setDestinationDirectoryPath(getCachePath(activity))
-            .build()
-            .compressToFile(File(filePath))
+        try {
+            val file = CompressHelper.Builder(activity)
+                .setMaxWidth(1500f)
+                .setMaxHeight(1500f)
+                .setQuality(80)
+                .setCompressFormat(defaultFormat)
+                .setFileName(System.currentTimeMillis().toString())
+                .setDestinationDirectoryPath(getCachePath(activity))
+                .build()
+                .compressToFile(File(filePath))
 
-        if (file.exists()) {
-            callback.onSuccess(file.absolutePath)
-        } else {
-            callback.onFailed("文件未找到")
+            if (file.exists()) {
+                callback.onSuccess(file.absolutePath)
+            } else {
+                callback.onFailed("file not found")
+            }
+
+        } catch (e: Exception) {
+            callback.onFailed("file error")
         }
+
     }
 
     /**

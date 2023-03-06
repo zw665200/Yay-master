@@ -1,6 +1,7 @@
 package com.ql.recovery.yay.manager
 
 import android.app.Activity
+import android.content.Context
 import com.frank.ffmpeg.FFmpegCmd
 import com.frank.ffmpeg.listener.OnHandleListener
 import com.frank.ffmpeg.util.FFmpegUtil
@@ -54,8 +55,8 @@ object RtcManager {
     }
 
 
-    fun cutVideo(activity: Activity, srcPath: String, func: (String) -> Unit) {
-        val rootFile = activity.getExternalFilesDir("video")
+    fun cutVideo(context: Context, srcPath: String, func: (String) -> Unit) {
+        val rootFile = context.getExternalFilesDir("video")
         if (rootFile != null) {
             val file = File(srcPath)
             val outPath = rootFile.path + File.separator + "t_" + file.name

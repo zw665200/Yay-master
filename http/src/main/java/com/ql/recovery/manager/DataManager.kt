@@ -71,18 +71,6 @@ object DataManager {
         return list
     }
 
-    @SuppressLint("CheckResult")
-    fun getWechatToken(activity: Activity, authCode: String, result: (Token) -> Unit) {
-        thread {
-            BaseLoader.wechatAuth(activity, authCode)
-                .compose(ResponseTransformer.handleResult())
-                .compose(SchedulerProvider.getInstance().applySchedulers())
-                .subscribe({
-                    result(it)
-                }, {
-                })
-        }
-    }
 
     @SuppressLint("CheckResult")
     fun getUserInfo(result: (UserInfo) -> Unit) {
@@ -234,10 +222,25 @@ object DataManager {
         }
     }
 
+
     @SuppressLint("CheckResult")
     fun createOrder(productId: Int, result: (OrderParam) -> Unit) {
         thread {
             BaseLoader.createOrder(productId)
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {
+
+                })
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    fun getAuthFromGuest(activity: Activity, result: (Token) -> Unit) {
+        thread {
+            BaseLoader.getAuthFromGuest(activity)
                 .compose(ResponseTransformer.handleResult())
                 .compose(SchedulerProvider.getInstance().applySchedulers())
                 .subscribe({

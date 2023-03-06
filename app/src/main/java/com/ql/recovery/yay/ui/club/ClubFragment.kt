@@ -162,8 +162,8 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 if (itemData.cover_url!!.contains(".mp4") || itemData.cover_url!!.contains("type=video")) {
                     launch {
                         itemBinding.playerView.initPlayer(itemData.cover_url)
-                        itemBinding.playerView.setMediaSource(itemData.cover_url, itemBinding)
-//                        downloadVideo(itemBinding, itemData, position)
+//                        itemBinding.playerView.setMediaSource(itemData.cover_url, itemBinding)
+                        downloadVideo(itemBinding, itemData, position)
                     }
                 } else {
                     itemBinding.ivPhoto.visibility = View.VISIBLE
@@ -200,13 +200,17 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
         launch(Dispatchers.IO) {
             FileUtil.downloadPartOfVideo(requireContext(), itemData.cover_url!!, object : FileCallback {
                 override fun onSuccess(filePath: String) {
-                    //裁剪视频
-                    RtcManager.cutVideo(requireActivity(), filePath) { localPath ->
-                        binding?.rcAnchorList?.post {
-                            itemData.local_video_url = localPath
-                            itemBinding.playerView.setMediaSource(localPath, itemBinding)
+
+                    context?.let { ctx ->
+                        //裁剪视频
+                        RtcManager.cutVideo(ctx, filePath) { localPath ->
+                            binding?.rcAnchorList?.post {
+                                itemData.local_video_url = localPath
+                                itemBinding.playerView.setMediaSource(localPath, itemBinding)
+                            }
                         }
                     }
+
                 }
 
                 override fun onFailed(message: String) {
@@ -370,7 +374,6 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
             }
         }
     }
-
 
     private fun getUserInfo() {
         DataManager.getUserInfo {

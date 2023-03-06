@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_20"
-        android:src="@drawable/guide_1" />
+        android:src="@drawable/guide_01" />
 
     <FrameLayout
         android:layout_width="wrap_content"

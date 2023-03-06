@@ -19,6 +19,7 @@
     <string name="login_facebook">Login With Facebook</string>
     <string name="login_whatsapp">Login with Test(Demo)</string>
     <string name="login_google">Login with Google</string>
+    <string name="login_guest">Login with Guest</string>
     <string name="login_phone_register">Register by phone</string>
     <string name="login_phone_login">Login by phone</string>
     <string name="login_input_number">Enter the phone number</string>
@@ -56,6 +57,7 @@
     <!--guide-->
     <string name="guide_title_gender">Select gender</string>
     <string name="guide_title_age">Select birthday</string>
+    <string name="guide_title_region">Select Country</string>
     <string name="guide_title_nickname">Add nickname</string>
     <string name="guide_title_avatar">Add an avatar</string>
     <string name="guide_title_wallpaper">Upload photos</string>
@@ -67,6 +69,7 @@
     <string name="guide_gender_female">Female</string>
     <string name="guide_gender_looking_for">Looking for…</string>
     <string name="guide_gender_birthday">My birthday</string>
+    <string name="guide_gender_country">My Country</string>
     <string name="guide_nickname_hint">Enter your nickname</string>
     <string name="guide_album_tip">Please upload a photo</string>
     <string name="guide_tag_tip">Highlight interests tags</string>
@@ -93,6 +96,9 @@
     <string name="home_prime">Prime</string>
     <string name="home_free">Free</string>
     <string name="home_match_begin">Start Matching</string>
+    <string name="home_current">current</string>
+    <string name="home_online">people online</string>
+    <string name="home_click_to_match">click screen to match</string>
 
     <!--permission-->
     <string name="permission_title">Permission Required</string>
@@ -498,6 +504,8 @@
     <string name="prime_get_free">Get for free</string>
     <string name="prime_get">Claimed</string>
     <string name="prime_end_time">Membership is valid until:%1$s</string>
+    <string name="prime_daily_coin_title">Get your coins today</string>
+    <string name="prime_daily_coin_get">Claim</string>
 
     <!--game-->
     <string name="game_title">Probability theory</string>
@@ -532,5 +540,11 @@
     <string name="quit_match_game">Are you sure to quit？</string>
     <string name="quit_ok">Confirm</string>
     <string name="quit_cancel">Cancel</string>
+
+    <!--private-->
+    <string name="private_normal_cost">该通话花费</string>
+    <string name="private_anchor_earn">该通话赚取</string>
+    <string name="private_unit">宝石/分钟</string>
+    <string name="private_wait_on_background">后台等待</string>
 
 </resources>

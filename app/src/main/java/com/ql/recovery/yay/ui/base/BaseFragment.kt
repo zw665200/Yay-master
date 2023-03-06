@@ -82,7 +82,7 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                         if (bundle != null) {
                             val subscriber = bundle.getParcelable<Subscriber>("subscriber")
                             if (subscriber != null) {
-                                if (!requireActivity().isFinishing && !requireActivity().isDestroyed) {
+                                activity?.let {
                                     //下发并刷新在线状态
                                     setOnlineStatus(subscriber.uid, subscriber.online)
                                 }
@@ -91,13 +91,13 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                     }
 
                     0x10001 -> {
-                        if (!requireActivity().isFinishing && !requireActivity().isDestroyed) {
+                        activity?.let {
                             refreshUserInfo()
                         }
                     }
 
                     0x10002 -> {
-                        if (!requireActivity().isFinishing && !requireActivity().isDestroyed) {
+                        activity?.let {
                             refreshOnlineTime()
                         }
                     }
@@ -142,24 +142,31 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                 success()
                 DataManager.updateCountry(address.countryCode) {}
 
-                val permission = getLocalStorage().decodeBool("home_get_location_success", false)
-                if (!permission) {
-                    ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_success", "get location success")
-                    ReportManager.appsFlyerCustomLog(requireContext(), "home_get_location_success", "get location success")
+                context?.let { ctx ->
+                    val permission = getLocalStorage().decodeBool("home_get_location_success", false)
+                    if (!permission) {
+                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_success", "get location success")
+                        ReportManager.appsFlyerCustomLog(ctx, "home_get_location_success", "get location success")
+                    }
                 }
+
             }
 
             override fun onFailed() {
                 requireActivity().runOnUiThread {
                     waitingDialog?.cancel()
-                    ToastUtil.showShort(requireContext(), "get location failed, please check your country")
-                    startActivity(Intent(requireActivity(), CountryActivity::class.java))
 
-                    val permission = getLocalStorage().decodeBool("home_get_location_failed", false)
-                    if (!permission) {
-                        ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_failed", "get location failed")
-                        ReportManager.appsFlyerCustomLog(requireContext(), "home_get_location_failed", "get location failed")
+                    context?.let { ctx ->
+                        ToastUtil.showShort(ctx, "get location failed, please check your country")
+                        startActivity(Intent(ctx, CountryActivity::class.java))
+
+                        val permission = getLocalStorage().decodeBool("home_get_location_failed", false)
+                        if (!permission) {
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "home_get_location_failed", "get location failed")
+                            ReportManager.appsFlyerCustomLog(ctx, "home_get_location_failed", "get location failed")
+                        }
                     }
+
                 }
             }
         })

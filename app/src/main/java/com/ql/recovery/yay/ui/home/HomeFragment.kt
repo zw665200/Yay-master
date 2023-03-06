@@ -1,16 +1,10 @@
 package com.ql.recovery.yay.ui.home
 
-import android.Manifest
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -25,9 +19,7 @@ import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseFragment
-import com.ql.recovery.yay.ui.dialog.BeautyDialog
-import com.ql.recovery.yay.ui.dialog.FilterDialog
-import com.ql.recovery.yay.ui.dialog.PrimeDialog
+import com.ql.recovery.yay.ui.dialog.*
 import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.match.MatchActivity
 import com.ql.recovery.yay.ui.store.StoreActivity
@@ -52,7 +44,6 @@ class HomeFragment : BaseFragment() {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        initMatchStart()
         initClubLottie()
         loadVideoLottie()
         loadAudioLottie()
@@ -79,6 +70,8 @@ class HomeFragment : BaseFragment() {
         getUserInfo()
         flushConfig()
         initRtcManager()
+
+        AnchorVideoDialog(requireActivity()){}
     }
 
     private fun initClubLottie() {
@@ -130,11 +123,6 @@ class HomeFragment : BaseFragment() {
         binding!!.lottieGame.playAnimation()
     }
 
-    private fun initMatchStart() {
-        binding!!.lottieMatch.imageAssetsFolder = "loading/button"
-        binding!!.lottieMatch.setAnimation("btn_data.json")
-        binding!!.lottieMatch.playAnimation()
-    }
 
     private fun getUserInfo() {
         getUserInfo {

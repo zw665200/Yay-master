@@ -1,6 +1,7 @@
 package com.ql.recovery.yay.service
 
-import android.app.*
+import android.app.Notification
+import android.app.Service
 import android.content.Intent
 import android.os.*
 import com.ql.recovery.bean.MatchConfig
@@ -41,18 +42,18 @@ class SosWebSocketClientService : Service() {
     }
 
     //灰色保活
-    class GrayInnerService : Service() {
-        override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-            startForeground(GRAY_SERVICE_ID, Notification())
-            stopForeground(true)
-            stopSelf()
-            return super.onStartCommand(intent, flags, startId)
-        }
-
-        override fun onBind(intent: Intent?): IBinder? {
-            return null
-        }
-    }
+//    class GrayInnerService : Service() {
+//        override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//            startForeground(GRAY_SERVICE_ID, Notification())
+//            stopForeground(true)
+//            stopSelf()
+//            return super.onStartCommand(intent, flags, startId)
+//        }
+//
+//        override fun onBind(intent: Intent?): IBinder? {
+//            return null
+//        }
+//    }
 
     override fun onBind(intent: Intent?): IBinder {
         return mBinder
@@ -78,8 +79,6 @@ class SosWebSocketClientService : Service() {
         } else {
             //获取构建好的Notification
             notification = AppUtil.getNotification(this, getString(R.string.app_name), getString(R.string.app_foreground))
-            //设置为默认的声音
-            notification!!.defaults = Notification.DEFAULT_SOUND
             startForeground(GRAY_SERVICE_ID, notification)
         }
         return START_STICKY
@@ -190,8 +189,8 @@ class SosWebSocketClientService : Service() {
         try {
             if (client != null) {
                 client!!.close()
+                stopForeground(true)
                 mIntent = null
-//                stopService(mInnerIntent)
             }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -246,32 +245,32 @@ class SosWebSocketClientService : Service() {
         }
     }
 
-    class AuxiliaryService : Service() {
-
-        override fun onBind(intent: Intent?): IBinder? {
-            return null
-        }
-
-        override fun onCreate() {
-            super.onCreate()
-        }
-
-        override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-            startNotification()
-            return super.onStartCommand(intent, flags, startId)
-        }
-
-        /**
-         * 启动通知
-         */
-        private fun startNotification() {
-            val notification = Notification()
-            this.startForeground(GRAY_SERVICE_ID, notification)
-            //关键  如果AuxiliaryService 没有与什么组件绑定  系统就会回收
-            stopSelf()
-            stopForeground(true)
-        }
-    }
+//    class AuxiliaryService : Service() {
+//
+//        override fun onBind(intent: Intent?): IBinder? {
+//            return null
+//        }
+//
+//        override fun onCreate() {
+//            super.onCreate()
+//        }
+//
+//        override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//            startNotification()
+//            return super.onStartCommand(intent, flags, startId)
+//        }
+//
+//        /**
+//         * 启动通知
+//         */
+//        private fun startNotification() {
+//            val notification = Notification()
+//            this.startForeground(GRAY_SERVICE_ID, notification)
+//            //关键  如果AuxiliaryService 没有与什么组件绑定  系统就会回收
+//            stopSelf()
+//            stopForeground(true)
+//        }
+//    }
 
     open inner class JWebSocketClient(uri: URI) : WebSocketClient(uri, Draft_6455()) {
 

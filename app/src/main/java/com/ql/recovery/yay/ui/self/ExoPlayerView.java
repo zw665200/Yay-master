@@ -2,7 +2,6 @@ package com.ql.recovery.yay.ui.self;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -15,28 +14,17 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSource;
-import com.google.android.exoplayer2.upstream.cache.Cache;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
-import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.ql.recovery.yay.databinding.ItemFunAnchorBinding;
-import com.ql.recovery.yay.util.AppUtil;
-import com.ql.recovery.yay.util.CustomLoaderFactory;
 import com.ql.recovery.yay.util.JLog;
-
-import java.io.File;
 
 public class ExoPlayerView extends PlayerView {
     private ExoPlayer mExoPlayer;
@@ -82,39 +70,39 @@ public class ExoPlayerView extends PlayerView {
 //                    .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
 //                    .setBufferSize(CacheDataSink.DEFAULT_BUFFER_SIZE);
 
-            SimpleCache cache = new SimpleCache(new File(mContext.getExternalCacheDir(), "media/" + AppUtil.md5Encode(url)), new LeastRecentlyUsedCacheEvictor( * 1024 * 1024));
-
-            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(mContext, "exoplayer-codelab");
-
-            DefaultDataSourceFactory upstreamFactory = new DefaultDataSourceFactory(mContext, "exoplayer-codelab");
-
-            CustomLoaderFactory customLoaderFactory = new CustomLoaderFactory(
-                    upstreamFactory,
-                    cache,
-                    3 * 1000
-            );
-
-            DataSource.Factory cacheDataSource = () -> {
-                CacheDataSource cacheDataSource1 = new CacheDataSource(
-                        cache,
-                        customLoaderFactory.createDataSource(),
-                        new FileDataSource(),
-                        new CacheDataSink(cache, CacheDataSink.DEFAULT_FRAGMENT_SIZE),
-                        CacheDataSource.FLAG_BLOCK_ON_CACHE,
-                        null
-                );
-                return cacheDataSource1;
-            };
+//            SimpleCache cache = new SimpleCache(new File(mContext.getExternalCacheDir(), "media/" + AppUtil.md5Encode(url)), new LeastRecentlyUsedCacheEvictor(3 * 1024 * 1024));
+//
+//            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(mContext, "exoplayer-codelab");
+//
+//            DefaultDataSourceFactory upstreamFactory = new DefaultDataSourceFactory(mContext, "exoplayer-codelab");
+//
+//            CustomLoaderFactory customLoaderFactory = new CustomLoaderFactory(
+//                    upstreamFactory,
+//                    cache,
+//                    3 * 1000
+//            );
+//
+//            DataSource.Factory cacheDataSource = () -> {
+//                CacheDataSource cacheDataSource1 = new CacheDataSource(
+//                        cache,
+//                        customLoaderFactory.createDataSource(),
+//                        new FileDataSource(),
+//                        new CacheDataSink(cache, CacheDataSink.DEFAULT_FRAGMENT_SIZE),
+//                        CacheDataSource.FLAG_BLOCK_ON_CACHE,
+//                        null
+//                );
+//                return cacheDataSource1;
+//            };
 
             MediaItem mediaItem = new MediaItem.Builder()
                     .setUri(url)
                     .build();
 
-//            DataSource.Factory dataSourceFactory = new FileDataSource.Factory();
+            DataSource.Factory dataSourceFactory = new FileDataSource.Factory();
 
             ProgressiveMediaSource mediaSource = new ProgressiveMediaSource
 //                    .Factory((DataSource.Factory) () -> new DefaultHttpDataSource.Factory().createDataSource())
-                    .Factory(cacheDataSource)
+                    .Factory(dataSourceFactory)
                     .createMediaSource(mediaItem);
 
             mExoPlayer.setMediaSource(mediaSource);

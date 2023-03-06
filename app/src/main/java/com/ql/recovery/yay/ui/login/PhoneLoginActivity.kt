@@ -328,9 +328,7 @@ class PhoneLoginActivity : BaseActivity() {
 
             val guide = getLocalStorage().decodeBool("guide_finish", false)
             if (!guide) {
-                if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()
-                    || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
-                ) {
+                if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.country.isBlank()) {
                     startActivity(Intent(this, GuideActivity::class.java))
                     finish()
                     return@getUserInfo

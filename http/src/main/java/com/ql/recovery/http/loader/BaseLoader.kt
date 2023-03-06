@@ -21,7 +21,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
  */
 object BaseLoader {
 
-    fun wechatAuth(context: Context, code: String): Observable<Response<Token>> {
+    fun getAuthFromGuest(context: Context): Observable<Response<Token>> {
         val brand = Build.BRAND
         val mode = Build.MODEL
         val device = Build.VERSION.RELEASE
@@ -42,14 +42,13 @@ object BaseLoader {
         map["brand"] = brand
         map["channel"] = Config.CHANNEL_ID
         map["device_id"] = deviceId
-        map["code"] = code
         map["device_mode"] = mode
         map["os"] = "Android $device"
 
         val json = GsonUtils.toJson(map)
         val request = json.toRequestBody("application/json; charset=utf-8".toMediaType())
 
-        return RetrofitServiceManager.get().baseService.wechatAuth(request)
+        return RetrofitServiceManager.get().baseService.getAuthFromGuest(request)
     }
 
     fun getAuthFromGoogle(context: Context, token: String): Observable<Response<Token>> {

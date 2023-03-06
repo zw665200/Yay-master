@@ -68,7 +68,7 @@ class StartActivity : BaseActivity() {
                 if (userInfo == null) {
                     openLoginPage()
                 } else {
-                    if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank()) {
+                    if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.country.isBlank()) {
                         openGuidePage()
                     } else {
                         openMainPage()

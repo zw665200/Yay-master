@@ -74,8 +74,8 @@ interface BaseService {
     /**
      * 微信授权
      */
-    @POST("auth/login/wechat")
-    fun wechatAuth(
+    @POST("auth/login/visit")
+    fun getAuthFromGuest(
         @Body body: RequestBody
     ): Observable<Response<Token>>
 

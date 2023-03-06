@@ -13,9 +13,10 @@
     <string name="login_agreement">Please checked \&#034;Privacy Policy\&#034; and \&#034;Terms of User\&#034;</string>
     <string name="login_failed">login failed</string>
     <string name="login_success">login success</string>
-    <string name="login_facebook">Log in With Facebook</string>
+    <string name="login_facebook">Facebook登录</string>
     <string name="login_whatsapp">Log in with Test(Demo)</string>
-    <string name="login_google">Log in with Google</string>
+    <string name="login_google">Google登录</string>
+    <string name="login_guest">游客登录</string>
     <string name="login_phone_register">手机注册</string>
     <string name="login_phone_login">手机登录</string>
     <string name="login_input_number">请输入手机号码</string>
@@ -47,6 +48,7 @@
     <!--guide-->
     <string name="guide_title_gender">选择性别</string>
     <string name="guide_title_age">选择年龄</string>
+    <string name="guide_title_region">选择国家</string>
     <string name="guide_title_nickname">添加昵称</string>
     <string name="guide_title_avatar">添加头像</string>
     <string name="guide_title_wallpaper">上传照片墙</string>
@@ -58,6 +60,7 @@
     <string name="guide_gender_female">女生</string>
     <string name="guide_gender_looking_for">我想要寻找…</string>
     <string name="guide_gender_birthday">我的生日</string>
+    <string name="guide_gender_country">我的国家</string>
     <string name="guide_nickname_hint">请输入你的昵称</string>
     <string name="guide_album_tip">请上传照片</string>
     <string name="guide_tag_tip">请选择兴趣标签</string>
@@ -84,6 +87,9 @@
     <string name="home_prime">Prime</string>
     <string name="home_free">免费</string>
     <string name="home_match_begin">开始匹配</string>
+    <string name="home_current">当前</string>
+    <string name="home_online">人在线</string>
+    <string name="home_click_to_match">点击屏幕开始您的旅程</string>
 
     <!--permission-->
     <string name="permission_title">获得权限</string>
@@ -470,6 +476,8 @@
     <string name="prime_get_free">免费领取</string>
     <string name="prime_get">已领取</string>
     <string name="prime_end_time">会员有效期截止到：%1$s</string>
+    <string name="prime_daily_coin_title">会员每日赠送</string>
+    <string name="prime_daily_coin_get">立即领取</string>
 
     <!--game-->
     <string name="game_title">概率论</string>
@@ -507,5 +515,11 @@
     <string name="quit_match_game">您确定要退出游戏匹配吗？</string>
     <string name="quit_ok">确定</string>
     <string name="quit_cancel">取消</string>
+
+    <!--private-->
+    <string name="private_normal_cost">该通话花费</string>
+    <string name="private_anchor_earn">该通话赚取</string>
+    <string name="private_unit">宝石/分钟</string>
+    <string name="private_wait_on_background">后台等待</string>
 
 </resources>
