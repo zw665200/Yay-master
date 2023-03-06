@@ -162,8 +162,8 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                 if (itemData.cover_url!!.contains(".mp4") || itemData.cover_url!!.contains("type=video")) {
                     launch {
                         itemBinding.playerView.initPlayer(itemData.cover_url)
-//                        itemBinding.playerView.setMediaSource(url, itemBinding)
-                        downloadVideo(itemBinding, itemData, position)
+                        itemBinding.playerView.setMediaSource(itemData.cover_url, itemBinding)
+//                        downloadVideo(itemBinding, itemData, position)
                     }
                 } else {
                     itemBinding.ivPhoto.visibility = View.VISIBLE

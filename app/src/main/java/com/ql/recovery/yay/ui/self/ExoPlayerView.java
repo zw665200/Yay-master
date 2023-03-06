@@ -2,6 +2,7 @@ package com.ql.recovery.yay.ui.self;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -20,12 +21,22 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DataSpec;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSource;
+import com.google.android.exoplayer2.upstream.cache.Cache;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.ql.recovery.yay.databinding.ItemFunAnchorBinding;
+import com.ql.recovery.yay.util.AppUtil;
+import com.ql.recovery.yay.util.CustomLoaderFactory;
 import com.ql.recovery.yay.util.JLog;
+
+import java.io.File;
 
 public class ExoPlayerView extends PlayerView {
     private ExoPlayer mExoPlayer;
@@ -71,15 +82,39 @@ public class ExoPlayerView extends PlayerView {
 //                    .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
 //                    .setBufferSize(CacheDataSink.DEFAULT_BUFFER_SIZE);
 
+            SimpleCache cache = new SimpleCache(new File(mContext.getExternalCacheDir(), "media/" + AppUtil.md5Encode(url)), new LeastRecentlyUsedCacheEvictor( * 1024 * 1024));
+
+            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(mContext, "exoplayer-codelab");
+
+            DefaultDataSourceFactory upstreamFactory = new DefaultDataSourceFactory(mContext, "exoplayer-codelab");
+
+            CustomLoaderFactory customLoaderFactory = new CustomLoaderFactory(
+                    upstreamFactory,
+                    cache,
+                    3 * 1000
+            );
+
+            DataSource.Factory cacheDataSource = () -> {
+                CacheDataSource cacheDataSource1 = new CacheDataSource(
+                        cache,
+                        customLoaderFactory.createDataSource(),
+                        new FileDataSource(),
+                        new CacheDataSink(cache, CacheDataSink.DEFAULT_FRAGMENT_SIZE),
+                        CacheDataSource.FLAG_BLOCK_ON_CACHE,
+                        null
+                );
+                return cacheDataSource1;
+            };
+
             MediaItem mediaItem = new MediaItem.Builder()
                     .setUri(url)
                     .build();
 
-            DataSource.Factory dataSourceFactory = new FileDataSource.Factory();
+//            DataSource.Factory dataSourceFactory = new FileDataSource.Factory();
 
             ProgressiveMediaSource mediaSource = new ProgressiveMediaSource
 //                    .Factory((DataSource.Factory) () -> new DefaultHttpDataSource.Factory().createDataSource())
-                    .Factory(dataSourceFactory)
+                    .Factory(cacheDataSource)
                     .createMediaSource(mediaItem);
 
             mExoPlayer.setMediaSource(mediaSource);
@@ -93,6 +128,25 @@ public class ExoPlayerView extends PlayerView {
                         case Player.STATE_READY:
                             itemBinding.playerView.setVisibility(View.VISIBLE);
                             if (mExoPlayer != null) {
+                                // 视频已准备就绪
+                                // 等待前三秒的数据缓存完毕
+//                                while (mExoPlayer.getCurrentPosition() < 3000) {
+//                                    try {
+//                                        Thread.sleep(200);
+//                                    } catch (InterruptedException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+
+                                // 前三秒的数据已经缓存完毕
+                                // 可以使用ExoPlayer的`getBufferedPosition`方法获取当前已缓存的视频长度
+//                                long startPosition = 0;
+//                                long endPosition = Math.min(mExoPlayer.getBufferedPosition(), 3000);
+//                                Cache cache = new SimpleCache(new File(mContext.getCacheDir(), "exoplayer-cache"), new NoOpCacheEvictor());
+//                                CacheDataSourceFactory cacheDataSourceFactory = new CacheDataSourceFactory(cache, dataSourceFactory);
+//                                DataSpec dataSpec = new DataSpec(Uri.parse(url), startPosition, endPosition, null);
+
+
                                 mExoPlayer.play();
                             }
                             break;
