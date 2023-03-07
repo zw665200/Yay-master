@@ -19,7 +19,7 @@
             android:id="@+id/fl_remote"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:keepScreenOn="true"/>
+            android:keepScreenOn="true" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
@@ -99,10 +99,10 @@
 
     <include
         android:id="@+id/include_title"
-        layout="@layout/layout_title_second"
+        layout="@layout/layout_title_video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_50" />
+        android:layout_marginTop="@dimen/dp_40" />
 
     <include
         android:id="@+id/include_timer"
@@ -140,30 +140,81 @@
                 android:layout_marginEnd="@dimen/sp_15"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/iv_beauty"
+                <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start|center"
-                    android:src="@drawable/pp_my" />
+                    android:layout_gravity="center_horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_avatar"
+                        android:layout_width="@dimen/dp_40"
+                        android:layout_height="@dimen/dp_40"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:src="@drawable/tx" />
+
+                    <ImageView
+                        android:id="@+id/iv_follow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:src="@drawable/follow_add" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/free_gift_bg">
+
+                    <ImageView
+                        android:id="@+id/iv_gift"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/paishou" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/sf_gift_bg">
+
+                    <ImageView
+                        android:id="@+id/iv_gift_sf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/sf_gift" />
+
+                </FrameLayout>
 
                 <ImageView
                     android:id="@+id/iv_game"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|end"
+                    android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dp_10"
                     android:gravity="center"
-                    android:src="@drawable/pp_yx" />
+                    android:src="@drawable/ic_game" />
 
-                <ImageView
-                    android:id="@+id/iv_gift"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|end"
+                <com.ql.recovery.yay.ui.self.ProgressView
+                    android:id="@+id/progress_View"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:gravity="center"
-                    android:src="@drawable/pp_gift" />
+                    app:bottom_text="30"
+                    app:bottom_textColor="@color/color_purple_744df6"
+                    app:bottom_textSize="@dimen/sp_16"
+                    app:max="100"
+                    app:progress="25"
+                    app:stroke_width="@dimen/dp_1"
+                    app:progress_color="@color/color_purple_744df6"/>
 
             </LinearLayout>
 

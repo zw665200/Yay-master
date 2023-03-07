@@ -41,7 +41,6 @@ import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityVideoBinding
 import com.ql.recovery.yay.databinding.ItemChatBinding
-import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.*
@@ -145,13 +144,12 @@ class VideoActivity : BaseActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         binding.includeTitle.ivBack.setOnClickListener { onBackPressed() }
-        binding.includeTitle.ivAvatar.setOnClickListener { showProfileDialog() }
-        binding.includeTitle.tvFollow.setOnClickListener { checkFollow() }
+        binding.ivAvatar.setOnClickListener { showProfileDialog() }
+        binding.ivFollow.setOnClickListener { checkFollow() }
         binding.includeTitle.ivSwitchCamera.setOnClickListener { switchCamera() }
         binding.includeBottom.tvSend.setOnClickListener { sendMessage() }
         binding.flSurface.setOnClickListener { binding.includeBottom.etMessage.clearFocus() }
         binding.includeTimer.tvAdd.setOnClickListener { getAdditionTime() }
-        binding.ivBeauty.setOnClickListener { showOrHideBeauty() }
         binding.includeTitle.ivReport.setOnClickListener { showReportDialog() }
         binding.ivGift.setOnClickListener { showGiftDialog() }
         binding.ivGame.setOnClickListener { showGameDialog(null) }
@@ -201,7 +199,7 @@ class VideoActivity : BaseActivity() {
 
     private fun initUserInfo(user: User) {
         //设置头像
-        Glide.with(this).load(user.avatar).apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.includeTitle.ivAvatar)
+        Glide.with(this).load(user.avatar).apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.ivAvatar)
 
         //设置蒙版
 //        Glide.with(this).load(user.cover_url)
@@ -209,28 +207,28 @@ class VideoActivity : BaseActivity() {
 //            .into(binding.ivBlur)
 
         //设置名字
-        binding.includeTitle.tvName.text = user.nickname
+//        binding.includeTitle.tvName.text = user.nickname
 
         //设置国家
-        if (user.country.isNotBlank()) {
-            val res = "file:///android_asset/images/${user.country}.png"
-            ImageManager.getBitmap(this, res) { bitmap ->
-                binding.includeTitle.ivNation.setImageBitmap(bitmap)
-            }
-        }
+//        if (user.country.isNotBlank()) {
+//            val res = "file:///android_asset/images/${user.country}.png"
+//            ImageManager.getBitmap(this, res) { bitmap ->
+//                binding.includeTitle.ivNation.setImageBitmap(bitmap)
+//            }
+//        }
 
         //设置关注状态
         when (user.follow_status) {
             1, 3 -> {
-                binding.includeTitle.tvFollow.text = getString(R.string.match_followed)
-                binding.includeTitle.tvFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_grey_30, null)
-                binding.includeTitle.tvFollow.setTextColor(Color.WHITE)
+//                binding.includeTitle.tvFollow.text = getString(R.string.match_followed)
+                binding.ivFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_grey_30, null)
+//                binding.includeTitle.tvFollow.setTextColor(Color.WHITE)
             }
 
             else -> {
-                binding.includeTitle.tvFollow.text = getString(R.string.match_follow)
-                binding.includeTitle.tvFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow, null)
-                binding.includeTitle.tvFollow.setTextColor(Color.BLACK)
+//                binding.includeTitle.tvFollow.text = getString(R.string.match_follow)
+                binding.ivFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow, null)
+//                binding.includeTitle.tvFollow.setTextColor(Color.BLACK)
             }
         }
     }
@@ -698,9 +696,9 @@ class VideoActivity : BaseActivity() {
                         DataManager.unfollow(mUser!!.uid) {
                             if (it) {
                                 mUser!!.follow_status = 1
-                                binding.includeTitle.tvFollow.text = getString(R.string.match_follow)
-                                binding.includeTitle.tvFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow, null)
-                                binding.includeTitle.tvFollow.setTextColor(Color.BLACK)
+//                                binding.includeTitle.tvFollow.text = getString(R.string.match_follow)
+                                binding.ivFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow, null)
+//                                binding.includeTitle.tvFollow.setTextColor(Color.BLACK)
                             }
                         }
                     }
@@ -709,9 +707,9 @@ class VideoActivity : BaseActivity() {
                         DataManager.follow(mUser!!.uid) {
                             if (it) {
                                 mUser!!.follow_status = 0
-                                binding.includeTitle.tvFollow.text = getString(R.string.match_followed)
-                                binding.includeTitle.tvFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_grey_30, null)
-                                binding.includeTitle.tvFollow.setTextColor(Color.WHITE)
+//                                binding.includeTitle.tvFollow.text = getString(R.string.match_followed)
+                                binding.ivFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_grey_30, null)
+//                                binding.includeTitle.tvFollow.setTextColor(Color.WHITE)
                             }
                         }
                     }
@@ -752,15 +750,15 @@ class VideoActivity : BaseActivity() {
                         //设置关注状态
                         when (user.follow_status) {
                             1, 3 -> {
-                                binding.includeTitle.tvFollow.text = getString(R.string.match_followed)
-                                binding.includeTitle.tvFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_grey_30, null)
-                                binding.includeTitle.tvFollow.setTextColor(Color.WHITE)
+//                                binding.includeTitle.tvFollow.text = getString(R.string.match_followed)
+                                binding.ivFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_grey_30, null)
+//                                binding.includeTitle.tvFollow.setTextColor(Color.WHITE)
                             }
 
                             else -> {
-                                binding.includeTitle.tvFollow.text = getString(R.string.match_follow)
-                                binding.includeTitle.tvFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow, null)
-                                binding.includeTitle.tvFollow.setTextColor(Color.BLACK)
+//                                binding.includeTitle.tvFollow.text = getString(R.string.match_follow)
+                                binding.ivFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow, null)
+//                                binding.includeTitle.tvFollow.setTextColor(Color.BLACK)
                             }
                         }
                     }

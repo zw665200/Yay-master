@@ -135,7 +135,10 @@
     <string name="chat_message_forward_to_team">Forward to Group</string>
     <string name="chat_message_forward_to_person">Forward to friend</string>
     <string name="chat_message_forward_to">Send to</string>
-    <string name="chat_message_is_typing">Typing...</string>
+    <string name="chat_message_is_typing">Typing…</string>
+    <string name="chat_msg_count_tip_1">今天还可发送%1d条消息，</string>
+    <string name="chat_msg_count_tip_2">升级会员</string>
+    <string name="chat_msg_count_tip_3">可无限制发送</string>
 
 
     <!-- search -->

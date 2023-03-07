@@ -11,7 +11,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.ql.recovery.bean.UserInfo
-import com.ql.recovery.config.Config
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.ChooseType
 import com.ql.recovery.yay.databinding.FragmentHomeBinding
@@ -19,24 +18,23 @@ import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseFragment
-import com.ql.recovery.yay.ui.dialog.*
+import com.ql.recovery.yay.ui.dialog.FilterDialog
+import com.ql.recovery.yay.ui.dialog.PrimeDialog
+import com.ql.recovery.yay.ui.dialog.StoreDialog
 import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.match.MatchActivity
+import com.ql.recovery.yay.ui.mine.CountryActivity
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.ToastUtil
 import com.tencent.mmkv.MMKV
-import io.agora.rtc2.IRtcEngineEventHandler
-import io.agora.rtc2.RtcEngine
-import io.agora.rtc2.RtcEngineConfig
 
 class HomeFragment : BaseFragment() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var binding: FragmentHomeBinding? = null
     private var type = Type.VIDEO
     private var mk = MMKV.defaultMMKV()
-    private var mRtcEngine: RtcEngine? = null
     private var lastClick = 0L
 
     override fun initView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -56,7 +54,6 @@ class HomeFragment : BaseFragment() {
         binding?.tvAudioMatch?.setOnClickListener { checkAudioMatch() }
         binding?.tvImMatch?.setOnClickListener { checkGameMatch() }
         binding?.flMatchBegin?.setOnClickListener { toMatchPage() }
-        binding?.ivBeauty?.setOnClickListener { checkPreview() }
         binding?.llChooseGender?.setOnClickListener { showFilterDialog(ChooseType.Gender) }
         binding?.llChooseRegion?.setOnClickListener { showFilterDialog(ChooseType.Region) }
         binding?.llCoin?.setOnClickListener { toStorePage() }
@@ -69,9 +66,11 @@ class HomeFragment : BaseFragment() {
     override fun initData() {
         getUserInfo()
         flushConfig()
-        initRtcManager()
 
-        AnchorVideoDialog(requireActivity()){}
+//        AnchorVideoDialog(requireActivity()){}
+//        getUserInfo {
+//            StoreDialog(requireActivity(), it).show()
+//        }
     }
 
     private fun initClubLottie() {
@@ -122,7 +121,6 @@ class HomeFragment : BaseFragment() {
         binding!!.lottieGame.setAnimation("loading/match/match_game_data.json")
         binding!!.lottieGame.playAnimation()
     }
-
 
     private fun getUserInfo() {
         getUserInfo {
@@ -192,7 +190,6 @@ class HomeFragment : BaseFragment() {
 
     private fun checkVideoMatch() {
         type = Type.VIDEO
-        binding?.ivBeauty?.visibility = View.VISIBLE
         binding?.tvVideoMatch?.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow_4, null)
         binding?.tvAudioMatch?.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_rectangle_white_4, null)
         binding?.tvImMatch?.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_rectangle_white_4, null)
@@ -206,7 +203,6 @@ class HomeFragment : BaseFragment() {
 
     private fun checkAudioMatch() {
         type = Type.VOICE
-        binding?.ivBeauty?.visibility = View.GONE
         binding?.tvVideoMatch?.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_rectangle_white_4, null)
         binding?.tvAudioMatch?.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow_4, null)
         binding?.tvImMatch?.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_rectangle_white_4, null)
@@ -220,7 +216,6 @@ class HomeFragment : BaseFragment() {
 
     private fun checkGameMatch() {
         type = Type.GAME
-        binding?.ivBeauty?.visibility = View.GONE
         binding?.tvVideoMatch?.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_rectangle_white_4, null)
         binding?.tvAudioMatch?.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_rectangle_white_4, null)
         binding?.tvImMatch?.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow_4, null)
@@ -252,18 +247,8 @@ class HomeFragment : BaseFragment() {
                 return@getUserInfo
             }
 
-
             if (userInfo.country.isBlank()) {
-                //检查定位权限
-                checkLocationPermissions {
-                    //获取定位
-                    getLocation {
-                        //检查视频的权限
-                        checkVideoPermissions {
-                            openMatchPage()
-                        }
-                    }
-                }
+                startActivity(Intent(requireActivity(), CountryActivity::class.java))
             } else {
                 //检查视频的权限
                 checkVideoPermissions {
@@ -347,41 +332,6 @@ class HomeFragment : BaseFragment() {
                 }
             }
         }
-    }
-
-    private fun checkPreview() {
-        if (!DoubleUtils.isFastDoubleClick()) {
-            getUserInfo { userInfo ->
-                BeautyDialog(requireActivity(), mRtcEngine, userInfo) {
-                    mRtcEngine?.stopPreview()
-                }
-            }
-        }
-    }
-
-    private fun initRtcManager() {
-        try {
-            if (mRtcEngine == null) {
-                val config = RtcEngineConfig()
-                config.mContext = requireContext()
-                config.mEventHandler = mRtcEventHandler
-                config.mAppId = Config.AGORA_APP_ID
-                mRtcEngine = RtcEngine.create(config)
-
-                //启用视频流
-                mRtcEngine?.enableVideo()
-            }
-        } catch (ex: Exception) {
-            ToastUtil.showShort(requireContext(), ex.message)
-        }
-    }
-
-    private var mRtcEventHandler = object : IRtcEngineEventHandler() {}
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mRtcEngine?.leaveChannel()
-        mRtcEngine?.removeHandler(mRtcEventHandler)
     }
 
     enum class Type { VIDEO, VOICE, GAME }

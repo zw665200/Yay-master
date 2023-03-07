@@ -141,7 +141,8 @@
     <string name="chat_message_forward_to_team">转发到群组</string>
     <string name="chat_message_forward_to_person">转发到个人</string>
     <string name="chat_message_forward_to">发送给</string>
-    <string name="chat_message_is_typing">正在输入中...</string>
+    <string name="chat_message_is_typing">正在输入中…</string>
+    <string name="chat_msg_count_tip">今天还可发送%1d条消息，<font color="#F6CE02">升级会员</font>可无限制发送</string>
 
     <!-- search -->
     <string name="message_search_title">历史记录</string>

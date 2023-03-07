@@ -71,16 +71,6 @@
             android:textColor="@color/color_purple_744df6"
             android:textSize="@dimen/sp_30" />
 
-        <com.ql.recovery.yay.ui.self.ProgressView
-            android:id="@+id/progress_View"
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="@dimen/dp_50"
-            android:layout_gravity="center_horizontal"
-            app:max="100"
-            app:progress="50"
-            app:bottom_text="50"
-            app:bottom_textColor="@color/color_yellow"
-            app:bottom_textSize="@dimen/dp_20" />
 
         <ImageView
             android:id="@+id/iv_avatar"

@@ -43,7 +43,7 @@
     <string name="chat_message_forward_to_team">转发到群组</string>
     <string name="chat_message_image_save">图片已保存到手机</string>
     <string name="chat_message_image_save_fail">图片保存失败</string>
-    <string name="chat_message_is_typing">正在输入中...</string>
+    <string name="chat_message_is_typing">正在输入中…</string>
     <string name="chat_message_location">位置</string>
     <string name="chat_message_location_distance">%.0fm内 | %s</string>
     <string name="chat_message_more_shoot">拍摄</string>
@@ -78,6 +78,7 @@
     <string name="chat_message_video_send_fail">视频发送失败</string>
     <string name="chat_message_video_time">%02d:%02d</string>
     <string name="chat_message_voice_in">松开发送，按住滑到空白区域取消</string>
+    <string name="chat_msg_count_tip">今天还可发送%1d条消息，<font color="#F6CE02">升级会员</font>可无限制发送</string>
     <string name="chat_name_update">名称被更新为</string>
     <string name="chat_network_error_tip">当前网络不可用，请检查你当网络设置。</string>
     <string name="chat_no_permission">操作无权限</string>

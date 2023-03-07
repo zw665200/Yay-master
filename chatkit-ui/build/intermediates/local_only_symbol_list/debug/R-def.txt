@@ -25,6 +25,7 @@ color color_ededef
 color color_eef1f4
 color color_eff1f4
 color color_f2f4f5
+color color_f6ce02
 color color_fc596a
 color color_fee3e6
 color color_fffbea
@@ -329,6 +330,8 @@ id tv_cancel
 id tv_commit
 id tv_des
 id tv_message
+id tv_msg_member
+id tv_msg_tip
 id tv_name
 id tv_nick_name
 id tv_nickname
@@ -469,6 +472,9 @@ string chat_message_video_save_fail
 string chat_message_video_send_fail
 string chat_message_video_time
 string chat_message_voice_in
+string chat_msg_count_tip_1
+string chat_msg_count_tip_2
+string chat_msg_count_tip_3
 string chat_name_update
 string chat_network_error_tip
 string chat_no_permission

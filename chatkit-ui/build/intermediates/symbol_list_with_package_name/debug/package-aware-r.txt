@@ -1227,6 +1227,7 @@ color color_eef1f4
 color color_eff1f4
 color color_f2f4f5
 color color_f5f8fc
+color color_f6ce02
 color color_f9b751
 color color_fc596a
 color color_fe7081
@@ -3361,6 +3362,8 @@ id tv_hour_unit
 id tv_left
 id tv_message
 id tv_minute_unit
+id tv_msg_member
+id tv_msg_tip
 id tv_name
 id tv_negative
 id tv_nick_name
@@ -3771,6 +3774,9 @@ string chat_message_video_save_fail
 string chat_message_video_send_fail
 string chat_message_video_time
 string chat_message_voice_in
+string chat_msg_count_tip_1
+string chat_msg_count_tip_2
+string chat_msg_count_tip_3
 string chat_name_update
 string chat_network_error_tip
 string chat_no_permission

@@ -51,14 +51,47 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/chat_view_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_msg_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/text_size_10"
+                android:layout_marginBottom="@dimen/text_size_10"
+                android:text="@string/chat_msg_count_tip_1"
+                android:textColor="@color/color_999999"
+                android:textSize="@dimen/text_size_13" />
+
+            <TextView
+                android:id="@+id/tv_msg_member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chat_msg_count_tip_2"
+                android:textColor="@color/color_f6ce02"
+                android:textSize="@dimen/text_size_13" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chat_msg_count_tip_3"
+                android:textColor="@color/color_999999"
+                android:textSize="@dimen/text_size_13" />
+
+        </LinearLayout>
 
         <com.netease.yunxin.kit.chatkit.ui.view.input.MessageBottomLayout
             android:id="@+id/inputView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </FrameLayout>
+    </LinearLayout>
 </LinearLayout>

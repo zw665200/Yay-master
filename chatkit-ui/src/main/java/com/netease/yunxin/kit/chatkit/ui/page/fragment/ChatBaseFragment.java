@@ -23,6 +23,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -60,11 +61,13 @@ import com.netease.yunxin.kit.chatkit.ui.dialog.ChatMessageForwardSelectDialog;
 import com.netease.yunxin.kit.chatkit.ui.dialog.MenuDialog;
 import com.netease.yunxin.kit.chatkit.ui.model.ChatMessageBean;
 import com.netease.yunxin.kit.chatkit.ui.page.LocationPageActivity;
+import com.netease.yunxin.kit.chatkit.ui.page.SendCallback;
 import com.netease.yunxin.kit.chatkit.ui.page.WatchImageActivity;
 import com.netease.yunxin.kit.chatkit.ui.page.WatchVideoActivity;
 import com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatBaseViewModel;
 import com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatP2PViewModel;
 import com.netease.yunxin.kit.chatkit.ui.page.viewmodel.ChatTeamViewModel;
+import com.netease.yunxin.kit.chatkit.ui.util.AppUtil;
 import com.netease.yunxin.kit.chatkit.ui.util.ToastUtil;
 import com.netease.yunxin.kit.chatkit.ui.view.ait.AitManager;
 import com.netease.yunxin.kit.chatkit.ui.view.interfaces.IMessageItemClickListener;
@@ -87,7 +90,7 @@ import com.netease.yunxin.kit.corekit.im.utils.RouterConstant;
 import com.netease.yunxin.kit.corekit.route.XKitRouter;
 import com.ql.recovery.config.Config;
 import com.ql.recovery.manager.DataManager;
-import com.ql.recovery.util.JLog;
+import com.tencent.mmkv.MMKV;
 
 import java.io.File;
 import java.io.IOException;
@@ -148,6 +151,8 @@ public abstract class ChatBaseFragment extends BaseFragment {
 
     private IMessageItemClickListener delegateListener;
 
+    private final MMKV mk = MMKV.defaultMMKV();
+
     @Nullable
     @Override
     public View onCreateView(
@@ -164,6 +169,16 @@ public abstract class ChatBaseFragment extends BaseFragment {
         loadConfig();
         NetworkUtils.registerNetworkStatusChangedListener(networkStateListener);
         initCustom();
+        loadFreeTimes();
+
+        //检查今日免费次数
+        String today = AppUtil.getTodayDay();
+        String date = mk.decodeString("daily_msg_date");
+        if (date == null || !date.equals(today)) {
+            mk.encode("daily_msg_date", today);
+            mk.encode("daily_msg_time", 0);
+        }
+
         return binding.getRoot();
     }
 
@@ -274,6 +289,25 @@ public abstract class ChatBaseFragment extends BaseFragment {
                         });
     }
 
+    private void loadFreeTimes() {
+        //检查今日可用次数
+        TextView view = binding.chatView.getChatBottomLayout().findViewById(R.id.tv_msg_tip);
+        TextView member = binding.chatView.getChatBottomLayout().findViewById(R.id.tv_msg_member);
+        DataManager.INSTANCE.getUserInfo(userInfo -> {
+            int times = mk.decodeInt("daily_msg_time", 0);
+            if (!userInfo.is_vip() && !userInfo.getRole().equals("anchor")) {
+                view.setVisibility(View.VISIBLE);
+                view.setText(String.format(requireContext().getString(R.string.chat_msg_count_tip_1), 10 - times));
+            } else {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            member.setOnClickListener(v -> requestOpenPrimeDialog(userInfo));
+
+            return null;
+        });
+    }
+
     private void loadConfig() {
         ChatUIConfig config = this.chatConfig;
         if (config == null) {
@@ -336,7 +370,8 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public boolean sendTextMessage(String msg, ChatMessageBean replyMsg) {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
+                        int sendTime = mk.decodeInt("daily_msg_time", 0);
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor") || sendTime <= 10) {
                             List<String> pushList = null;
                             if (aitManager != null && sessionType == SessionTypeEnum.Team) {
                                 pushList = aitManager.getAitTeamMember();
@@ -350,15 +385,9 @@ public abstract class ChatBaseFragment extends BaseFragment {
                                 aitManager.reset();
                             }
                         } else {
-                            if (Config.INSTANCE.getMHandler() != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable("user_info", userInfo);
-                                Message message = new Message();
-                                message.setData(bundle);
-                                message.what = 0x10000;
-                                Config.INSTANCE.getMHandler().sendMessage(message);
-                            }
+                            requestOpenPrimeDialog(userInfo);
                         }
+
                         return null;
                     });
 
@@ -369,7 +398,8 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 public void pickMedia() {
                     //判断是否是会员
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
+                        int sendTime = mk.decodeInt("daily_msg_time", 0);
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor") || sendTime <= 10) {
                             if (PermissionUtils.hasPermissions(
                                     ChatBaseFragment.this.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
                                 startPickMedia();
@@ -379,14 +409,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                                         REQUEST_READ_EXTERNAL_STORAGE_PERMISSION);
                             }
                         } else {
-                            if (Config.INSTANCE.getMHandler() != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable("user_info", userInfo);
-                                Message message = new Message();
-                                message.setData(bundle);
-                                message.what = 0x10000;
-                                Config.INSTANCE.getMHandler().sendMessage(message);
-                            }
+                            requestOpenPrimeDialog(userInfo);
                         }
                         return null;
                     });
@@ -395,7 +418,8 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public void takePicture() {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
+                        int sendTime = mk.decodeInt("daily_msg_time", 0);
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor") || sendTime <= 10) {
                             if (PermissionUtils.hasPermissions(
                                     ChatBaseFragment.this.getContext(), Manifest.permission.CAMERA)) {
                                 startTakePicture();
@@ -403,14 +427,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                                 requestCameraPermission(Manifest.permission.CAMERA, REQUEST_CAMERA_PERMISSION);
                             }
                         } else {
-                            if (Config.INSTANCE.getMHandler() != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable("user_info", userInfo);
-                                Message message = new Message();
-                                message.setData(bundle);
-                                message.what = 0x10000;
-                                Config.INSTANCE.getMHandler().sendMessage(message);
-                            }
+                            requestOpenPrimeDialog(userInfo);
                         }
                         return null;
                     });
@@ -419,7 +436,8 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public void captureVideo() {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
+                        int sendTime = mk.decodeInt("daily_msg_time", 0);
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor") || sendTime <= 10) {
                             if (PermissionUtils.hasPermissions(
                                     ChatBaseFragment.this.getContext(), Manifest.permission.CAMERA)) {
                                 startCaptureVideo();
@@ -427,14 +445,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                                 requestCameraPermission(Manifest.permission.CAMERA, REQUEST_VIDEO_PERMISSION);
                             }
                         } else {
-                            if (Config.INSTANCE.getMHandler() != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable("user_info", userInfo);
-                                Message message = new Message();
-                                message.setData(bundle);
-                                message.what = 0x10000;
-                                Config.INSTANCE.getMHandler().sendMessage(message);
-                            }
+                            requestOpenPrimeDialog(userInfo);
                         }
                         return null;
                     });
@@ -443,7 +454,8 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public boolean sendFile() {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
+                        int sendTime = mk.decodeInt("daily_msg_time", 0);
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor") || sendTime <= 10) {
                             if (PermissionUtils.hasPermissions(
                                     ChatBaseFragment.this.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
                                 startPickFile();
@@ -453,14 +465,7 @@ public abstract class ChatBaseFragment extends BaseFragment {
                                         REQUEST_READ_EXTERNAL_STORAGE_PERMISSION);
                             }
                         } else {
-                            if (Config.INSTANCE.getMHandler() != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable("user_info", userInfo);
-                                Message message = new Message();
-                                message.setData(bundle);
-                                message.what = 0x10000;
-                                Config.INSTANCE.getMHandler().sendMessage(message);
-                            }
+                            requestOpenPrimeDialog(userInfo);
                         }
                         return null;
                     });
@@ -471,18 +476,12 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public boolean sendAudio(File audioFile, long audioLength, ChatMessageBean replyMsg) {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
+                        int sendTime = mk.decodeInt("daily_msg_time", 0);
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor") || sendTime <= 10) {
                             //audio not support reply
                             viewModel.sendAudioMessage(audioFile, audioLength);
                         } else {
-                            if (Config.INSTANCE.getMHandler() != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable("user_info", userInfo);
-                                Message message = new Message();
-                                message.setData(bundle);
-                                message.what = 0x10000;
-                                Config.INSTANCE.getMHandler().sendMessage(message);
-                            }
+                            requestOpenPrimeDialog(userInfo);
                         }
                         return null;
                     });
@@ -493,17 +492,11 @@ public abstract class ChatBaseFragment extends BaseFragment {
                 @Override
                 public boolean sendCustomMessage(MsgAttachment attachment, String content) {
                     DataManager.INSTANCE.getUserInfo(userInfo -> {
-                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor")) {
+                        int sendTime = mk.decodeInt("daily_msg_time", 0);
+                        if (userInfo.is_vip() || userInfo.getRole().equals("anchor") || sendTime <= 10) {
                             viewModel.sendCustomMessage(attachment, content);
                         } else {
-                            if (Config.INSTANCE.getMHandler() != null) {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable("user_info", userInfo);
-                                Message message = new Message();
-                                message.setData(bundle);
-                                message.what = 0x10000;
-                                Config.INSTANCE.getMHandler().sendMessage(message);
-                            }
+                            requestOpenPrimeDialog(userInfo);
                         }
                         return null;
                     });
@@ -547,42 +540,45 @@ public abstract class ChatBaseFragment extends BaseFragment {
 
                 @Override
                 public void videoCall() {
-                    String sessionId = viewModel.getSessionId();
-                    if (sessionId != null) {
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("uid", Integer.parseInt(sessionId));
-
-                        Message message = new Message();
-                        message.setData(bundle);
-                        message.what = 0x10005;
-
-                        if (Config.INSTANCE.getMHandler() != null) {
-                            Config.INSTANCE.getMHandler().sendMessage(message);
-                        }
-                    }
+                    requestOpenCallDialog();
                 }
 
                 @Override
                 public void audioCall() {
-                    String sessionId = viewModel.getSessionId();
-                    if (sessionId != null) {
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("uid", Integer.parseInt(sessionId));
-
-                        Message message = new Message();
-                        message.setData(bundle);
-                        message.what = 0x10005;
-
-                        if (Config.INSTANCE.getMHandler() != null) {
-                            Config.INSTANCE.getMHandler().sendMessage(message);
-                        }
-                    }
+                    requestOpenCallDialog();
                 }
             };
 
     private void requestCameraPermission(String permission, int request) {
         currentRequest = request;
         permissionLauncher.launch(new String[]{permission});
+    }
+
+    private void requestOpenPrimeDialog(com.ql.recovery.bean.UserInfo userInfo) {
+        if (Config.INSTANCE.getMHandler() != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("user_info", userInfo);
+            Message message = new Message();
+            message.setData(bundle);
+            message.what = 0x10000;
+            Config.INSTANCE.getMHandler().sendMessage(message);
+        }
+    }
+
+    private void requestOpenCallDialog() {
+        String sessionId = viewModel.getSessionId();
+        if (sessionId != null) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("uid", Integer.parseInt(sessionId));
+
+            Message message = new Message();
+            message.setData(bundle);
+            message.what = 0x10005;
+
+            if (Config.INSTANCE.getMHandler() != null) {
+                Config.INSTANCE.getMHandler().sendMessage(message);
+            }
+        }
     }
 
     public String getPermissionText(String permission) {
@@ -1214,6 +1210,8 @@ public abstract class ChatBaseFragment extends BaseFragment {
                                 }
                             }
                         });
+
+        viewModel.setSendCallback(this::loadFreeTimes);
     }
 
     private void showForwardConfirmDialog(SessionTypeEnum type, ArrayList<String> sessionIds) {

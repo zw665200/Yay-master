@@ -17,20 +17,15 @@
     </declare-styleable>
 
     <declare-styleable name="ProgressView">
-        <attr name="top_text" format="string" />
-        <attr name="top_textSize" format="dimension" />
-        <attr name="top_textColor" format="color" />
-        <attr name="center_text" format="string" />
-        <attr name="center_textSize" format="dimension" />
-        <attr name="center_textColor" format="color" />
         <attr name="bottom_text" format="string" />
         <attr name="bottom_textSize" format="dimension" />
         <attr name="bottom_textColor" format="color" />
+        <attr name="inner_circle_color" format="color" />
+        <attr name="outer_circle_color" format="color" />
         <attr name="max" format="integer" />
         <attr name="progress" format="integer" />
-        <attr name="bindingText" format="dimension"/>
-        <attr name="wave_color" format="color" />
-        <attr name="wave_height" format="dimension" />
+        <attr name="progress_color" format="color" />
+        <attr name="bindingText" format="dimension" />
         <attr name="stroke_color" format="color" />
         <attr name="stroke_width" format="dimension" />
         <attr name="submerged_textColor" format="color" />

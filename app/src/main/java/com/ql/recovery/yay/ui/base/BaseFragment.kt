@@ -156,7 +156,7 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
                 requireActivity().runOnUiThread {
                     waitingDialog?.cancel()
 
-                    context?.let { ctx ->
+                    activity?.let { ctx ->
                         ToastUtil.showShort(ctx, "get location failed, please check your country")
                         startActivity(Intent(ctx, CountryActivity::class.java))
 

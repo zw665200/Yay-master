@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2022 NetEase, Inc. All rights reserved.
   ~ Use of this source code is governed by a MIT license that can be
   ~ found in the LICENSE file.
@@ -34,5 +33,6 @@
     <color name="color_3eaf96">#3eaf96</color>
     <color name="color_ededef">#ededef</color>
     <color name="color_dbdde4">#dbdde4</color>
+    <color name="color_f6ce02">#F6CE02</color>
 
 </resources>

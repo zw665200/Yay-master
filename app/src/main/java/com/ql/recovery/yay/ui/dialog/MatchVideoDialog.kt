@@ -9,9 +9,9 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
-import androidx.recyclerview.widget.GridLayoutManager
-import com.blongho.country_data.World
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.ql.recovery.bean.Reason
 import com.ql.recovery.bean.Tag
@@ -19,11 +19,9 @@ import com.ql.recovery.bean.User
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.DialogMatchVideoBinding
-import com.ql.recovery.yay.databinding.ItemTagBinding
 import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.self.BreatheInterpolator
 import com.ql.recovery.yay.util.AppUtil
-import com.ql.recovery.yay.util.JLog
 
 
 class MatchVideoDialog(
@@ -31,11 +29,10 @@ class MatchVideoDialog(
     private val status: (status: MatchStatus) -> Unit
 ) : Dialog(activity, R.style.app_dialog2) {
     private lateinit var binding: DialogMatchVideoBinding
-    private lateinit var mAdapter: DataAdapter<Tag>
     private var timer: CountDownTimer? = null
-    private var mList = mutableListOf<Tag>()
     private var set: AnimatorSet? = null
     private var mUser: User? = null
+    private var max = 10
     private var from = From.Other
 
     init {
@@ -61,23 +58,9 @@ class MatchVideoDialog(
             status(MatchStatus.Reject)
         }
 
-        initTags()
         initTimer()
     }
 
-    private fun initTags() {
-        mAdapter = DataAdapter.Builder<Tag>()
-            .setData(mList)
-            .setLayoutId(R.layout.item_tag)
-            .addBindView { itemView, itemData ->
-                val itemBinding = ItemTagBinding.bind(itemView)
-                itemBinding.tvTag.text = itemData.name
-            }
-            .create()
-
-        binding.rcTags.adapter = mAdapter
-        binding.rcTags.layoutManager = GridLayoutManager(activity, 4)
-    }
 
     private fun initTimer() {
         timer = object : CountDownTimer(45000L, 1000L) {
@@ -102,7 +85,7 @@ class MatchVideoDialog(
         if (user == null) return
         mUser = user
 
-        Glide.with(activity).load(user.cover_url).into(binding.ivImage)
+        Glide.with(activity).load(user.avatar).apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.ivAvatar)
         Glide.with(activity).load(user.cover_url).into(binding.ivUserBg)
         binding.tvNickname.text = user.nickname
         binding.tvAge.text = user.age.toString()
@@ -120,18 +103,6 @@ class MatchVideoDialog(
                 binding.ivNation.setImageBitmap(bitmap)
             }
         }
-
-        val tags = user.tags
-        if (!tags.isNullOrEmpty()) {
-            mList.clear()
-            if (tags.size > 8) {
-                mList.addAll(tags.subList(0, 8))
-            } else {
-                mList.addAll(tags)
-            }
-
-            mAdapter.notifyItemRangeChanged(0, mList.size)
-        }
     }
 
     fun getUser(): User? {
@@ -142,13 +113,18 @@ class MatchVideoDialog(
         return activity
     }
 
-    fun setTime(time: Long) {
-        binding.tvTimer.text = time.toString()
+    fun setTime(time: Int) {
+        if (max == 10) {
+            max = time
+            binding.progressView.max = max
+        }
+
+        binding.progressView.progress = time
     }
 
     fun startConnect() {
         binding.tvNotice.text = activity.getString(R.string.match_video_apply)
-        binding.tvTimer.visibility = View.VISIBLE
+        binding.progressView.visibility = View.VISIBLE
         binding.ivHandOff.visibility = View.GONE
         binding.ivConnect.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.GONE
@@ -156,7 +132,7 @@ class MatchVideoDialog(
 
     fun waitConnect() {
         binding.tvNotice.text = activity.getString(R.string.match_waiting_to_connect)
-        binding.tvTimer.visibility = View.INVISIBLE
+        binding.progressView.visibility = View.INVISIBLE
         binding.ivHandOff.visibility = View.GONE
         binding.ivConnect.visibility = View.GONE
         binding.viewMargin.visibility = View.GONE
@@ -168,7 +144,7 @@ class MatchVideoDialog(
     fun startConnectForPersonal() {
         from = From.Other
         binding.tvNotice.text = activity.getString(R.string.match_video_apply)
-        binding.tvTimer.visibility = View.GONE
+        binding.progressView.visibility = View.GONE
         binding.ivConnect.visibility = View.VISIBLE
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.VISIBLE
@@ -179,7 +155,7 @@ class MatchVideoDialog(
      * 被拒绝私人视频邀请
      */
     fun rejectConnectForPersonal(reason: Reason) {
-        binding.tvTimer.visibility = View.GONE
+        binding.progressView.visibility = View.GONE
         binding.ivConnect.visibility = View.GONE
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.GONE
@@ -211,7 +187,7 @@ class MatchVideoDialog(
     fun waitConnectForPersonal() {
         from = From.MySelf
         binding.tvNotice.text = activity.getString(R.string.match_waiting_to_connect_personal)
-        binding.tvTimer.visibility = View.GONE
+        binding.progressView.visibility = View.GONE
         binding.ivConnect.visibility = View.GONE
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.GONE
@@ -223,7 +199,7 @@ class MatchVideoDialog(
      */
     fun handOff() {
         binding.tvNotice.text = activity.getString(R.string.match_disconnect)
-        binding.tvTimer.visibility = View.INVISIBLE
+        binding.progressView.visibility = View.INVISIBLE
         binding.ivConnect.visibility = View.GONE
     }
 
@@ -232,7 +208,7 @@ class MatchVideoDialog(
      */
     fun connectingTimeout() {
         binding.tvNotice.text = activity.getString(R.string.match_connect_timeout)
-        binding.tvTimer.visibility = View.INVISIBLE
+        binding.progressView.visibility = View.INVISIBLE
         binding.ivConnect.visibility = View.GONE
     }
 
@@ -269,15 +245,6 @@ class MatchVideoDialog(
             gravity = Gravity.CENTER
             width = WindowManager.LayoutParams.MATCH_PARENT
             height = WindowManager.LayoutParams.MATCH_PARENT
-
-            val lp1 = binding.llProfile.layoutParams
-            lp1.width = w * 4 / 5
-            binding.llProfile.layoutParams = lp1
-
-            val lp = binding.ivImage.layoutParams
-            lp.width = w * 4 / 5 - AppUtil.dp2px(activity, 5f)
-            lp.height = h * 2 / 5
-            binding.ivImage.layoutParams = lp
         }
 
         if (!activity.isFinishing && !activity.isDestroyed) {

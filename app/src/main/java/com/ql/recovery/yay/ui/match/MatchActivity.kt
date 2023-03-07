@@ -4,13 +4,17 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.Color
+import android.net.Uri
 import android.os.*
 import android.view.View
 import com.bumptech.glide.Glide
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.upstream.FileDataSource
+import com.google.android.exoplayer2.upstream.AssetDataSource
+import com.google.android.exoplayer2.upstream.DataSpec
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -32,9 +36,6 @@ import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.GsonUtils
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
-import io.agora.rtc2.IRtcEngineEventHandler
-import io.agora.rtc2.RtcEngine
-import io.agora.rtc2.RtcEngineConfig
 
 class MatchActivity : BaseActivity() {
     private lateinit var binding: ActivityMatchBinding
@@ -45,12 +46,10 @@ class MatchActivity : BaseActivity() {
     private var matchVideoDialog: MatchVideoDialog? = null
     private var matchAudioDialog: MatchAudioDialog? = null
     private var matchFailedDialog: MatchFailedDialog? = null
-    private var mRtcEngine: RtcEngine? = null
     private var mMatcher: User? = null
     private var mHandler = Handler(Looper.getMainLooper())
     private var exoPlayer: ExoPlayer? = null
     private var mWaitingDialog: WaitingDialog? = null
-    private var mRtcEventHandler = object : IRtcEngineEventHandler() {}
 
     private var videoUri = "file:///android_asset/videos/match_video.mp4"
     private var audioUri = "file:///android_asset/videos/match_audio.mp4"
@@ -61,7 +60,6 @@ class MatchActivity : BaseActivity() {
 
     override fun initView() {
         binding.ivClose.setOnClickListener { finish() }
-        binding.ivBeauty.setOnClickListener { checkPreview() }
         binding.llChooseGender.setOnClickListener { showFilterDialog(ChooseType.Gender) }
         binding.llChooseRegion.setOnClickListener { showFilterDialog(ChooseType.Region) }
         binding.ivGame.setOnClickListener { showGameDialog() }
@@ -75,7 +73,6 @@ class MatchActivity : BaseActivity() {
         mWaitingDialog = WaitingDialog(this)
 
         flushConfig()
-        initLocalSurface()
 
         val type = intent.getStringExtra("type")
         if (type != null) {
@@ -107,35 +104,39 @@ class MatchActivity : BaseActivity() {
             if (type == "video" || type == "voice") {
                 getUserInfo { userInfo ->
                     //只有普通用户在匹配页开启匹配，主播进app就开启匹配
-//                    if (userInfo.role == "normal") {
-                    initMatchServer(type)
-                    initTimer(type)
-                    initNotice(type)
-//                    initReport(userInfo)
-//                    }
+                    if (userInfo.role == "normal") {
+                        initMatchServer(type)
+                        initTimer(type)
+                        initNotice(type)
+                        initHandler(type)
+                    }
                 }
             }
         }
     }
 
     private fun initPlayer(type: String) {
+        val assetDataSourceFactory = DefaultDataSourceFactory(this, "user-agent")
+        val assetDataSource = AssetDataSource(this)
         when (type) {
             "video" -> {
-                val mediaItem = MediaItem.fromUri(videoUri)
-                exoPlayer?.setMediaItem(mediaItem)
+                assetDataSource.open(DataSpec(Uri.parse(videoUri)))
             }
 
             "voice" -> {
-                val mediaItem = MediaItem.Builder().setUri(audioUri).build()
-                exoPlayer?.setMediaItem(mediaItem)
+                assetDataSource.open(DataSpec(Uri.parse(audioUri)))
             }
         }
 
         binding.playerView.setShutterBackgroundColor(Color.TRANSPARENT)
-        exoPlayer!!.repeatMode = Player.REPEAT_MODE_ALL
-        exoPlayer!!.playWhenReady = true
-        exoPlayer!!.prepare()
         binding.playerView.player = exoPlayer
+        exoPlayer?.repeatMode = Player.REPEAT_MODE_ALL
+        exoPlayer?.playWhenReady = true
+
+        val videoSource = ProgressiveMediaSource.Factory(assetDataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(assetDataSource.uri!!))
+        exoPlayer?.setMediaSource(videoSource)
+        exoPlayer?.prepare()
     }
 
     private fun flushConfig() {
@@ -182,9 +183,18 @@ class MatchActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val type = intent.getStringExtra("type")
+        if (type != null && type != "game") {
+            getUserInfo { userInfo ->
+                startWebSocketService(userInfo.uid, type, getMatchConfig())
+            }
+        }
+    }
+
     private fun initMatchServer(type: String) {
-        val userInfo = getLocalStorage().decodeParcelable("user_info", UserInfo::class.java)
-        if (userInfo != null) {
+        getUserInfo { userInfo ->
             when (type) {
                 "video" -> {
                     matchVideoDialog = MatchVideoDialog(this) { status ->
@@ -232,10 +242,6 @@ class MatchActivity : BaseActivity() {
                     }
                 }
             }
-
-            initHandler(type)
-
-            startWebSocketService(userInfo.uid, type, getMatchConfig())
         }
     }
 
@@ -391,8 +397,8 @@ class MatchActivity : BaseActivity() {
                             }
 
                             "match_countdown" -> {
-                                val typeToken = object : TypeToken<MessageInfo<Long>>() {}
-                                val info = GsonUtils.fromJson<MessageInfo<Long>>(data, typeToken.type) ?: return
+                                val typeToken = object : TypeToken<MessageInfo<Int>>() {}
+                                val info = GsonUtils.fromJson<MessageInfo<Int>>(data, typeToken.type) ?: return
                                 when (type) {
                                     "video" -> {
                                         matchVideoDialog?.setTime(info.content)
@@ -450,7 +456,6 @@ class MatchActivity : BaseActivity() {
                 list.add(getString(R.string.match_wait_tip_5))
                 list.add(getString(R.string.match_wait_tip_6))
                 list.add(getString(R.string.match_wait_tip_7))
-                noticeLoop(list, 0)
             }
 
             "voice" -> {
@@ -461,7 +466,6 @@ class MatchActivity : BaseActivity() {
                 list.add(getString(R.string.match_wait_tip_5))
                 list.add(getString(R.string.match_wait_tip_6))
                 list.add(getString(R.string.match_wait_tip_7))
-                noticeLoop(list, 0)
             }
         }
     }
@@ -499,16 +503,6 @@ class MatchActivity : BaseActivity() {
         }
     }
 
-    private fun noticeLoop(list: List<String>, position: Int) {
-        mHandler.postDelayed({
-            binding.tvBroadcast.setText(list[position])
-            if (position == list.size - 1) {
-                noticeLoop(list, 0)
-            } else {
-                noticeLoop(list, position + 1)
-            }
-        }, 2000L)
-    }
 
     private fun waiting(time: Long, func: () -> Unit) {
         if (!isFinishing && !isDestroyed) {
@@ -656,38 +650,18 @@ class MatchActivity : BaseActivity() {
         }
     }
 
-    private fun checkPreview() {
-        if (!DoubleUtils.isFastDoubleClick()) {
-            getUserInfo { userInfo ->
-                binding.surfaceLocal.visibility = View.VISIBLE
-                BeautyDialog(this, mRtcEngine, userInfo) {
-                    mRtcEngine?.stopPreview()
-                }
-            }
-        }
-    }
-
-    private fun initLocalSurface() {
-        try {
-            val config = RtcEngineConfig()
-            config.mContext = this
-            config.mEventHandler = mRtcEventHandler
-            config.mAppId = Config.AGORA_APP_ID
-            mRtcEngine = RtcEngine.create(config)
-
-            //启用视频流
-            mRtcEngine?.enableVideo()
-
-        } catch (ex: Exception) {
-            ToastUtil.showShort(this, ex.message)
-        }
-    }
 
     override fun onStop() {
         super.onStop()
 
-        Config.mainHandler?.sendEmptyMessage(0x10006)
-        Config.subscriberHandler?.sendEmptyMessage(0x10001)
+        val type = intent.getStringExtra("type")
+        if (type != null && type != "game") {
+            closeService()
+
+            //刷新金币数量
+            Config.mainHandler?.sendEmptyMessage(0x10006)
+            Config.subscriberHandler?.sendEmptyMessage(0x10001)
+        }
     }
 
     override fun onDestroy() {
@@ -699,7 +673,6 @@ class MatchActivity : BaseActivity() {
         val type = intent.getStringExtra("type")
         if (type == "video" || type == "voice") {
             timer?.cancel()
-            closeService()
         }
     }
 

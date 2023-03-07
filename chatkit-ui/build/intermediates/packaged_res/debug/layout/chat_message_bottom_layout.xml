@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2022 NetEase, Inc. All rights reserved.
   ~ Use of this source code is governed by a MIT license that can be
   ~ found in the LICENSE file.
@@ -16,14 +15,14 @@
         android:id="@+id/llyReply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:background="@color/color_eff1f4"
-        android:visibility="gone"
         android:gravity="center_vertical"
-        android:paddingVertical="@dimen/dimen_11_dp"
+        android:orientation="horizontal"
         android:paddingHorizontal="@dimen/dimen_8_dp"
-        android:orientation="horizontal">
+        android:paddingVertical="@dimen/dimen_11_dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/iv_reply_close"
@@ -41,8 +40,8 @@
             android:id="@+id/tvReplyContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
             android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/color_929299"
             android:textSize="@dimen/text_size_12" />
 
@@ -65,17 +64,17 @@
             android:id="@+id/chat_message_input_et"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:autofillHints=""
             android:background="@null"
+            android:ellipsize="end"
             android:imeOptions="actionSend"
+            android:inputType="text"
             android:paddingStart="@dimen/dimen_12_dp"
             android:paddingEnd="@dimen/dimen_12_dp"
             android:singleLine="true"
-            android:ellipsize="end"
             android:textColorHint="@color/color_b3b7bc"
             android:textCursorDrawable="@null"
             android:textSize="@dimen/text_size_16"
-            android:autofillHints=""
-            android:inputType="text"
             tools:ignore="LabelFor" />
     </com.netease.yunxin.kit.common.ui.widgets.RoundFrameLayout>
 
@@ -120,13 +119,13 @@
             android:id="@+id/chat_message_emoji_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/chat_message_actions_panel"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_188_dp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </FrameLayout>
 
     <androidx.constraintlayout.widget.Group

@@ -71,7 +71,7 @@ class MatchAudioDialog(
         return mUser
     }
 
-    fun setTime(time: Long) {
+    fun setTime(time: Int) {
         binding.tvTimer.text = time.toString()
     }
 

@@ -66,8 +66,6 @@ class AnchorVideoDialog(
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                binding.progressView.progress = (millisUntilFinished * 100 / 45000L).toInt()
-                binding.progressView.bottomText = AppUtil.timeStamp2Date(millisUntilFinished, "ss")
                 if (millisUntilFinished in 14000L..15000L) {
                     //对方30秒不接听，发起者显示超时
                     if (from == From.MySelf) {

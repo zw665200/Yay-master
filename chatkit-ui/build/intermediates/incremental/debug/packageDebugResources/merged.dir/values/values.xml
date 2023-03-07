@@ -20,6 +20,7 @@
     <color name="color_eef1f4">#EFF1F4</color>
     <color name="color_eff1f4">#eff1f4</color>
     <color name="color_f2f4f5">#f2f4f5</color>
+    <color name="color_f6ce02">#F6CE02</color>
     <color name="color_fc596a">#fffc596a</color>
     <color name="color_fee3e6">#fffee3e6</color>
     <color name="color_fffbea">#FFFBEA</color>
@@ -108,7 +109,7 @@
     <string name="chat_message_forward_to_team">Forward to Group</string>
     <string name="chat_message_image_save">Saved </string>
     <string name="chat_message_image_save_fail">Failed to save</string>
-    <string name="chat_message_is_typing">Typing...</string>
+    <string name="chat_message_is_typing">Typing…</string>
     <string name="chat_message_location">Location</string>
     <string name="chat_message_location_distance">%.0fm内 | %s</string>
     <string name="chat_message_more_shoot">Camera</string>
@@ -143,6 +144,9 @@
     <string name="chat_message_video_send_fail">Failed to send</string>
     <string name="chat_message_video_time">%02d:%02d</string>
     <string name="chat_message_voice_in"> Release to send</string>
+    <string name="chat_msg_count_tip_1">今天还可发送%1d条消息，</string>
+    <string name="chat_msg_count_tip_2">升级会员</string>
+    <string name="chat_msg_count_tip_3">可无限制发送</string>
     <string name="chat_name_update">Named as </string>
     <string name="chat_network_error_tip">No Internet</string>
     <string name="chat_no_permission"> No Permission</string>

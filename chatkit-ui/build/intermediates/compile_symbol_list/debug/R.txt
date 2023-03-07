@@ -1226,6 +1226,7 @@ int color color_eef1f4 0x0
 int color color_eff1f4 0x0
 int color color_f2f4f5 0x0
 int color color_f5f8fc 0x0
+int color color_f6ce02 0x0
 int color color_f9b751 0x0
 int color color_fc596a 0x0
 int color color_fe7081 0x0
@@ -3360,6 +3361,8 @@ int id tv_hour_unit 0x0
 int id tv_left 0x0
 int id tv_message 0x0
 int id tv_minute_unit 0x0
+int id tv_msg_member 0x0
+int id tv_msg_tip 0x0
 int id tv_name 0x0
 int id tv_negative 0x0
 int id tv_nick_name 0x0
@@ -3770,6 +3773,9 @@ int string chat_message_video_save_fail 0x0
 int string chat_message_video_send_fail 0x0
 int string chat_message_video_time 0x0
 int string chat_message_voice_in 0x0
+int string chat_msg_count_tip_1 0x0
+int string chat_msg_count_tip_2 0x0
+int string chat_msg_count_tip_3 0x0
 int string chat_name_update 0x0
 int string chat_network_error_tip 0x0
 int string chat_no_permission 0x0

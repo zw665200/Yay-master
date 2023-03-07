@@ -33,7 +33,7 @@ public final class ChatViewLayoutBinding implements ViewBinding {
   public final FrameLayout chatViewBodyTop;
 
   @NonNull
-  public final FrameLayout chatViewBottom;
+  public final LinearLayout chatViewBottom;
 
   @NonNull
   public final BackTitleBar chatViewTitle;
@@ -45,13 +45,19 @@ public final class ChatViewLayoutBinding implements ViewBinding {
   public final ChatMessageListView messageView;
 
   @NonNull
+  public final TextView tvMsgMember;
+
+  @NonNull
+  public final TextView tvMsgTip;
+
+  @NonNull
   public final TextView tvNotification;
 
   private ChatViewLayoutBinding(@NonNull LinearLayout rootView, @NonNull FrameLayout chatViewBody,
       @NonNull FrameLayout chatViewBodyBottom, @NonNull FrameLayout chatViewBodyTop,
-      @NonNull FrameLayout chatViewBottom, @NonNull BackTitleBar chatViewTitle,
+      @NonNull LinearLayout chatViewBottom, @NonNull BackTitleBar chatViewTitle,
       @NonNull MessageBottomLayout inputView, @NonNull ChatMessageListView messageView,
-      @NonNull TextView tvNotification) {
+      @NonNull TextView tvMsgMember, @NonNull TextView tvMsgTip, @NonNull TextView tvNotification) {
     this.rootView = rootView;
     this.chatViewBody = chatViewBody;
     this.chatViewBodyBottom = chatViewBodyBottom;
@@ -60,6 +66,8 @@ public final class ChatViewLayoutBinding implements ViewBinding {
     this.chatViewTitle = chatViewTitle;
     this.inputView = inputView;
     this.messageView = messageView;
+    this.tvMsgMember = tvMsgMember;
+    this.tvMsgTip = tvMsgTip;
     this.tvNotification = tvNotification;
   }
 
@@ -109,7 +117,7 @@ public final class ChatViewLayoutBinding implements ViewBinding {
       }
 
       id = R.id.chat_view_bottom;
-      FrameLayout chatViewBottom = ViewBindings.findChildViewById(rootView, id);
+      LinearLayout chatViewBottom = ViewBindings.findChildViewById(rootView, id);
       if (chatViewBottom == null) {
         break missingId;
       }
@@ -132,6 +140,18 @@ public final class ChatViewLayoutBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tv_msg_member;
+      TextView tvMsgMember = ViewBindings.findChildViewById(rootView, id);
+      if (tvMsgMember == null) {
+        break missingId;
+      }
+
+      id = R.id.tv_msg_tip;
+      TextView tvMsgTip = ViewBindings.findChildViewById(rootView, id);
+      if (tvMsgTip == null) {
+        break missingId;
+      }
+
       id = R.id.tv_notification;
       TextView tvNotification = ViewBindings.findChildViewById(rootView, id);
       if (tvNotification == null) {
@@ -139,7 +159,8 @@ public final class ChatViewLayoutBinding implements ViewBinding {
       }
 
       return new ChatViewLayoutBinding((LinearLayout) rootView, chatViewBody, chatViewBodyBottom,
-          chatViewBodyTop, chatViewBottom, chatViewTitle, inputView, messageView, tvNotification);
+          chatViewBodyTop, chatViewBottom, chatViewTitle, inputView, messageView, tvMsgMember,
+          tvMsgTip, tvNotification);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
