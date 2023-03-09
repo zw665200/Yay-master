@@ -1,5 +1,6 @@
 package com.ql.recovery.yay
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
@@ -9,6 +10,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import com.appsflyer.AppsFlyerLib
 import com.blongho.country_data.World
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -39,6 +44,7 @@ import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.manager.RetrofitServiceManager
 import com.ql.recovery.yay.config.MatchStatus
+import com.ql.recovery.yay.databinding.LayoutFloatChatBinding
 import com.ql.recovery.yay.manager.DBManager
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.dialog.MatchVideoDialog
@@ -62,6 +68,7 @@ import java.lang.ref.WeakReference
 class BaseApp : Application() {
     private var currentActivity: WeakReference<Activity>? = null
     private var matchVideoDialog: MatchVideoDialog? = null
+    private var windowManager: WindowManager? = null
     private var handler = Handler(Looper.getMainLooper())
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var mMatcher: User? = null
@@ -552,6 +559,8 @@ class BaseApp : Application() {
 
                 firebaseAnalytics = Firebase.analytics
 
+                createFloatView(activity)
+
                 val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
                 if (userInfo != null) {
                     //保证对话框能在所有页面弹出
@@ -703,6 +712,53 @@ class BaseApp : Application() {
         } else {
             return config
         }
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    fun createFloatView(activity: Activity) {
+            windowManager = activity.windowManager
+        val layoutParam = WindowManager.LayoutParams().apply {
+            width = ViewGroup.LayoutParams.WRAP_CONTENT
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+        }
+
+        val floatView = LayoutFloatChatBinding.inflate(activity.layoutInflater)
+        windowManager?.addView(floatView.root, layoutParam)
+
+        var x = 0
+        var y = 0
+        floatView.root.setOnTouchListener(
+            object : View.OnTouchListener {
+                override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
+                    when (motionEvent.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            x = motionEvent.rawX.toInt()
+                            y = motionEvent.rawY.toInt()
+
+                        }
+                        MotionEvent.ACTION_MOVE -> {
+                            val nowX = motionEvent.rawX.toInt()
+                            val nowY = motionEvent.rawY.toInt()
+                            val movedX = nowX - x
+                            val movedY = nowY - y
+                            x = nowX
+                            y = nowY
+                            layoutParam.apply {
+                                x += movedX
+                                y += movedY
+                            }
+                            //更新悬浮球控件位置
+                            windowManager?.updateViewLayout(view, layoutParam)
+                        }
+                        else -> {
+
+                        }
+                    }
+                    return false
+                }
+            })
     }
 
     /**
