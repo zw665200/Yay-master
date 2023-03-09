@@ -7,6 +7,7 @@ import com.ql.recovery.bean.*
 import com.ql.recovery.config.Config
 import com.ql.recovery.http.response.Response
 import com.ql.recovery.manager.RetrofitServiceManager
+import com.ql.recovery.util.AppUtil
 import com.ql.recovery.util.DeviceUtil
 import com.ql.recovery.util.GsonUtils
 import com.tencent.mmkv.MMKV
@@ -40,10 +41,14 @@ object BaseLoader {
 
         val map = ArrayMap<String, Any>()
         map["brand"] = brand
-        map["channel"] = Config.CHANNEL_ID
         map["device_id"] = deviceId
         map["device_mode"] = mode
-        map["os"] = "Android $device"
+
+        if (AppUtil.isHarmonyOS()) {
+            map["os"] = "Harmony $device"
+        } else {
+            map["os"] = "Android $device"
+        }
 
         val json = GsonUtils.toJson(map)
         val request = json.toRequestBody("application/json; charset=utf-8".toMediaType())
@@ -205,6 +210,16 @@ object BaseLoader {
     fun updateCountry(country: String): Observable<Response<Boolean>> {
         val map = ArrayMap<String, Any>()
         map["country"] = country
+
+        val json = GsonUtils.toJson(map)
+        val request = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+        return RetrofitServiceManager.get().baseService.updateUserInfo(Config.CLIENT_TOKEN, request)
+    }
+
+    fun updateAvatarAndNickname(avatar: String, nickname: String): Observable<Response<Boolean>> {
+        val map = ArrayMap<String, Any>()
+        map["avatar"] = avatar
+        map["nickname"] = nickname
 
         val json = GsonUtils.toJson(map)
         val request = json.toRequestBody("application/json; charset=utf-8".toMediaType())
@@ -373,6 +388,10 @@ object BaseLoader {
         return RetrofitServiceManager.get().baseService.getMatchList(Config.CLIENT_TOKEN, page, size)
     }
 
+    fun getOnlineCount(): Observable<Response<Int>> {
+        return RetrofitServiceManager.get().baseService.getOnlineCount(Config.CLIENT_TOKEN)
+    }
+
     fun getTemplateList(): Observable<Response<List<Template>>> {
         return RetrofitServiceManager.get().baseService.getTemplateList(Config.CLIENT_TOKEN)
     }
@@ -458,6 +477,20 @@ object BaseLoader {
         val json = GsonUtils.toJson(map)
         val request = json.toRequestBody("application/json; charset=utf-8".toMediaType())
         return RetrofitServiceManager.get().baseService.handlerVideoInvite(Config.CLIENT_TOKEN, request)
+    }
+
+    /**
+     * 查找系统打招呼消息模板
+     */
+    fun getGreetingTemplates(role: String, sex: String): Observable<Response<List<Greeting>>> {
+        return RetrofitServiceManager.get().baseService.getGreetingTemplates(Config.CLIENT_TOKEN, role, sex)
+    }
+
+    /**
+     * 系统主动通话邀请
+     */
+    fun getSystemInvite(): Observable<Response<Boolean>> {
+        return RetrofitServiceManager.get().baseService.getSystemInvite(Config.CLIENT_TOKEN)
     }
 
     //------------------------------follow--------------------------------//
@@ -575,6 +608,13 @@ object BaseLoader {
         return RetrofitServiceManager.get().baseService.getAnchorList(Config.CLIENT_TOKEN, category, page, size)
     }
 
+    /**
+     *获得主播列表
+     */
+    fun getAnchorMessageList(): Observable<Response<List<ClubFollow>>> {
+        return RetrofitServiceManager.get().baseService.getAnchorMessageList(Config.CLIENT_TOKEN)
+    }
+
     //-------------------------------income--------------------------------//
     /**
      * 获得主播收益详情
@@ -646,6 +686,34 @@ object BaseLoader {
      */
     fun getVipReward(): Observable<Response<Boolean>> {
         return RetrofitServiceManager.get().baseService.getVipReward(Config.CLIENT_TOKEN)
+    }
+
+    /**
+     * 检查会员每日奖励是否领取
+     */
+    fun checkDailyReward(): Observable<Response<Boolean>> {
+        return RetrofitServiceManager.get().baseService.checkDailyReward(Config.CLIENT_TOKEN)
+    }
+
+    /**
+     * 领取会员每日奖励
+     */
+    fun receiveDailyReward(): Observable<Response<Boolean>> {
+        return RetrofitServiceManager.get().baseService.receiveDailyReward(Config.CLIENT_TOKEN)
+    }
+
+    /**
+     * 检查用户是否已领取首次完善资料奖励
+     */
+    fun checkFirstCompletionAward(): Observable<Response<Boolean>> {
+        return RetrofitServiceManager.get().baseService.checkFirstCompletionAward(Config.CLIENT_TOKEN)
+    }
+
+    /**
+     * 领取首次完善资料奖励
+     */
+    fun receiveFirstCompletionAward(): Observable<Response<Boolean>> {
+        return RetrofitServiceManager.get().baseService.receiveFirstCompletionAward(Config.CLIENT_TOKEN)
     }
 
     //------------------------------message---------------------------------//

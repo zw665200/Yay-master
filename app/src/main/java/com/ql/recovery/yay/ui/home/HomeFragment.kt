@@ -11,6 +11,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.ql.recovery.bean.UserInfo
+import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.ChooseType
 import com.ql.recovery.yay.databinding.FragmentHomeBinding
@@ -18,16 +19,14 @@ import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.MainActivity
 import com.ql.recovery.yay.ui.base.BaseFragment
+import com.ql.recovery.yay.ui.dialog.CompleteProfileDialog
 import com.ql.recovery.yay.ui.dialog.FilterDialog
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
-import com.ql.recovery.yay.ui.dialog.StoreDialog
-import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.match.MatchActivity
 import com.ql.recovery.yay.ui.mine.CountryActivity
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils
-import com.ql.recovery.yay.util.ToastUtil
 import com.tencent.mmkv.MMKV
 
 class HomeFragment : BaseFragment() {
@@ -66,11 +65,7 @@ class HomeFragment : BaseFragment() {
     override fun initData() {
         getUserInfo()
         flushConfig()
-
-//        AnchorVideoDialog(requireActivity()){}
-//        getUserInfo {
-//            StoreDialog(requireActivity(), it).show()
-//        }
+        loadOnlineCount()
     }
 
     private fun initClubLottie() {
@@ -179,6 +174,12 @@ class HomeFragment : BaseFragment() {
         }
     }
 
+    private fun loadOnlineCount() {
+        DataManager.getOnlineCount { count ->
+            binding?.tvOnlineCount?.text = count.toString()
+        }
+    }
+
     private fun toStorePage() {
         if (!DoubleUtils.isFastDoubleClick()) {
             startActivity(Intent(requireActivity(), StoreActivity::class.java))
@@ -238,14 +239,23 @@ class HomeFragment : BaseFragment() {
             //report
             initReport(userInfo, "match_first_click")
 
-            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
-                userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
-            ) {
-                //如果用户资料不完整，要填写完整才能匹配
-                ToastUtil.showLong(requireContext(), getString(R.string.notice_incomplete_profile))
-                startActivity(Intent(requireActivity(), GuideActivity::class.java))
-                return@getUserInfo
-            }
+//            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
+//                userInfo.nickname.isBlank() || userInfo.photos.isEmpty()
+//            ) {
+//                DataManager.checkFirstCompletionAward {
+//                    if (!it) {
+//                        //引导用户完善资料
+//                        CompleteProfileDialog(requireActivity(), userInfo) {
+//                            //检查视频的权限
+//                            checkVideoPermissions {
+//                                openMatchPage()
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                return@getUserInfo
+//            }
 
             if (userInfo.country.isBlank()) {
                 startActivity(Intent(requireActivity(), CountryActivity::class.java))

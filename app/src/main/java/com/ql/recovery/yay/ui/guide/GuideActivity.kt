@@ -73,7 +73,6 @@ class GuideActivity : BaseActivity() {
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityGuideBinding.inflate(layoutInflater, baseBinding.flBase, true)
-        baseBinding.divider.visibility = View.GONE
     }
 
     override fun initView() {
@@ -113,17 +112,15 @@ class GuideActivity : BaseActivity() {
                 binding.includeHead.tvName.text = getString(R.string.guide_title_age)
                 chooseBirthDay()
                 return@getUserInfo
-            } else {
-                binding.includeBirthday.root.visibility = View.GONE
             }
 
-            if (userInfo.country.isBlank()) {
-                step = Step.Country
-                binding.includeCountry.root.visibility = View.VISIBLE
-                binding.includeHead.tvName.text = getString(R.string.guide_title_region)
-                chooseCountry()
-                return@getUserInfo
-            }
+//            if (userInfo.country.isBlank()) {
+//                step = Step.Country
+//                binding.includeCountry.root.visibility = View.VISIBLE
+//                binding.includeHead.tvName.text = getString(R.string.guide_title_region)
+//                chooseCountry()
+//                return@getUserInfo
+//            }
 
 //            if (it.nickname.isBlank()) {
 //                step = Step.NickName
@@ -218,6 +215,7 @@ class GuideActivity : BaseActivity() {
 
                 updateUserInfo(null, null, null, mIsMale, mFindIsMale, null, null)
                 ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_gender_click", "modify gender")
+                ReportManager.appsFlyerCustomLog(this, "modify_gender_click", "modify gender")
             }
 
             Step.Birthday -> {
@@ -240,6 +238,7 @@ class GuideActivity : BaseActivity() {
 
                 updateUserInfo(null, mBirthday, null, null, null, null, null)
                 ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_birthday_click", "modify birthday")
+                ReportManager.appsFlyerCustomLog(this, "modify_birthday_click", "modify birthday")
             }
 
             Step.Country -> {
@@ -264,6 +263,7 @@ class GuideActivity : BaseActivity() {
                     mNickname = nickname
                     updateUserInfo(null, null, nickname, null, null, null, null)
                     ReportManager.firebaseCustomLog(firebaseAnalytics, "modify_nickname_click", "modify nickname")
+                    ReportManager.appsFlyerCustomLog(this, "modify_nickname_click", "modify nickname")
 
                     //更新用户资料
                     val fields = HashMap<UserInfoFieldEnum, Any>()

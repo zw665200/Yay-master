@@ -132,6 +132,7 @@
                         android:textSize="@dimen/sp_13" />
 
                     <TextView
+                        android:id="@+id/tv_online_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_5"

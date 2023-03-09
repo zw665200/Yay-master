@@ -20,6 +20,13 @@ data class MsgInfo(
 )
 
 @Parcelize
+data class Invite(
+    val user: User,
+    val transaction_type: String?,
+    val room_type: String?
+) : Parcelable
+
+@Parcelize
 data class User(
     val uid: Int,
     val avatar: String,

@@ -8,11 +8,10 @@ import android.os.*
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.bumptech.glide.Glide
-import com.google.gson.reflect.TypeToken
 import com.netease.yunxin.kit.conversationkit.repo.ConversationRepo
 import com.ql.recovery.bean.*
 import com.ql.recovery.config.Config
+import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.databinding.ActivityMainBinding
@@ -21,17 +20,16 @@ import com.ql.recovery.yay.service.SosWebSocketClientService
 import com.ql.recovery.yay.ui.base.BaseFragment
 import com.ql.recovery.yay.ui.base.BaseFragmentActivity
 import com.ql.recovery.yay.ui.club.ClubFragment
+import com.ql.recovery.yay.ui.dialog.DailyClubDialog
+import com.ql.recovery.yay.ui.dialog.DailyCoinDialog
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
 import com.ql.recovery.yay.ui.home.HomeFragment
-import com.ql.recovery.yay.ui.login.LoginActivity
 import com.ql.recovery.yay.ui.mine.MineFragment
 import com.ql.recovery.yay.ui.notifications.NotificationsFragment
 import com.ql.recovery.yay.ui.record.RecordFragment
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.GsonUtils
 import com.ql.recovery.yay.util.JLog
-import com.ql.recovery.yay.util.ToastUtil
-import com.tencent.mmkv.MMKV
 
 class MainActivity : BaseFragmentActivity() {
     companion object {
@@ -71,33 +69,49 @@ class MainActivity : BaseFragmentActivity() {
 
     private var mWebSocketService: SosWebSocketClientService? = null
     private var bindIntent: Intent? = null
+    private var handler = Handler(Looper.getMainLooper())
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityMainBinding.inflate(layoutInflater, baseBinding.flBase, true)
     }
 
     override fun initView() {
-        val lp = binding.divider.layoutParams
-        val different = AppUtil.getNavigationBarHeightIfRoom(this)
-        if (different != 0) {
-            binding.divider.visibility = View.VISIBLE
-            lp.height = different
-            binding.divider.layoutParams = lp
-        } else {
-            binding.divider.visibility = View.GONE
-            lp.height = 0
-            binding.divider.layoutParams = lp
-        }
+//        checkDailyRecommend()
+        checkMemberDailyReward()
+    }
 
-        //开启匹配链接
-//        if (mWebSocketService == null) {
-//            getUserInfo { userInfo ->
-//                //只有身份是主播时全程开启匹配
-//                if (userInfo.role == "anchor") {
-//                    startWebSocketService(userInfo.uid, "video", getMatchConfig())
-//                }
-//            }
-//        }
+    /**
+     * 每日主播推荐
+     */
+    private fun checkDailyRecommend() {
+        getUserInfo { userInfo ->
+            if (userInfo.role != "anchor") {
+                val today = AppUtil.getTodayDay()
+                val date = getLocalStorage().decodeString("daily_recommend_date", "")
+                if (today != date) {
+                    handler.postDelayed({
+                        DailyClubDialog(this).show()
+                    }, 1000L)
+                }
+            }
+        }
+    }
+
+    /**
+     * 会员每日领取宝石
+     */
+    private fun checkMemberDailyReward() {
+        getUserInfo { userInfo ->
+            if (userInfo.is_vip) {
+                DataManager.checkDailyReward {
+                    if (!it) {
+                        getBasePrice { basePrice ->
+                            DailyCoinDialog(this, basePrice.app.membership_daily_reward).show()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun putFragments(): Array<Class<out BaseFragment>> {
@@ -185,9 +199,52 @@ class MainActivity : BaseFragmentActivity() {
                         //刷新用户信息
                         flushUserInfo()
                     }
+
+                    0x10007 -> {
+                        val message = MsgInfo("match_accept_invite")
+                        val json = GsonUtils.toJson(message)
+                        mWebSocketService?.sendMsg(json)
+                    }
+
+                    0x10008 -> {
+                        val message = MsgInfo("match_reject_invite")
+                        val json = GsonUtils.toJson(message)
+                        mWebSocketService?.sendMsg(json)
+                    }
+
+                    0x10009 -> {
+                        val message = MessageInfo("rematch", 0, 0, "")
+                        val json = GsonUtils.toJson(message)
+                        mWebSocketService?.sendMsg(json)
+                    }
                 }
             }
         }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        getUserInfo { userInfo ->
+            //只有身份是主播时全程开启匹配
+            if (userInfo.role == "anchor") {
+                if (mWebSocketService == null) {
+                    //开启匹配链接
+                    startWebSocketService(userInfo.uid, "video", getMatchConfig())
+                }
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        closeService()
+
+        //刷新金币数量
+        Config.mainHandler?.sendEmptyMessage(0x10006)
+        Config.subscriberHandler?.sendEmptyMessage(0x10001)
     }
 
 
@@ -196,6 +253,7 @@ class MainActivity : BaseFragmentActivity() {
         bindIntent!!.putExtra("id", id)
         bindIntent!!.putExtra("type", type)
         bindIntent!!.putExtra("match_config", config)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(bindIntent)
         } else {
@@ -226,4 +284,16 @@ class MainActivity : BaseFragmentActivity() {
         }
     }
 
+    private fun closeService() {
+        try {
+            if (bindIntent != null) {
+                mWebSocketService?.closeConnect()
+                unbindService(serviceConnection)
+                stopService(bindIntent)
+                mWebSocketService = null
+            }
+        } catch (ex: Exception) {
+
+        }
+    }
 }

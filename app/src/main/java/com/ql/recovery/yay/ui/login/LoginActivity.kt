@@ -35,6 +35,7 @@ import com.ql.recovery.yay.ui.mine.AgreementActivity
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
 import com.tencent.mmkv.MMKV
+import java.util.Locale
 import kotlin.concurrent.thread
 
 
@@ -411,6 +412,11 @@ class LoginActivity : BaseActivity() {
         DataManager.getUserInfo { userInfo ->
             ToastUtil.showShort(this, getString(R.string.login_success))
 
+            if (userInfo.country.isBlank()) {
+                val country = Locale.getDefault().country
+                DataManager.updateCountry(country) {}
+            }
+
             //上报日志
             thread {
                 //刷新用户信息
@@ -425,7 +431,7 @@ class LoginActivity : BaseActivity() {
                 ReportManager.appsFlyerLoginLog(this, userInfo.uid)
             }
 
-            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.country.isBlank()) {
+            if (userInfo.sex == 0 || userInfo.age == 0) {
                 val intent = Intent(this, GuideActivity::class.java)
                 intent.putExtra("home", true)
                 startActivity(intent)

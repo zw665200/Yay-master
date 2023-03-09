@@ -314,9 +314,7 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
             ReportManager.firebaseCustomLog(firebaseAnalytics, "private_video_click", "private video click")
             ReportManager.appsFlyerCustomLog(requireContext(), "private_video_click", "private video click")
 
-            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
-                userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
-            ) {
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()) {
                 //如果用户资料不完整，要填写完整才能匹配
                 ToastUtil.showLong(requireContext(), getString(R.string.notice_incomplete_profile))
                 startActivity(Intent(requireActivity(), GuideActivity::class.java))

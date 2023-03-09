@@ -4,15 +4,16 @@ import android.app.Activity
 import android.app.Dialog
 import android.view.Gravity
 import android.view.WindowManager
+import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.DialogDailyCoinBinding
 import com.ql.recovery.yay.util.AppUtil
+import com.ql.recovery.yay.util.ToastUtil
 
 
 class DailyCoinDialog(
     private val activity: Activity,
-    private val coin: Int,
-    private val func: () -> Unit
+    private val coin: Int
 ) : Dialog(activity, R.style.app_dialog2) {
     private lateinit var binding: DialogDailyCoinBinding
 
@@ -28,10 +29,19 @@ class DailyCoinDialog(
         binding.tvCoin.text = coin.toString()
 
         binding.ivCancel.setOnClickListener { cancel() }
+        binding.flGetCoin.setOnClickListener { receiveReward() }
 
         show()
     }
 
+    private fun receiveReward() {
+        DataManager.receiveDailyReward {
+            if (it) {
+                cancel()
+                ToastUtil.showShort(activity, "claim success")
+            }
+        }
+    }
 
     override fun show() {
         window!!.decorView.setPadding(0, 0, 0, 0)

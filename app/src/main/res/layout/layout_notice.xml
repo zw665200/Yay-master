@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_70"
-    android:background="@color/color_white"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:scrollbars="none">
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="@dimen/dp_10">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="打开通知，不错过她的消息"
+            android:text="@string/notice_title"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_15" />
 
@@ -25,21 +25,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_5"
-            android:text="交友成功率提高10倍"
+            android:text="@string/notice_content"
             android:textColor="@color/color_grey"
             android:textSize="@dimen/sp_13" />
 
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_open"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
         android:layout_marginEnd="@dimen/dp_15"
         android:background="@drawable/shape_corner_yellow_4"
         android:padding="@dimen/dp_8"
-        android:text="去开启"
+        android:text="@string/notice_open"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_13" />
 
-</FrameLayout>
+</androidx.cardview.widget.CardView>

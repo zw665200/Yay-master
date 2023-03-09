@@ -174,6 +174,23 @@ object DataManager {
     }
 
     @SuppressLint("CheckResult")
+    fun updateAvatarAndNickname(
+        avatar: String,
+        nickname: String,
+        result: (Boolean) -> Unit
+    ) {
+        thread {
+            BaseLoader.updateAvatarAndNickname(avatar, nickname)
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {
+                })
+        }
+    }
+
+    @SuppressLint("CheckResult")
     fun getTrades(result: (List<Order>) -> Unit) {
         thread {
             BaseLoader.getTrades()
@@ -654,7 +671,21 @@ object DataManager {
                 .compose(SchedulerProvider.getInstance().applySchedulers())
                 .subscribe({
                     result(it.list)
-//                    result(arrayListOf())
+                }, {})
+        }
+    }
+
+    /**
+     * 获得匹配列表
+     */
+    @SuppressLint("CheckResult")
+    fun getOnlineCount(result: (Int) -> Unit) {
+        thread {
+            BaseLoader.getOnlineCount()
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
                 }, {})
         }
     }
@@ -747,6 +778,40 @@ object DataManager {
                     result(it)
                 }, {
                     result(null)
+                })
+        }
+    }
+
+    /**
+     * 查找系统打招呼消息模板
+     */
+    @SuppressLint("CheckResult")
+    fun getGreetingTemplates(role: String, sex: String, result: (List<Greeting>) -> Unit) {
+        thread {
+            BaseLoader.getGreetingTemplates(role, sex)
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {
+
+                })
+        }
+    }
+
+    /**
+     * 系统主动通话邀请
+     */
+    @SuppressLint("CheckResult")
+    fun getSystemInvite(result: (Boolean) -> Unit) {
+        thread {
+            BaseLoader.getSystemInvite()
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {
+
                 })
         }
     }
@@ -1015,6 +1080,21 @@ object DataManager {
         }
     }
 
+    /**
+     * 获得CLUB通知消息
+     */
+    @SuppressLint("CheckResult")
+    fun getAnchorMessageList(result: (List<ClubFollow>) -> Unit) {
+        thread {
+            BaseLoader.getAnchorMessageList()
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {})
+        }
+    }
+
     //-------------------------------income--------------------------------//
     /**
      * 获得主播收益详情
@@ -1151,6 +1231,65 @@ object DataManager {
         }
     }
 
+    /**
+     * 检查会员每日奖励是否领取
+     */
+    @SuppressLint("CheckResult")
+    fun checkDailyReward(result: (Boolean) -> Unit) {
+        thread {
+            BaseLoader.checkDailyReward()
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {})
+        }
+    }
+
+    /**
+     * 领取会员每日奖励
+     */
+    @SuppressLint("CheckResult")
+    fun receiveDailyReward(result: (Boolean) -> Unit) {
+        thread {
+            BaseLoader.receiveDailyReward()
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {})
+        }
+    }
+
+    /**
+     * 检查用户是否已领取首次完善资料奖励
+     */
+    @SuppressLint("CheckResult")
+    fun checkFirstCompletionAward(result: (Boolean) -> Unit) {
+        thread {
+            BaseLoader.checkFirstCompletionAward()
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {})
+        }
+    }
+
+    /**
+     * 领取首次完善资料奖励
+     */
+    @SuppressLint("CheckResult")
+    fun receiveFirstCompletionAward(result: (Boolean) -> Unit) {
+        thread {
+            BaseLoader.receiveFirstCompletionAward()
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {})
+        }
+    }
 
     /**
      * 获取系统通知列表

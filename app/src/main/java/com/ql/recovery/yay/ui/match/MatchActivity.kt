@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.*
 import android.view.View
-import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -73,7 +72,11 @@ class MatchActivity : BaseActivity() {
         mWaitingDialog = WaitingDialog(this)
 
         flushConfig()
+        loadOnlineCount()
+        initMatch()
+    }
 
+    private fun initMatch() {
         val type = intent.getStringExtra("type")
         if (type != null) {
             when (type) {
@@ -104,12 +107,12 @@ class MatchActivity : BaseActivity() {
             if (type == "video" || type == "voice") {
                 getUserInfo { userInfo ->
                     //只有普通用户在匹配页开启匹配，主播进app就开启匹配
-                    if (userInfo.role == "normal") {
-                        initMatchServer(type)
-                        initTimer(type)
-                        initNotice(type)
-                        initHandler(type)
-                    }
+//                    if (userInfo.role == "normal") {
+                    initMatchServer(type)
+                    initTimer(type)
+                    initNotice(type)
+                    initHandler(type)
+//                    }
                 }
             }
         }
@@ -183,6 +186,12 @@ class MatchActivity : BaseActivity() {
         }
     }
 
+    private fun loadOnlineCount() {
+        DataManager.getOnlineCount { count ->
+            binding.tvOnlineCount.text = count.toString()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         val type = intent.getStringExtra("type")
@@ -194,50 +203,48 @@ class MatchActivity : BaseActivity() {
     }
 
     private fun initMatchServer(type: String) {
-        getUserInfo { userInfo ->
-            when (type) {
-                "video" -> {
-                    matchVideoDialog = MatchVideoDialog(this) { status ->
-                        when (status) {
-                            MatchStatus.Accept -> {
-                                acceptInvite(type)
-                                ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_video_match_click", "accept")
-                                ReportManager.appsFlyerCustomLog(this, "accept_video_match_click", "accept")
-                            }
+        when (type) {
+            "video" -> {
+                matchVideoDialog = MatchVideoDialog(this) { status, _ ->
+                    when (status) {
+                        MatchStatus.Accept -> {
+                            acceptInvite(type)
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_video_match_click", "accept")
+                            ReportManager.appsFlyerCustomLog(this, "accept_video_match_click", "accept")
+                        }
 
-                            MatchStatus.Reject -> {
-                                rejectInvite()
-                                rematch(1500L)
-                                ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_video_match_click", "reject")
-                                ReportManager.appsFlyerCustomLog(this, "reject_video_match_click", "reject")
-                            }
+                        MatchStatus.Reject -> {
+                            rejectInvite()
+                            rematch(1500L)
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_video_match_click", "reject")
+                            ReportManager.appsFlyerCustomLog(this, "reject_video_match_click", "reject")
+                        }
 
-                            MatchStatus.Cancel -> {
-                                binding.ivUserBg.visibility = View.GONE
-                            }
+                        MatchStatus.Cancel -> {
+                            binding.ivUserBg.visibility = View.GONE
                         }
                     }
                 }
+            }
 
-                "voice" -> {
-                    matchAudioDialog = MatchAudioDialog(this) { status ->
-                        when (status) {
-                            MatchStatus.Accept -> {
-                                acceptInvite(type)
-                                ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_voice_match_click", "accept")
-                                ReportManager.appsFlyerCustomLog(this, "accept_voice_match_click", "accept")
-                            }
+            "voice" -> {
+                matchAudioDialog = MatchAudioDialog(this) { status ->
+                    when (status) {
+                        MatchStatus.Accept -> {
+                            acceptInvite(type)
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_voice_match_click", "accept")
+                            ReportManager.appsFlyerCustomLog(this, "accept_voice_match_click", "accept")
+                        }
 
-                            MatchStatus.Reject -> {
-                                rejectInvite()
-                                rematch(1500L)
-                                ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_voice_match_click", "reject")
-                                ReportManager.appsFlyerCustomLog(this, "reject_voice_match_click", "reject")
-                            }
+                        MatchStatus.Reject -> {
+                            rejectInvite()
+                            rematch(1500L)
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_voice_match_click", "reject")
+                            ReportManager.appsFlyerCustomLog(this, "reject_voice_match_click", "reject")
+                        }
 
-                            MatchStatus.Cancel -> {
-                                binding.ivUserBg.visibility = View.GONE
-                            }
+                        MatchStatus.Cancel -> {
+                            binding.ivUserBg.visibility = View.GONE
                         }
                     }
                 }
@@ -256,9 +263,12 @@ class MatchActivity : BaseActivity() {
 
                         when (message.type) {
                             "match_invite" -> {
+//                                val typeToken = object : TypeToken<MessageInfo<Invite>>() {}
+//                                val info = GsonUtils.fromJson<MessageInfo<Invite>>(data, typeToken.type) ?: return
                                 val typeToken = object : TypeToken<MessageInfo<User>>() {}
                                 val info = GsonUtils.fromJson<MessageInfo<User>>(data, typeToken.type) ?: return
 
+                                //取消所有对话框和计时器
                                 timer?.cancel()
                                 matchFailedDialog?.cancel()
 
@@ -269,11 +279,12 @@ class MatchActivity : BaseActivity() {
                                         if (!isFinishing && !isDestroyed) {
                                             //设置背景图片
                                             binding.ivUserBg.visibility = View.VISIBLE
-                                            Glide.with(this@MatchActivity).load(info.content.cover_url).into(binding.ivUserBg)
-
+//                                            matchVideoDialog?.setMatchType(info.content.room_type, info.content.transaction_type)
+                                            matchVideoDialog?.setMatchType("match", "")
                                             matchVideoDialog?.startConnect()
                                             matchVideoDialog?.show()
 
+                                            //免提模式
                                             val config = getMatchConfig()
                                             if (config.hand_free) {
                                                 matchVideoDialog?.waitConnect()
@@ -283,16 +294,15 @@ class MatchActivity : BaseActivity() {
                                     }
 
                                     "voice" -> {
+//                                        mMatcher = info.content.user
+//                                        matchAudioDialog?.setUser(info.content.user)
                                         mMatcher = info.content
                                         matchAudioDialog?.setUser(info.content)
                                         if (!isFinishing && !isDestroyed) {
-                                            //设置背景图片
-                                            binding.ivUserBg.visibility = View.VISIBLE
-                                            Glide.with(this@MatchActivity).load(info.content.cover_url).into(binding.ivUserBg)
-
                                             matchAudioDialog?.startConnect()
                                             matchAudioDialog?.show()
 
+                                            //免提模式
                                             val config = getMatchConfig()
                                             if (config.hand_free) {
                                                 matchAudioDialog?.waitConnect()
@@ -344,6 +354,7 @@ class MatchActivity : BaseActivity() {
                                         matchVideoDialog?.cancel()
                                         startVideoPage(info.content)
                                     }
+
                                     "voice" -> {
                                         matchAudioDialog?.cancel()
                                         startAudioPage(info.content)
@@ -502,7 +513,6 @@ class MatchActivity : BaseActivity() {
             mWebSocketService?.sendMsg(json)
         }
     }
-
 
     private fun waiting(time: Long, func: () -> Unit) {
         if (!isFinishing && !isDestroyed) {
@@ -682,6 +692,7 @@ class MatchActivity : BaseActivity() {
                 mWebSocketService?.closeConnect()
                 unbindService(serviceConnection)
                 stopService(bindIntent)
+                mWebSocketService = null
             }
         } catch (ex: Exception) {
 

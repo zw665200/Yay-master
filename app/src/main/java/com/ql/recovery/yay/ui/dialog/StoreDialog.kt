@@ -102,6 +102,7 @@ class StoreDialog(
 
                 when (itemData.code) {
                     "coin_level_one", "" -> {
+                        itemBinding.tvCount.visibility = View.VISIBLE
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_standard)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_m, null)
 
@@ -111,6 +112,7 @@ class StoreDialog(
                     }
 
                     "coin_level_two" -> {
+                        itemBinding.tvCount.visibility = View.VISIBLE
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_free)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_b, null)
                         itemBinding.root.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_c, null)
@@ -122,6 +124,7 @@ class StoreDialog(
                     }
 
                     "coin_level_three" -> {
+                        itemBinding.tvCount.visibility = View.VISIBLE
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_17)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_m, null)
 
@@ -139,6 +142,7 @@ class StoreDialog(
                     }
 
                     "coin_level_four_in_app" -> {
+                        itemBinding.tvCount.visibility = View.VISIBLE
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_23)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_m, null)
 
@@ -148,6 +152,7 @@ class StoreDialog(
                     }
 
                     "coin_level_five" -> {
+                        itemBinding.tvCount.visibility = View.VISIBLE
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_27)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_b, null)
                         itemBinding.root.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_a, null)
@@ -158,6 +163,7 @@ class StoreDialog(
                     }
 
                     "coin_level_six" -> {
+                        itemBinding.tvCount.visibility = View.VISIBLE
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_29)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_m, null)
 
@@ -167,6 +173,7 @@ class StoreDialog(
                     }
 
                     "coin_level_seven" -> {
+                        itemBinding.tvCount.visibility = View.VISIBLE
                         itemBinding.ivTag.setImageResource(R.drawable.hybg_save_32)
                         itemBinding.tvMoney.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_b, null)
                         itemBinding.root.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.hybg_a, null)

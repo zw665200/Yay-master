@@ -73,7 +73,7 @@
     <string name="guide_nickname_hint">Enter your nickname</string>
     <string name="guide_album_tip">Please upload a photo</string>
     <string name="guide_tag_tip">Highlight interests tags</string>
-    <string name="guide_avatar_setting">Upload</string>
+    <string name="guide_avatar_setting">Upload Avatar</string>
     <string name="guide_avatar_upload">Upload a real profile picture can help you more quickly gain the favor of the opposite sex</string>
     <string name="guide_notice_limit_age">*You must over 18 years of age</string>
 
@@ -154,6 +154,7 @@
     <string name="match_failed_invite_title">Recommendations</string>
     <string name="match_failed_invite">Someone has invited you to Club</string>
     <string name="match_failed_invite_accept">Go meet them</string>
+    <string name="match_say_hi">Say Hi</string>
     <string name="match_finish">Chat has ended!</string>
     <string name="match_finish_title">Are you satisfied with S/he?</string>
     <string name="match_item_gift_get_more">Get more gems</string>
@@ -196,6 +197,10 @@
     <string name="match_add_time_tip">The call will be hung up if there\'s no duration recharge</string>
     <string name="match_ticket_receive">The other party gives you a raffle ticket, click "start"</string>
     <string name="match_ticket_unused">tickets unused, please draw first</string>
+    <string name="match_call_income">You will be charged %1d gems/minute</string>
+    <string name="match_call_cost">You will be cost %1d gems/minute</string>
+    <string name="match_call_wait_background">Waiting in the background</string>
+    <string name="match_call_auto_accept">Auto-accept</string>
 
     <!--match record-->
     <string name="record_title">History</string>
@@ -247,6 +252,7 @@
     <string name="store_question">Contact us if you have any questions</string>
     <string name="store_pay_free">Free</string>
     <string name="store_pay_success">Payment successful</string>
+    <string name="store_more_menu">more</string>
 
     <!--mine-->
     <string name="mine_followed">Followers</string>
@@ -546,5 +552,27 @@
     <string name="private_anchor_earn">该通话赚取</string>
     <string name="private_unit">宝石/分钟</string>
     <string name="private_wait_on_background">后台等待</string>
+
+    <!--notice-->
+    <string name="notice_title">打开通知，不错过她的消息</string>
+    <string name="notice_content">交友成功率提高10倍</string>
+    <string name="notice_open">去开启</string>
+
+    <!--recommend-->
+    <string name="recommend_title">今天主播推荐</string>
+    <string name="recommend_tip_1">今天还可发送%1d条消息，</string>
+    <string name="recommend_tip_2">升级会员</string>
+    <string name="recommend_tip_3">可无限制发送</string>
+
+    <!--complete profile-->
+    <string name="complete_title">完善资料，可获得120宝石奖励</string>
+    <string name="complete_avatar_tip">上传真人头像，能快速获得异性好感!</string>
+    <string name="complete_nickname">昵称</string>
+    <string name="complete_nickname_input">请输入你的昵称</string>
+    <string name="complete_photo">照片墙</string>
+    <string name="complete_next_step">下一步</string>
+    <string name="complete_finish">完成</string>
+    <string name="complete_give_up">放弃奖励</string>
+    <string name="complete_confirm">确定</string>
 
 </resources>

@@ -3,35 +3,36 @@ package com.ql.recovery.yay.ui.dialog
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.app.Dialog
 import android.os.CountDownTimer
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import com.bumptech.glide.Glide
-import com.netease.yunxin.kit.adapters.DataAdapter
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.ql.recovery.bean.Reason
-import com.ql.recovery.bean.Tag
 import com.ql.recovery.bean.User
+import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.DialogAnchorVideoBinding
 import com.ql.recovery.yay.manager.ImageManager
+import com.ql.recovery.yay.ui.base.BaseDialog
 import com.ql.recovery.yay.ui.self.BreatheInterpolator
 import com.ql.recovery.yay.util.AppUtil
 
 
 class AnchorVideoDialog(
     private val activity: Activity,
-    private val status: (status: MatchStatus) -> Unit
-) : Dialog(activity, R.style.app_dialog2) {
+    private val status: (status: MatchStatus, type: String?) -> Unit
+) : BaseDialog(activity) {
     private lateinit var binding: DialogAnchorVideoBinding
-    private lateinit var mAdapter: DataAdapter<Tag>
     private var timer: CountDownTimer? = null
-    private var mList = mutableListOf<Tag>()
     private var set: AnimatorSet? = null
     private var mUser: User? = null
+    private var mType: String? = null
+    private var max = 0
     private var from = From.Other
 
     init {
@@ -41,28 +42,32 @@ class AnchorVideoDialog(
     private fun initVew() {
         binding = DialogAnchorVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setCancelable(true)
+        setCancelable(false)
 
         binding.ivConnect.setOnClickListener {
-            status(MatchStatus.Accept)
+            status(MatchStatus.Accept, mType)
         }
 
         binding.ivHandOff.setOnClickListener {
             cancel()
-            status(MatchStatus.Reject)
+            status(MatchStatus.Reject, mType)
+        }
+
+        binding.tvSkip.setOnClickListener {
+            cancel()
+            status(MatchStatus.Reject, mType)
         }
 
         initTimer()
-
-        show()
     }
+
 
     private fun initTimer() {
         timer = object : CountDownTimer(45000L, 1000L) {
             override fun onFinish() {
                 //45秒之后关闭对话框挂掉视频
-                this@AnchorVideoDialog.cancel()
-                status(MatchStatus.Reject)
+                cancel()
+                status(MatchStatus.Reject, mType)
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -80,7 +85,7 @@ class AnchorVideoDialog(
         if (user == null) return
         mUser = user
 
-        Glide.with(activity).load(user.cover_url).into(binding.ivAvatar)
+        Glide.with(activity).load(user.avatar).apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.ivAvatar)
         Glide.with(activity).load(user.cover_url).into(binding.ivUserBg)
         binding.tvNickname.text = user.nickname
         binding.tvAge.text = user.age.toString()
@@ -98,18 +103,6 @@ class AnchorVideoDialog(
                 binding.ivNation.setImageBitmap(bitmap)
             }
         }
-
-        val tags = user.tags
-        if (!tags.isNullOrEmpty()) {
-            mList.clear()
-            if (tags.size > 8) {
-                mList.addAll(tags.subList(0, 8))
-            } else {
-                mList.addAll(tags)
-            }
-
-            mAdapter.notifyItemRangeChanged(0, mList.size)
-        }
     }
 
     fun getUser(): User? {
@@ -120,13 +113,59 @@ class AnchorVideoDialog(
         return activity
     }
 
-    fun setTime(time: Long) {
-        binding.tvTimer.text = time.toString()
+    fun setTime(time: Int) {
+        if (max == 0) {
+            max = time
+            binding.progressView.max = max
+        }
+
+        binding.progressView.progress = time
+    }
+
+    /**
+     * 设置匹配模式
+     */
+    fun setMatchType(matchType: String?, transactionType: String?) {
+        mType = matchType
+        when (matchType) {
+            "match" -> {
+                binding.tvCallDes.visibility = View.GONE
+                binding.tvSkip.visibility = View.VISIBLE
+            }
+
+            "private" -> {
+                binding.tvSkip.visibility = View.GONE
+                getBasePrice { basePrice ->
+                    binding.tvCallDes.visibility = View.VISIBLE
+                    getUserInfo { userInfo ->
+                        if (userInfo.role == "anchor") {
+                            binding.tvCallDes.text = String.format(activity.getString(R.string.match_call_income), basePrice.common.private_video)
+                        } else {
+                            binding.tvCallDes.text = String.format(activity.getString(R.string.match_call_cost), basePrice.common.private_video)
+                        }
+                    }
+                }
+            }
+
+            "pri_match" -> {
+                binding.tvSkip.visibility = View.GONE
+                DataManager.getAdditionPriceList(matchType) { list ->
+                    if (list.isNotEmpty()) {
+                        binding.tvCallDes.visibility = View.VISIBLE
+                        if (transactionType == "income") {
+                            binding.tvCallDes.text = String.format(activity.getString(R.string.match_call_income), list[0].cost)
+                        } else {
+                            binding.tvCallDes.text = String.format(activity.getString(R.string.match_call_cost), list[0].cost)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun startConnect() {
         binding.tvNotice.text = activity.getString(R.string.match_video_apply)
-        binding.tvTimer.visibility = View.VISIBLE
+        binding.progressView.visibility = View.VISIBLE
         binding.ivHandOff.visibility = View.GONE
         binding.ivConnect.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.GONE
@@ -134,7 +173,7 @@ class AnchorVideoDialog(
 
     fun waitConnect() {
         binding.tvNotice.text = activity.getString(R.string.match_waiting_to_connect)
-        binding.tvTimer.visibility = View.INVISIBLE
+        binding.progressView.visibility = View.INVISIBLE
         binding.ivHandOff.visibility = View.GONE
         binding.ivConnect.visibility = View.GONE
         binding.viewMargin.visibility = View.GONE
@@ -146,20 +185,22 @@ class AnchorVideoDialog(
     fun startConnectForPersonal() {
         from = From.Other
         binding.tvNotice.text = activity.getString(R.string.match_video_apply)
-        binding.tvTimer.visibility = View.GONE
+        binding.progressView.visibility = View.GONE
         binding.ivConnect.visibility = View.VISIBLE
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.VISIBLE
+        binding.tvSkip.visibility = View.GONE
     }
 
     /**
      * 被拒绝私人视频邀请
      */
     fun rejectConnectForPersonal(reason: Reason) {
-        binding.tvTimer.visibility = View.GONE
+        binding.progressView.visibility = View.GONE
         binding.ivConnect.visibility = View.GONE
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.GONE
+        binding.tvSkip.visibility = View.GONE
 
         if (from == From.MySelf) {
             when (reason.reason) {
@@ -187,10 +228,11 @@ class AnchorVideoDialog(
     fun waitConnectForPersonal() {
         from = From.MySelf
         binding.tvNotice.text = activity.getString(R.string.match_waiting_to_connect_personal)
-        binding.tvTimer.visibility = View.GONE
+        binding.progressView.visibility = View.GONE
         binding.ivConnect.visibility = View.GONE
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.GONE
+        binding.tvSkip.visibility = View.GONE
     }
 
     /**
@@ -198,7 +240,7 @@ class AnchorVideoDialog(
      */
     fun handOff() {
         binding.tvNotice.text = activity.getString(R.string.match_disconnect)
-        binding.tvTimer.visibility = View.INVISIBLE
+        binding.progressView.visibility = View.INVISIBLE
         binding.ivConnect.visibility = View.GONE
     }
 
@@ -207,7 +249,7 @@ class AnchorVideoDialog(
      */
     fun connectingTimeout() {
         binding.tvNotice.text = activity.getString(R.string.match_connect_timeout)
-        binding.tvTimer.visibility = View.INVISIBLE
+        binding.progressView.visibility = View.INVISIBLE
         binding.ivConnect.visibility = View.GONE
     }
 
@@ -229,25 +271,26 @@ class AnchorVideoDialog(
         set?.cancel()
 
         if (!activity.isFinishing && !activity.isDestroyed) {
-            status(MatchStatus.Cancel)
+            status(MatchStatus.Cancel, mType)
         }
     }
 
     override fun show() {
+        beginAnimation(binding.llProfile)
         timer?.start()
 
         val w = AppUtil.getScreenWidth(activity)
         val h = AppUtil.getScreenHeight(activity)
         window!!.decorView.setPadding(0, 0, 0, 0)
         window!!.attributes = window!!.attributes.apply {
-            gravity = Gravity.BOTTOM
+            gravity = Gravity.CENTER
             width = WindowManager.LayoutParams.MATCH_PARENT
-            height = WindowManager.LayoutParams.WRAP_CONTENT
-            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
-            dimAmount = 0.5f
+            height = WindowManager.LayoutParams.MATCH_PARENT
         }
 
-        super.show()
+        if (!activity.isFinishing && !activity.isDestroyed) {
+            super.show()
+        }
     }
 
     enum class From { MySelf, Other }

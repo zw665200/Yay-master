@@ -3,7 +3,6 @@ package com.ql.recovery.yay.ui.dialog
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.app.Dialog
 import android.os.CountDownTimer
 import android.view.Gravity
 import android.view.View
@@ -12,28 +11,31 @@ import android.view.animation.Animation
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
-import com.netease.yunxin.kit.adapters.DataAdapter
 import com.ql.recovery.bean.Reason
-import com.ql.recovery.bean.Tag
 import com.ql.recovery.bean.User
+import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.DialogMatchVideoBinding
 import com.ql.recovery.yay.manager.ImageManager
+import com.ql.recovery.yay.ui.base.BaseDialog
 import com.ql.recovery.yay.ui.self.BreatheInterpolator
 import com.ql.recovery.yay.util.AppUtil
+import com.tencent.mmkv.MMKV
 
 
 class MatchVideoDialog(
     private val activity: Activity,
-    private val status: (status: MatchStatus) -> Unit
-) : Dialog(activity, R.style.app_dialog2) {
+    private val status: (status: MatchStatus, type: String?) -> Unit
+) : BaseDialog(activity) {
     private lateinit var binding: DialogMatchVideoBinding
     private var timer: CountDownTimer? = null
     private var set: AnimatorSet? = null
     private var mUser: User? = null
-    private var max = 10
+    private var mType: String? = null
+    private var max = 0
     private var from = From.Other
+    private var mk = MMKV.defaultMMKV()
 
     init {
         initVew()
@@ -44,18 +46,28 @@ class MatchVideoDialog(
         setContentView(binding.root)
         setCancelable(false)
 
+        getUserInfo { userInfo ->
+            if (userInfo.role == "anchor") {
+                binding.flAutoAccept.visibility = View.VISIBLE
+                binding.tvWaitBackground.visibility = View.VISIBLE
+            } else {
+                binding.flAutoAccept.visibility = View.GONE
+                binding.tvWaitBackground.visibility = View.INVISIBLE
+            }
+        }
+
         binding.ivConnect.setOnClickListener {
-            status(MatchStatus.Accept)
+            status(MatchStatus.Accept, mType)
         }
 
         binding.ivHandOff.setOnClickListener {
             cancel()
-            status(MatchStatus.Reject)
+            status(MatchStatus.Reject, mType)
         }
 
-        binding.llRematch.setOnClickListener {
+        binding.tvSkip.setOnClickListener {
             cancel()
-            status(MatchStatus.Reject)
+            status(MatchStatus.Reject, mType)
         }
 
         initTimer()
@@ -67,7 +79,7 @@ class MatchVideoDialog(
             override fun onFinish() {
                 //45秒之后关闭对话框挂掉视频
                 this@MatchVideoDialog.cancel()
-                status(MatchStatus.Reject)
+                status(MatchStatus.Reject, mType)
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -109,17 +121,48 @@ class MatchVideoDialog(
         return mUser
     }
 
-    fun getActivity(): Activity {
-        return activity
-    }
-
     fun setTime(time: Int) {
-        if (max == 10) {
+        if (max == 0) {
             max = time
             binding.progressView.max = max
         }
 
         binding.progressView.progress = time
+    }
+
+    fun setMatchType(matchType: String?, transactionType: String?) {
+        //检查匹配模式
+        when (matchType) {
+            "match" -> {
+                binding.tvCallDes.visibility = View.GONE
+            }
+
+            "private" -> {
+                getBasePrice { basePrice ->
+                    binding.tvCallDes.visibility = View.VISIBLE
+                    getUserInfo { userInfo ->
+                        if (userInfo.role == "anchor") {
+                            binding.tvCallDes.text = String.format(activity.getString(R.string.match_call_income), basePrice.common.private_video)
+                        } else {
+                            binding.tvCallDes.text = String.format(activity.getString(R.string.match_call_cost), basePrice.common.private_video)
+                        }
+                    }
+                }
+            }
+
+            "pri_match" -> {
+                DataManager.getAdditionPriceList(matchType) { list ->
+                    if (list.isNotEmpty()) {
+                        binding.tvCallDes.visibility = View.VISIBLE
+                        if (transactionType == "income") {
+                            binding.tvCallDes.text = String.format(activity.getString(R.string.match_call_income), list[0].cost)
+                        } else {
+                            binding.tvCallDes.text = String.format(activity.getString(R.string.match_call_cost), list[0].cost)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun startConnect() {
@@ -148,7 +191,7 @@ class MatchVideoDialog(
         binding.ivConnect.visibility = View.VISIBLE
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.VISIBLE
-        binding.llRematch.visibility = View.GONE
+        binding.tvSkip.visibility = View.GONE
     }
 
     /**
@@ -159,7 +202,7 @@ class MatchVideoDialog(
         binding.ivConnect.visibility = View.GONE
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.GONE
-        binding.llRematch.visibility = View.GONE
+        binding.tvSkip.visibility = View.GONE
 
         if (from == From.MySelf) {
             when (reason.reason) {
@@ -191,7 +234,7 @@ class MatchVideoDialog(
         binding.ivConnect.visibility = View.GONE
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.GONE
-        binding.llRematch.visibility = View.GONE
+        binding.tvSkip.visibility = View.GONE
     }
 
     /**
@@ -230,16 +273,14 @@ class MatchVideoDialog(
         set?.cancel()
 
         if (!activity.isFinishing && !activity.isDestroyed) {
-            status(MatchStatus.Cancel)
+            status(MatchStatus.Cancel, mType)
         }
     }
 
     override fun show() {
-        beginAnimation(binding.llProfile)
+//        beginAnimation(binding.llProfile)
         timer?.start()
 
-        val w = AppUtil.getScreenWidth(activity)
-        val h = AppUtil.getScreenHeight(activity)
         window!!.decorView.setPadding(0, 0, 0, 0)
         window!!.attributes = window!!.attributes.apply {
             gravity = Gravity.CENTER

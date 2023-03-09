@@ -43,16 +43,16 @@
         <FrameLayout
             android:id="@+id/fl_base"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+            android:layout_height="match_parent"
+            android:background="@color/color_dark_grey" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:background="@color/white" />
 
 </LinearLayout>

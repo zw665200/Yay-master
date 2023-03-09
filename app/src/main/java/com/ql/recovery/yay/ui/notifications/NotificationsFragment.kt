@@ -22,6 +22,7 @@ import com.ql.recovery.bean.Conversation
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
+import com.ql.recovery.yay.callback.Callback
 import com.ql.recovery.yay.databinding.FragmentNotificationsBinding
 import com.ql.recovery.yay.databinding.ItemConversationBinding
 import com.ql.recovery.yay.databinding.ItemMatchVisitListBinding
@@ -45,7 +46,6 @@ class NotificationsFragment : BaseFragment() {
     private var relateList = arrayListOf<UserInfo>()
     private var conversationList = arrayListOf<Conversation>()
     private var waitingDialog: WaitingDialog? = null
-    private var firstLoad = true
     private var mPage = 0
     private var mSize = 20
 
@@ -56,35 +56,40 @@ class NotificationsFragment : BaseFragment() {
         binding!!.includeSystemNotification.root.setOnClickListener { toNotificationPage() }
         binding!!.ivShare.setOnClickListener { toSharePage() }
         binding!!.llCoin.setOnClickListener { toStorePage() }
+        binding!!.includeNotice.root.setOnClickListener { AppUtil.openNotifySettings(requireContext()) }
 
         waitingDialog = WaitingDialog(requireActivity())
+
+        initConversationList()
+        initFollowList()
+        getFollowingInfoList()
+        getNotificationList()
+        getConversationList()
+
+        binding!!.refreshLayout.setOnRefreshListener { refreshLayout ->
+            refreshLayout.finishRefresh()
+            mPage = 0
+            getUserInfo()
+            getFollowingInfoList()
+            getNotificationList()
+            getConversationList()
+        }
+
+        binding!!.refreshLayout.setOnLoadMoreListener {
+            mPage++
+            getConversationList()
+        }
 
         return binding!!.root
     }
 
     override fun initData() {
-        if (firstLoad) {
-            firstLoad = false
-            initConversationList()
-            initFollowList()
-
-            binding!!.refreshLayout.setOnRefreshListener { refreshLayout ->
-                refreshLayout.finishRefresh()
-                initData()
-            }
-
-            binding!!.refreshLayout.setOnLoadMoreListener {
-                mPage++
-                getConversationList()
-            }
-        }
-
-        mPage = 0
-
         getUserInfo()
-        getFollowingInfoList()
-        getNotificationList()
-        getConversationList()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkNotice()
     }
 
     private fun getConversationList() {
@@ -321,7 +326,6 @@ class NotificationsFragment : BaseFragment() {
                 binding?.includeNoData?.root?.visibility = View.GONE
             }
 
-
             mList.clear()
             mList.addAll(relateList)
             for (child in list) {
@@ -481,6 +485,18 @@ class NotificationsFragment : BaseFragment() {
         }
     }
 
+    private fun checkNotice() {
+        AppUtil.checkNotifySetting(requireContext(), object : Callback {
+            override fun onSuccess() {
+                binding?.includeNotice?.root?.visibility = View.GONE
+            }
+
+            override fun onFailed(msg: String) {
+                binding?.includeNotice?.root?.visibility = View.VISIBLE
+            }
+        })
+    }
+
     override fun click(v: View) {
     }
 
@@ -488,6 +504,4 @@ class NotificationsFragment : BaseFragment() {
         super.onDestroyView()
         binding = null
     }
-
-    enum class TagType { Followed, Following, Friend }
 }

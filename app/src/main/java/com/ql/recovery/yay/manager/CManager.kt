@@ -118,17 +118,12 @@ object CManager {
      * 无损压缩图片
      */
     fun compress(activity: Activity, filePath: String, callback: FileCallback) {
-        var defaultFormat = Bitmap.CompressFormat.JPEG
-        if (filePath.lowercase().endsWith("png")) {
-            defaultFormat = Bitmap.CompressFormat.PNG
-        }
-
         try {
             val file = CompressHelper.Builder(activity)
                 .setMaxWidth(1500f)
                 .setMaxHeight(1500f)
                 .setQuality(80)
-                .setCompressFormat(defaultFormat)
+                .setCompressFormat(Bitmap.CompressFormat.JPEG)
                 .setFileName(System.currentTimeMillis().toString())
                 .setDestinationDirectoryPath(getCachePath(activity))
                 .build()

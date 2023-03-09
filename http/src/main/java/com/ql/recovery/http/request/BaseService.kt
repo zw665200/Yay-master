@@ -74,7 +74,7 @@ interface BaseService {
     /**
      * 微信授权
      */
-    @POST("auth/login/visit")
+    @POST("auth/login/visitor")
     fun getAuthFromGuest(
         @Body body: RequestBody
     ): Observable<Response<Token>>
@@ -306,6 +306,15 @@ interface BaseService {
         @Query("size") size: Int
     ): Observable<Response<BaseParam<UserInfo>>>
 
+
+    /**
+     * 获得在线人数
+     */
+    @GET("match/count")
+    fun getOnlineCount(
+        @Header("Authorization") authorization: String
+    ): Observable<Response<Int>>
+
     /**
      * 获得匹配列表-未解锁的游戏匹配用户列表
      */
@@ -498,6 +507,24 @@ interface BaseService {
         @Body body: RequestBody
     ): Observable<Response<Room?>>
 
+    /**
+     * 查找系统打招呼消息模板
+     */
+    @GET("im/greeting/templates")
+    fun getGreetingTemplates(
+        @Header("Authorization") authorization: String,
+        @Query("role") role: String,
+        @Query("sex") sex: String
+    ): Observable<Response<List<Greeting>>>
+
+    /**
+     * 系统主动通话邀请
+     */
+    @GET("im/system/invite")
+    fun getSystemInvite(
+        @Header("Authorization") authorization: String
+    ): Observable<Response<Boolean>>
+
     //-------------------------------Gift--------------------------------//
     /**
      * 获得礼物列表
@@ -527,6 +554,14 @@ interface BaseService {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Observable<Response<BaseParam<Anchor>>>
+
+    /**
+     * 获得club通知消息
+     */
+    @GET("club/messages")
+    fun getAnchorMessageList(
+        @Header("Authorization") authorization: String
+    ): Observable<Response<List<ClubFollow>>>
 
     //-------------------------------income--------------------------------//
     /**
@@ -604,6 +639,38 @@ interface BaseService {
      */
     @GET("user/vip/gem/receive")
     fun getVipReward(
+        @Header("Authorization") authorization: String
+    ): Observable<Response<Boolean>>
+
+    /**
+     * 检查会员每日奖励是否领取
+     */
+    @GET("user/membership/checkDailyReward")
+    fun checkDailyReward(
+        @Header("Authorization") authorization: String
+    ): Observable<Response<Boolean>>
+
+    /**
+     * 领取会员每日奖励
+     */
+    @POST("user/membership/receiveDailyReward")
+    fun receiveDailyReward(
+        @Header("Authorization") authorization: String
+    ): Observable<Response<Boolean>>
+
+    /**
+     * 检查用户是否已领取首次完善资料奖励
+     */
+    @GET("user/checkFirstCompletionAward")
+    fun checkFirstCompletionAward(
+        @Header("Authorization") authorization: String
+    ): Observable<Response<Boolean>>
+
+    /**
+     * 领取首次完善资料奖励
+     */
+    @POST("user/receiveFirstCompletionAward")
+    fun receiveFirstCompletionAward(
         @Header("Authorization") authorization: String
     ): Observable<Response<Boolean>>
 

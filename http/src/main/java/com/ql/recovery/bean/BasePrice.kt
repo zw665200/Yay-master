@@ -10,6 +10,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class BasePrice(
+    val app: App,
     val common: Common,
     val match_filter: MatchFilter,
     val service_charge: ServiceCharge,
@@ -70,4 +71,10 @@ data class Addition(
     val room_type: String,
     val vip_discount: Float,
     var check: Boolean = false
+) : Parcelable
+
+@Parcelize
+data class App(
+    val info_completion_award: Int,
+    val membership_daily_reward: Int
 ) : Parcelable

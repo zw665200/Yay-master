@@ -25,6 +25,7 @@ import com.ql.recovery.yay.ui.region.RegionActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.ToastUtil
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import java.util.*
 import kotlin.concurrent.thread
 
 class PhoneLoginActivity : BaseActivity() {
@@ -311,6 +312,11 @@ class PhoneLoginActivity : BaseActivity() {
     private fun loadUserInfo() {
         DataManager.getUserInfo { userInfo ->
             ToastUtil.showShort(this, getString(R.string.login_success))
+
+            if (userInfo.country.isBlank()) {
+                val country = Locale.getDefault().country
+                DataManager.updateCountry(country) {}
+            }
 
             thread {
                 //刷新用户信息

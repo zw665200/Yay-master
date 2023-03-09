@@ -43,15 +43,32 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tv_money"
+    <LinearLayout
+        android:id="@+id/ll_money"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/hybg_m"
         android:gravity="center"
-        android:fontFamily="@font/din_m"
-        android:textColor="@color/color_content"
-        android:textSize="@dimen/sp_17" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/din_m"
+            android:gravity="center"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/sp_16" />
+
+        <ImageView
+            android:id="@+id/iv_origin_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:src="@drawable/m_o"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
 </FrameLayout>

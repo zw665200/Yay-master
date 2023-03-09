@@ -59,8 +59,6 @@ abstract public class BaseFragmentActivity extends BaseActivity {
         flMainId = getFLid();
         llBottom = getBottomLayout();
         initBaseView();
-        initView();
-        initData();
         setTabSel(llBottom.getChildAt(mDefaultPage), mDefaultPage);
     }
 
@@ -118,9 +116,9 @@ abstract public class BaseFragmentActivity extends BaseActivity {
      * Do operations after abstract methods called.
      * U can do onCreate after abstract methods called.
      */
-    protected abstract void initView();
+//    protected abstract void initView();
 
-    protected abstract void initData();
+//    protected abstract void initData();
 
     protected abstract void getViewBinding(@NonNull ActivityBaseBinding baseBinding);
 

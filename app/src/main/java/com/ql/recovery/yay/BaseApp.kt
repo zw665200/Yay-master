@@ -11,6 +11,9 @@ import android.os.Looper
 import android.os.Message
 import com.appsflyer.AppsFlyerLib
 import com.blongho.country_data.World
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
@@ -37,6 +40,7 @@ import com.ql.recovery.manager.DataManager
 import com.ql.recovery.manager.RetrofitServiceManager
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.manager.DBManager
+import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.dialog.MatchVideoDialog
 import com.ql.recovery.yay.ui.dialog.NoticeDialog
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
@@ -57,14 +61,15 @@ import java.lang.ref.WeakReference
  */
 class BaseApp : Application() {
     private var currentActivity: WeakReference<Activity>? = null
-    private var dialog: MatchVideoDialog? = null
+    private var matchVideoDialog: MatchVideoDialog? = null
     private var handler = Handler(Looper.getMainLooper())
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var mMatcher: User? = null
     private var activityCount = 0
     private var isForeground = false
     private var isScreenOff = false
     private var startAt = 0L
     private var leaveAt = 0L
-
 
     override fun onCreate() {
         super.onCreate()
@@ -213,6 +218,112 @@ class BaseApp : Application() {
                         }
                     }
 
+                }
+            }
+        }
+
+        Config.messageHandler = object : Handler(Looper.getMainLooper()) {
+            override fun handleMessage(msg: Message) {
+                when (msg.what) {
+                    0x1 -> {
+                        val data = msg.obj as String
+                        JLog.i("data = $data")
+                        val message = GsonUtils.fromJson(data, MsgInfo::class.java) ?: return
+
+                        when (message.type) {
+                            "match_invite" -> {
+                                val typeToken = object : TypeToken<MessageInfo<Invite>>() {}
+                                val info = GsonUtils.fromJson<MessageInfo<Invite>>(data, typeToken.type) ?: return
+
+                                val activity = currentActivity?.get()
+                                if (activity != null) {
+                                    mMatcher = info.content.user
+                                    matchVideoDialog?.setUser(info.content.user)
+                                    if (!activity.isFinishing && !activity.isDestroyed) {
+                                        matchVideoDialog?.setMatchType(info.content.room_type, info.content.transaction_type)
+                                        matchVideoDialog?.startConnect()
+                                        matchVideoDialog?.show()
+
+                                        //免提模式
+                                        val config = getMatchConfig()
+                                        if (config.hand_free) {
+                                            matchVideoDialog?.waitConnect()
+                                            acceptInvite()
+                                        }
+                                    }
+                                }
+                            }
+
+                            "match_accept_invite" -> {
+
+                            }
+
+                            "match_reject_invite" -> {
+                                matchVideoDialog?.handOff()
+
+                                //5秒后进入匹配池
+                                rematch(5000L)
+
+                                handler.postDelayed({
+                                    matchVideoDialog?.cancel()
+                                }, 1500L)
+                            }
+
+                            "match_start_play" -> {
+                                val typeToken = object : TypeToken<MessageInfo<Room>>() {}
+                                val info = GsonUtils.fromJson<MessageInfo<Room>>(data, typeToken.type) ?: return
+
+                                MMKV.defaultMMKV().encode("recent_record", "match")
+
+                                matchVideoDialog?.cancel()
+
+                                val activity = currentActivity?.get()
+                                if (activity != null) {
+                                    startVideoPage(activity, info.content)
+                                }
+                            }
+
+                            "match_invite_timeout" -> {
+                                matchVideoDialog?.connectingTimeout()
+                                matchVideoDialog?.cancel()
+                                rematch(1000L)
+
+                                val activity = currentActivity?.get()
+                                if (activity != null) {
+                                    ReportManager.firebaseCustomLog(firebaseAnalytics, "video_match_timeout", "timeout")
+                                    ReportManager.appsFlyerCustomLog(activity, "video_match_timeout", "timeout")
+                                }
+                            }
+
+                            "match_peer_disconnect" -> {
+                                matchVideoDialog?.handOff()
+                                matchVideoDialog?.cancel()
+                                rematch(1500L)
+                            }
+
+                            "match_countdown" -> {
+                                val typeToken = object : TypeToken<MessageInfo<Int>>() {}
+                                val info = GsonUtils.fromJson<MessageInfo<Int>>(data, typeToken.type) ?: return
+                                matchVideoDialog?.setTime(info.content)
+                            }
+
+                            "system" -> {
+                                val typeToken = object : TypeToken<MessageInfo<String>>() {}
+                                val info = GsonUtils.fromJson<MessageInfo<String>>(data, typeToken.type) ?: return
+                                val activity = currentActivity?.get()
+                                if (activity != null) {
+                                    ToastUtil.showShort(activity, info.content)
+                                }
+                            }
+                        }
+                    }
+
+                    0x2 -> {
+                        val activity = currentActivity?.get()
+                        if (activity != null) {
+                            ToastUtil.showShort(activity, msg.obj as String)
+                        }
+                    }
                 }
             }
         }
@@ -430,84 +541,99 @@ class BaseApp : Application() {
                 }
             }
 
-            override fun onActivityStarted(activity: Activity) {
-
-            }
+            override fun onActivityStarted(activity: Activity) {}
 
             override fun onActivityResumed(activity: Activity) {
-//                JLog.i("onActivityResumed : ${activity::class.java.simpleName}")
-
                 currentActivity = if (activity.parent != null) {
                     WeakReference<Activity>(activity.parent)
                 } else {
                     WeakReference<Activity>(activity)
                 }
 
-                //保证对话框能在所有页面弹出
-                initVideoDialog(activity)
+                firebaseAnalytics = Firebase.analytics
 
                 val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
-                if (userInfo != null && userInfo.role == "anchor") {
-                    activityCount++
-                    startAt = System.currentTimeMillis() / 1000L
+                if (userInfo != null) {
+                    //保证对话框能在所有页面弹出
+                    initAnchorVideoDialog(activity)
 
-                    isForeground = true
-                    isScreenOff = false
+                    if (userInfo.role == "anchor") {
+                        //检测主播在前台时间
+                        activityCount++
+                        startAt = System.currentTimeMillis() / 1000L
+
+                        isForeground = true
+                        isScreenOff = false
+                    }
                 }
             }
 
             override fun onActivityPaused(activity: Activity) {
-//                JLog.i("onActivityPaused: ${activity::class.java.simpleName}")
                 addUsageToDatabase(activity)
             }
 
             override fun onActivityStopped(activity: Activity) {
-//                JLog.i("onActivityStopped")
                 activityCount--
 
                 //退到后台立即上报
                 if (activityCount == 0) {
                     isForeground = false
-//                    addAnchorOnlineTime()
                 }
             }
 
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-            }
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 
-            override fun onActivityDestroyed(activity: Activity) {
-            }
+            override fun onActivityDestroyed(activity: Activity) {}
         })
     }
 
-    private fun initVideoDialog(activity: Activity) {
-        dialog = MatchVideoDialog(activity) { status ->
-            val user = dialog?.getUser()
+    private fun initAnchorVideoDialog(activity: Activity) {
+        matchVideoDialog = MatchVideoDialog(activity) { status, type ->
+            val user = matchVideoDialog?.getUser()
             if (user != null) {
-                when (status) {
-                    MatchStatus.Accept -> {
-                        dialog?.waitConnectForPersonal()
-                        DataManager.handlerVideoInvite(user.uid, true, "default") { room ->
-                            dialog?.cancel()
-
-                            if (room != null) {
-                                startVideoPay(activity, room, user, "receiver")
+                if (type == "private") {
+                    when (status) {
+                        MatchStatus.Accept -> {
+                            matchVideoDialog?.waitConnectForPersonal()
+                            DataManager.handlerVideoInvite(user.uid, true, "default") { room ->
+                                if (room != null) {
+                                    matchVideoDialog?.cancel()
+                                    startVideoPay(activity, room, user, "receiver")
+                                }
                             }
                         }
+
+                        MatchStatus.Reject -> {
+                            DataManager.handlerVideoInvite(user.uid, false, "default") {}
+                        }
+
+                        MatchStatus.Cancel -> {}
                     }
+                } else {
+                    when (status) {
+                        MatchStatus.Accept -> {
+                            acceptInvite()
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_video_match_click", "accept")
+                            ReportManager.appsFlyerCustomLog(this, "accept_video_match_click", "accept")
+                        }
 
-                    MatchStatus.Reject -> {
-                        DataManager.handlerVideoInvite(user.uid, false, "default") {}
-                    }
+                        MatchStatus.Reject -> {
+                            rejectInvite()
+                            rematch(1500L)
+                            ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_video_match_click", "reject")
+                            ReportManager.appsFlyerCustomLog(this, "reject_video_match_click", "reject")
+                        }
 
-                    MatchStatus.Cancel -> {
-
+                        MatchStatus.Cancel -> {}
                     }
                 }
             }
         }
     }
 
+    /**
+     * 私聊同意开始视频聊天
+     */
     private fun startVideoPay(activity: Activity, room: Room, user: User, from: String) {
         val intent = Intent(activity, VideoActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -518,24 +644,32 @@ class BaseApp : Application() {
         startActivity(intent)
     }
 
+    /**
+     * 弹出视频聊天对话框（接收方）
+     */
     private fun showVideoChat(user: User) {
-        if (dialog != null && dialog?.isShowing == false) {
-            dialog?.setUser(user)
-            dialog?.startConnectForPersonal()
-            dialog?.show()
-        }
-    }
-
-    private fun showVideoChatFromMyself(user: User) {
-        if (dialog != null && dialog?.isShowing == false) {
-            dialog?.setUser(user)
-            dialog?.waitConnectForPersonal()
-            dialog?.show()
+        if (matchVideoDialog != null && matchVideoDialog?.isShowing == false) {
+            matchVideoDialog?.setUser(user)
+            matchVideoDialog?.setMatchType("private", null)
+            matchVideoDialog?.startConnectForPersonal()
+            matchVideoDialog?.show()
         }
     }
 
     /**
-     * 发起视频聊天，对方在线才能聊天
+     * 弹出视频聊天对话框（发起方）
+     */
+    private fun showVideoChatFromMyself(user: User) {
+        if (matchVideoDialog != null && matchVideoDialog?.isShowing == false) {
+            matchVideoDialog?.setUser(user)
+            matchVideoDialog?.setMatchType("private", null)
+            matchVideoDialog?.waitConnectForPersonal()
+            matchVideoDialog?.show()
+        }
+    }
+
+    /**
+     * 发起视频聊天
      * @param activity
      */
     private fun requestVideoChat(activity: Activity, uid: Int) {
@@ -557,6 +691,43 @@ class BaseApp : Application() {
                 }
             }
         }
+    }
+
+    fun getMatchConfig(): MatchConfig {
+        val mk = MMKV.defaultMMKV()
+        val config = mk.decodeParcelable("match_config", MatchConfig::class.java)
+        if (config == null) {
+            val defaultConfig = MatchConfig(0, "", "", false)
+            mk.encode("match_config", defaultConfig)
+            return defaultConfig
+        } else {
+            return config
+        }
+    }
+
+    /**
+     * 匹配结束开始视频聊天
+     * @param activity
+     */
+    private fun startVideoPage(activity: Activity, room: Room) {
+        val intent = Intent(activity, VideoActivity::class.java)
+        intent.putExtra("room", room)
+        intent.putExtra("user", mMatcher)
+        intent.putExtra("type", "match")
+        startActivity(intent)
+    }
+
+    private fun acceptInvite() {
+        matchVideoDialog?.waitConnect()
+        Config.mainHandler?.sendEmptyMessage(0x10007)
+    }
+
+    private fun rejectInvite() {
+        Config.mainHandler?.sendEmptyMessage(0x10008)
+    }
+
+    private fun rematch(time: Long) {
+        handler.postDelayed({ Config.mainHandler?.sendEmptyMessage(0x10009) }, time)
     }
 
     private fun handleCustomMessage(json: String) {
@@ -598,6 +769,7 @@ class BaseApp : Application() {
                                     && !name.contains("AudioActivity")
                                     && !name.contains("GameActivity")
                                 ) {
+                                    matchVideoDialog?.setMatchType("private", null)
                                     showVideoChat(info.content)
                                 } else {
                                     //自动拒绝对方的邀请
@@ -612,12 +784,15 @@ class BaseApp : Application() {
                         val typeToken = object : TypeToken<MessageInfo<Room>>() {}
                         val info = GsonUtils.fromJson<MessageInfo<Room>>(json, typeToken.type)
                         if (info != null) {
-                            if (dialog != null) {
-                                val user = dialog!!.getUser()
+                            if (matchVideoDialog != null) {
+                                val user = matchVideoDialog!!.getUser()
                                 if (user != null) {
-                                    if (dialog?.isShowing == true) {
-                                        dialog?.cancel()
-                                        startVideoPay(dialog!!.getActivity(), info.content, user, "sender")
+                                    if (matchVideoDialog?.isShowing == true) {
+                                        matchVideoDialog?.cancel()
+                                        val activity = currentActivity?.get()
+                                        if (activity != null) {
+                                            startVideoPay(activity, info.content, user, "sender")
+                                        }
                                     }
                                 }
                             }
@@ -629,11 +804,11 @@ class BaseApp : Application() {
                         val typeToken = object : TypeToken<MessageInfo<Reason>>() {}
                         val info = GsonUtils.fromJson<MessageInfo<Reason>>(json, typeToken.type)
                         if (info != null) {
-                            if (dialog != null) {
-                                dialog?.rejectConnectForPersonal(info.content)
+                            if (matchVideoDialog != null) {
+                                matchVideoDialog?.rejectConnectForPersonal(info.content)
 
                                 //2秒后关闭对话框
-                                handler.postDelayed({ dialog?.cancel() }, 2000L)
+                                handler.postDelayed({ matchVideoDialog?.cancel() }, 2000L)
 
                                 //如果进入房间则通知房间取消视频
                                 Config.roomHandler?.sendEmptyMessage(0x10005)
@@ -753,8 +928,13 @@ class BaseApp : Application() {
     }
 
     override fun onTerminate() {
-        JLog.i("onTerminate")
         super.onTerminate()
+        //主播异常退出时长上报
+        val activity = currentActivity?.get()
+        if (activity != null) {
+            addUsageToDatabase(activity)
+        }
+
         unregisterPushListener()
         unregisterOtherClientStatus()
         unRegisterUserOnlineStatus()

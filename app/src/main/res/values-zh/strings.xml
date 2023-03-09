@@ -144,6 +144,7 @@
     <string name="match_failed_invite_title">为你推荐</string>
     <string name="match_failed_invite">Club有人向你发起了邀请</string>
     <string name="match_failed_invite_accept">去认识一下</string>
+    <string name="match_say_hi">一键打招呼</string>
     <string name="match_finish">聊天结束</string>
     <string name="match_finish_title">您对刚刚的聊天还满意吗？</string>
     <string name="match_item_gift_get_more">Get more gems</string>
@@ -170,6 +171,10 @@
     <string name="match_add_time_tip">倒计时结束后，不加时通话将会自动挂断</string>
     <string name="match_ticket_receive">对方赠送您抽奖券，您可以开始抽奖</string>
     <string name="match_ticket_unused">检测到您还有未使用的票券，请先使用</string>
+    <string name="match_call_income">该通话每分钟收益%1d宝石</string>
+    <string name="match_call_cost">该通话每分钟花费%1d宝石</string>
+    <string name="match_call_wait_background">后台等待</string>
+    <string name="match_call_auto_accept">自动接受</string>
 
     <!--match record-->
     <string name="record_title">匹配记录</string>
@@ -220,6 +225,7 @@
     <string name="store_question">有什么问题请联系我们</string>
     <string name="store_pay_free">免费</string>
     <string name="store_pay_success">支付成功</string>
+    <string name="store_more_menu">更多套餐</string>
 
     <!--mine-->
     <string name="mine_followed">粉丝</string>
@@ -521,5 +527,16 @@
     <string name="private_anchor_earn">该通话赚取</string>
     <string name="private_unit">宝石/分钟</string>
     <string name="private_wait_on_background">后台等待</string>
+
+    <!--notice-->
+    <string name="notice_title">打开通知，不错过她的消息</string>
+    <string name="notice_content">交友成功率提高10倍</string>
+    <string name="notice_open">去开启</string>
+
+    <!--recommend-->
+    <string name="recommend_title">今天女生推荐</string>
+    <string name="recommend_tip_1">今天还可发送%1d条消息，</string>
+    <string name="recommend_tip_2">升级会员</string>
+    <string name="recommend_tip_3">可无限制发送</string>
 
 </resources>

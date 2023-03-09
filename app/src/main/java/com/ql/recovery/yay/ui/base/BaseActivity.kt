@@ -46,15 +46,15 @@ abstract class BaseActivity : FragmentActivity() {
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         baseBinding = ActivityBaseBinding.inflate(layoutInflater)
+
         getViewBinding(baseBinding)
         setContentView(baseBinding.root)
 
+        firebaseAnalytics = Firebase.analytics
         setStatusBarLight()
         initView()
         initData()
         checkFitsSystemWindow()
-
-        firebaseAnalytics = Firebase.analytics
     }
 
     protected fun setStatusBarLight() {
@@ -236,9 +236,7 @@ abstract class BaseActivity : FragmentActivity() {
             ReportManager.firebaseCustomLog(firebaseAnalytics, "private_video_click", "private video click")
             ReportManager.appsFlyerCustomLog(this, "private_video_click", "private video click")
 
-            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
-                userInfo.nickname.isBlank() || userInfo.photos.isEmpty() || userInfo.tags.isEmpty()
-            ) {
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() || userInfo.nickname.isBlank()) {
                 //如果用户资料不完整，要填写完整才能匹配
                 ToastUtil.showLong(this, getString(R.string.notice_incomplete_profile))
                 startActivity(Intent(this, GuideActivity::class.java))

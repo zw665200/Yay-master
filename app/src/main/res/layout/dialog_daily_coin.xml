@@ -46,6 +46,7 @@
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/fl_get_coin"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50"
             android:layout_gravity="bottom"
@@ -53,7 +54,6 @@
             android:background="@drawable/xrtc_an">
 
             <TextView
-                android:id="@+id/btn_get_coin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

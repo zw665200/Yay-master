@@ -183,7 +183,7 @@ public class ProgressView extends View {
                 RectF rf = new RectF(strokeWidth, strokeWidth, width - strokeWidth, width - strokeWidth);
                 LinearGradient shader = new LinearGradient(0, height / 2.0f, width, height / 2.0f, SWEEP_GRADIENT_COLORS, null, Shader.TileMode.MIRROR);
                 outerRingPaint3.setShader(shader);
-                canvas.drawArc(rf, 0, (float) (progress * 3.6), false, outerRingPaint3);
+                canvas.drawArc(rf, 0, (float) (progress * 36), false, outerRingPaint3);
             }
 
             //画文字
@@ -195,6 +195,15 @@ public class ProgressView extends View {
             canvas.drawText(bottomText, width / 2.0f - textRect.width() / 2.0f, height / 2.0f + textRect.height() / 2.0f, bottomPaint);
 
         }
+    }
+
+    private void drawArc(Canvas canvas, RectF rf, int i) {
+        canvas.drawArc(rf, 0, (float) (progress * i * 0.36), false, outerRingPaint3);
+        postDelayed(() -> {
+            if (i == 0) {
+                drawArc(canvas, rf, i - 1);
+            }
+        }, 8L);
     }
 
     private int dp2px(Context context, float dpVal) {

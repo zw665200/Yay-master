@@ -432,11 +432,6 @@ class MineFragment : BaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getImageFromAlbum() {
-//        val intent = Intent()
-//        intent.action = Intent.ACTION_PICK
-//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-//        startActivityForResult(intent, 0x1002)
-
         Album.image(this)
             .multipleChoice()
             .camera(false)
