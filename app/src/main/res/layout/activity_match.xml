@@ -218,12 +218,6 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/iv_user_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
-
     <FrameLayout
         android:id="@+id/fl_game"
         android:layout_width="match_parent"

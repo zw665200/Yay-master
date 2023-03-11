@@ -180,6 +180,7 @@ class CompleteProfileDialog(
                         waitingDialog.cancel()
                         if (isSuccess) {
                             toStepTwo()
+                            DataManager.getUserInfo { }
                         }
                     }
                 }
@@ -219,7 +220,14 @@ class CompleteProfileDialog(
                     waitingDialog.cancel()
                     if (it) {
                         cancel()
-                        ProfileFinishDialog(activity).show()
+                        DataManager.getUserInfo { }
+
+                        //领取奖励
+                        DataManager.receiveFirstCompletionReward { complete ->
+                            if (complete) {
+                                ProfileFinishDialog(activity).show()
+                            }
+                        }
                     }
                 }
             }

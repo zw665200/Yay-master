@@ -53,7 +53,7 @@ class ProfileActivity : BaseActivity() {
 
     override fun initView() {
         binding.includeTitle.ivBack.setOnClickListener { finish() }
-        binding.llAvatar.setOnClickListener { getImageFromAlbum(0x1004) }
+        binding.llAvatar.setOnClickListener { getAvatarFromAlbum() }
         binding.llNickname.setOnClickListener { modifyNickname() }
         binding.llSex.setOnClickListener { modifySex() }
         binding.llBirthday.setOnClickListener { modifyBirthday() }
@@ -155,7 +155,7 @@ class ProfileActivity : BaseActivity() {
 
                 itemView.setOnClickListener {
                     if (itemData.isBlank()) {
-                        getImageFromAlbum(0x1002)
+                        getImageFromAlbum()
                     } else {
                         Album.gallery(this)
                             .checkedList(mPicList.filter { it != "" } as ArrayList<String>?)
@@ -360,12 +360,43 @@ class ProfileActivity : BaseActivity() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun getImageFromAlbum(code: Int) {
-//        val intent = Intent()
-//        intent.action = Intent.ACTION_PICK
-//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-//        startActivityForResult(intent, code)
+    private fun getAvatarFromAlbum() {
+        Album.image(this)
+            .multipleChoice()
+            .camera(false)
+            .columnCount(4)
+            .selectCount(1)
+            .filterSize(null)
+            .filterMimeType(null)
+            .afterFilterVisibility(true)
+            .onResult { albumList ->
+                waitingDialog.show()
 
+                for (item in albumList) {
+                    //压缩图片
+                    CManager.compress(this, item.path, object : FileCallback {
+                        override fun onSuccess(filePath: String) {
+                            //上传图片
+                            DataManager.uploadFileToOss(this@ProfileActivity, filePath) { ossPath ->
+                                if (ossPath.isNotEmpty()) {
+                                    DataManager.updateAvatar(ossPath) {
+                                        waitingDialog.cancel()
+                                        getUserInfo()
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onFailed(message: String) {
+                        }
+                    })
+                }
+
+            }.start()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getImageFromAlbum() {
         Album.image(this)
             .multipleChoice()
             .camera(false)

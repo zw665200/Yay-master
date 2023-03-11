@@ -35,7 +35,7 @@ import com.ql.recovery.yay.ui.mine.AgreementActivity
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
 import com.tencent.mmkv.MMKV
-import java.util.Locale
+import java.util.*
 import kotlin.concurrent.thread
 
 
@@ -62,9 +62,9 @@ class LoginActivity : BaseActivity() {
         binding.userAgreement.setOnClickListener { toAgreementPage() }
         binding.privacyAgreement.setOnClickListener { toAgreementPage() }
         binding.facebookLogin.setOnClickListener { loginWithFacebook() }
-        binding.phoneLogin.setOnClickListener { toPhoneLoginPage() }
+        binding.tvPhoneLogin.setOnClickListener { toPhoneLoginPage() }
         binding.whatsAppLogin.setOnClickListener { loginWithTest() }
-        binding.llFastLogin.setOnClickListener { loginWithGuest() }
+        binding.ivGuestLogin.setOnClickListener { loginWithGuest() }
     }
 
     override fun initData() {
@@ -395,6 +395,12 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun loginWithGuest() {
+        if (!binding.agreementCheck.isChecked) {
+            ToastUtil.showShort(this, getString(R.string.login_agreement))
+            return
+        }
+
+        waitingDialog?.show()
         DataManager.getAuthFromGuest(this) {
             val accessToken = it.type + " " + it.access_token
             Config.CLIENT_TOKEN = accessToken
@@ -410,6 +416,8 @@ class LoginActivity : BaseActivity() {
 
     private fun loadUserInfo() {
         DataManager.getUserInfo { userInfo ->
+            waitingDialog?.cancel()
+
             ToastUtil.showShort(this, getString(R.string.login_success))
 
             if (userInfo.country.isBlank()) {

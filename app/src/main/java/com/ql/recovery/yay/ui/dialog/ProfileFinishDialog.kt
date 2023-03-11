@@ -6,10 +6,8 @@ import android.view.Gravity
 import android.view.WindowManager
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
-import com.ql.recovery.yay.databinding.DialogAccountDeleteBinding
 import com.ql.recovery.yay.databinding.DialogProfileFinishBinding
 import com.ql.recovery.yay.util.AppUtil
-import com.ql.recovery.yay.util.ToastUtil
 
 class ProfileFinishDialog(
     private val activity: Activity
@@ -29,7 +27,6 @@ class ProfileFinishDialog(
             cancel()
         }
     }
-
 
     override fun show() {
         window!!.decorView.setPadding(0, 0, 0, 0)

@@ -24,16 +24,16 @@ android {
 
     signingConfigs {
         debug {
-//            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
-            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
+            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
+//            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
             storePassword 'abcd@1234'
             keyAlias 'key'
             keyPassword 'abcd@1234'
         }
 
         release {
-//            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
-            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
+            storeFile file('C:\\Users\\ASUS\\StudioProjects\\Yay-master\\yay.keystore')
+//            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\Yay-master\\yay.keystore')
             storePassword 'abcd@1234'
             keyAlias 'key'
             keyPassword 'abcd@1234'

@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.os.EnvironmentCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ql.recovery.config.Config
@@ -136,6 +138,17 @@ object ImageManager : CoroutineScope by MainScope() {
 
     fun getBitmap(context: Context, url: String, result: (Bitmap) -> Unit) {
         Glide.with(context).asBitmap().load(url).into(object : CustomTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                result(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+            }
+        })
+    }
+
+    fun getRoundBitmap(context: Context, url: String, result: (Bitmap) -> Unit) {
+        Glide.with(context).asBitmap().load(url).apply(RequestOptions.bitmapTransform(CircleCrop())).into(object : CustomTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                 result(resource)
             }

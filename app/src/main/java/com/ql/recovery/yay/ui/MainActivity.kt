@@ -78,6 +78,16 @@ class MainActivity : BaseFragmentActivity() {
     override fun initView() {
 //        checkDailyRecommend()
         checkMemberDailyReward()
+
+        getUserInfo { userInfo ->
+            //只有身份是主播时全程开启匹配
+            if (userInfo.role == "anchor") {
+                if (mWebSocketService == null) {
+                    //开启匹配链接
+                    startWebSocketService(userInfo.uid, "video", getMatchConfig())
+                }
+            }
+        }
     }
 
     /**
@@ -225,26 +235,19 @@ class MainActivity : BaseFragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        getUserInfo { userInfo ->
-            //只有身份是主播时全程开启匹配
-            if (userInfo.role == "anchor") {
-                if (mWebSocketService == null) {
-                    //开启匹配链接
-                    startWebSocketService(userInfo.uid, "video", getMatchConfig())
-                }
-            }
-        }
     }
 
     override fun onStop() {
         super.onStop()
 
-        closeService()
-
         //刷新金币数量
         Config.mainHandler?.sendEmptyMessage(0x10006)
         Config.subscriberHandler?.sendEmptyMessage(0x10001)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        closeService()
     }
 
 

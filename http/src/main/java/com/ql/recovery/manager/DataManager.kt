@@ -126,6 +126,38 @@ object DataManager {
     }
 
     @SuppressLint("CheckResult")
+    fun updateAvatar(
+        url: String,
+        result: (Boolean) -> Unit
+    ) {
+        thread {
+            BaseLoader.updateAvatar(url)
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {
+                })
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    fun updateNickname(
+        name: String,
+        result: (Boolean) -> Unit
+    ) {
+        thread {
+            BaseLoader.updateNickname(name)
+                .compose(ResponseTransformer.handleResult())
+                .compose(SchedulerProvider.getInstance().applySchedulers())
+                .subscribe({
+                    result(it)
+                }, {
+                })
+        }
+    }
+
+    @SuppressLint("CheckResult")
     fun updateVideo(
         urlList: List<String>,
         result: (Boolean) -> Unit
@@ -1265,9 +1297,9 @@ object DataManager {
      * 检查用户是否已领取首次完善资料奖励
      */
     @SuppressLint("CheckResult")
-    fun checkFirstCompletionAward(result: (Boolean) -> Unit) {
+    fun checkFirstCompletionReward(result: (Boolean) -> Unit) {
         thread {
-            BaseLoader.checkFirstCompletionAward()
+            BaseLoader.checkFirstCompletionReward()
                 .compose(ResponseTransformer.handleResult())
                 .compose(SchedulerProvider.getInstance().applySchedulers())
                 .subscribe({
@@ -1280,9 +1312,9 @@ object DataManager {
      * 领取首次完善资料奖励
      */
     @SuppressLint("CheckResult")
-    fun receiveFirstCompletionAward(result: (Boolean) -> Unit) {
+    fun receiveFirstCompletionReward(result: (Boolean) -> Unit) {
         thread {
-            BaseLoader.receiveFirstCompletionAward()
+            BaseLoader.receiveFirstCompletionReward()
                 .compose(ResponseTransformer.handleResult())
                 .compose(SchedulerProvider.getInstance().applySchedulers())
                 .subscribe({

@@ -86,6 +86,16 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_15" />
 
+            <com.ql.recovery.yay.ui.self.StrokeTextView
+                android:id="@+id/tv_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/dp_5"
+                android:text="400"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_30" />
+
         </LinearLayout>
 
     </FrameLayout>

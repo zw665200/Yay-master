@@ -1,6 +1,8 @@
 package com.ql.recovery.yay.ui.home
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -58,6 +60,12 @@ class HomeFragment : BaseFragment() {
         binding?.llCoin?.setOnClickListener { toStorePage() }
         binding?.ivVip?.setOnClickListener { showPrimeDialog() }
         binding?.lottieClub?.setOnClickListener { (requireActivity() as MainActivity).changeFragment(2) }
+
+//        binding!!.tvTest.paint.apply {
+//            strokeWidth = 2f
+//            style = Paint.Style.STROKE
+//            color = Color.RED
+//        }
 
         return binding!!.root
     }
@@ -239,23 +247,23 @@ class HomeFragment : BaseFragment() {
             //report
             initReport(userInfo, "match_first_click")
 
-//            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
-//                userInfo.nickname.isBlank() || userInfo.photos.isEmpty()
-//            ) {
-//                DataManager.checkFirstCompletionAward {
-//                    if (!it) {
-//                        //引导用户完善资料
-//                        CompleteProfileDialog(requireActivity(), userInfo) {
-//                            //检查视频的权限
-//                            checkVideoPermissions {
-//                                openMatchPage()
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                return@getUserInfo
-//            }
+            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
+                userInfo.nickname.isBlank() || userInfo.photos.isEmpty()
+            ) {
+                DataManager.checkFirstCompletionReward {
+                    if (!it) {
+                        //引导用户完善资料
+                        CompleteProfileDialog(requireActivity(), userInfo) {
+                            //检查视频的权限
+                            checkVideoPermissions {
+                                openMatchPage()
+                            }
+                        }
+                    }
+                }
+
+                return@getUserInfo
+            }
 
             if (userInfo.country.isBlank()) {
                 startActivity(Intent(requireActivity(), CountryActivity::class.java))

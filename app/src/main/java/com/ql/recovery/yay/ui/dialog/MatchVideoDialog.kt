@@ -2,25 +2,30 @@ package com.ql.recovery.yay.ui.dialog
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.graphics.PixelFormat
+import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.Gravity
-import android.view.View
-import android.view.WindowManager
+import android.os.Message
+import android.view.*
 import android.view.animation.Animation
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.ql.recovery.bean.Reason
 import com.ql.recovery.bean.User
+import com.ql.recovery.config.Config
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.DialogMatchVideoBinding
+import com.ql.recovery.yay.databinding.LayoutFloatChatBinding
 import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.base.BaseDialog
 import com.ql.recovery.yay.ui.self.BreatheInterpolator
-import com.ql.recovery.yay.util.AppUtil
+import com.ql.recovery.yay.ui.self.KeyEventFrameLayout
+import com.ql.recovery.yay.util.JLog
 import com.tencent.mmkv.MMKV
 
 
@@ -35,7 +40,6 @@ class MatchVideoDialog(
     private var mType: String? = null
     private var max = 0
     private var from = From.Other
-    private var mk = MMKV.defaultMMKV()
 
     init {
         initVew()
@@ -70,6 +74,18 @@ class MatchVideoDialog(
             status(MatchStatus.Reject, mType)
         }
 
+        binding.tvWaitBackground.setOnClickListener {
+            if (mUser != null) {
+                cancel()
+                val bundle = Bundle()
+                bundle.putParcelable("user", mUser)
+                val msg = Message()
+                msg.what = 0x10007
+                msg.data = bundle
+                Config.mHandler?.sendMessage(msg)
+            }
+        }
+
         initTimer()
     }
 
@@ -80,6 +96,12 @@ class MatchVideoDialog(
                 //45秒之后关闭对话框挂掉视频
                 this@MatchVideoDialog.cancel()
                 status(MatchStatus.Reject, mType)
+
+                getUserInfo { userInfo ->
+                    if (userInfo.role == "anchor") {
+                        Config.mHandler?.sendEmptyMessage(0x10008)
+                    }
+                }
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -96,6 +118,8 @@ class MatchVideoDialog(
     fun setUser(user: User?) {
         if (user == null) return
         mUser = user
+
+        JLog.i("before user = $mUser")
 
         Glide.with(activity).load(user.avatar).apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.ivAvatar)
         Glide.with(activity).load(user.cover_url).into(binding.ivUserBg)

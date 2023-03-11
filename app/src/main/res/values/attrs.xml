@@ -9,6 +9,11 @@
         <attr name="maxHeight" format="dimension" />
     </declare-styleable>
 
+<!--    <declare-styleable name="StrokeTextView">-->
+<!--        <attr name="strokeColor" format="color" />-->
+<!--        <attr name="strokeWidth" format="float" />-->
+<!--    </declare-styleable>-->
+
     <declare-styleable name="RadiusCardView">
         <attr name="topLeftRadius" format="dimension" />
         <attr name="topRightRadius" format="dimension" />

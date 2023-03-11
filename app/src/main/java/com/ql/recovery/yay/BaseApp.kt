@@ -6,14 +6,13 @@ import android.app.Application
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.PixelFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
+import android.view.View.OnTouchListener
 import com.appsflyer.AppsFlyerLib
 import com.blongho.country_data.World
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -46,6 +45,7 @@ import com.ql.recovery.manager.RetrofitServiceManager
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.LayoutFloatChatBinding
 import com.ql.recovery.yay.manager.DBManager
+import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.ui.dialog.MatchVideoDialog
 import com.ql.recovery.yay.ui.dialog.NoticeDialog
@@ -67,16 +67,27 @@ import java.lang.ref.WeakReference
  */
 class BaseApp : Application() {
     private var currentActivity: WeakReference<Activity>? = null
-    private var matchVideoDialog: MatchVideoDialog? = null
-    private var windowManager: WindowManager? = null
     private var handler = Handler(Looper.getMainLooper())
     private lateinit var firebaseAnalytics: FirebaseAnalytics
-    private var mMatcher: User? = null
+    private var matcher: User? = null
+
+    //主播上报的参数
     private var activityCount = 0
     private var isForeground = false
     private var isScreenOff = false
     private var startAt = 0L
     private var leaveAt = 0L
+
+    //悬浮窗的移动参数
+    private var x = 0
+    private var y = 0
+    private var downX = 0
+    private var downY = 0
+
+    //对话框和悬浮窗
+    private var matchVideoDialog: MatchVideoDialog? = null
+    private var windowManager: WindowManager? = null
+    private var floatView: LayoutFloatChatBinding? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -225,6 +236,23 @@ class BaseApp : Application() {
                         }
                     }
 
+                    0x10007 -> {
+                        val bundle = msg.data
+                        if (bundle != null) {
+                            val user = bundle.getParcelable<User>("user")
+                            if (user != null) {
+                                val activity = currentActivity?.get()
+                                if (activity != null) {
+                                    createFloatView(activity, user)
+                                }
+                            }
+                        }
+                    }
+
+                    0x10008 -> {
+                        removeFloatView()
+                    }
+
                 }
             }
         }
@@ -244,9 +272,9 @@ class BaseApp : Application() {
 
                                 val activity = currentActivity?.get()
                                 if (activity != null) {
-                                    mMatcher = info.content.user
-                                    matchVideoDialog?.setUser(info.content.user)
                                     if (!activity.isFinishing && !activity.isDestroyed) {
+                                        matcher = info.content.user
+                                        matchVideoDialog?.setUser(info.content.user)
                                         matchVideoDialog?.setMatchType(info.content.room_type, info.content.transaction_type)
                                         matchVideoDialog?.startConnect()
                                         matchVideoDialog?.show()
@@ -256,6 +284,11 @@ class BaseApp : Application() {
                                         if (config.hand_free) {
                                             matchVideoDialog?.waitConnect()
                                             acceptInvite()
+                                        }
+
+                                        //如果应用在后台发通知
+                                        if (!isForeground) {
+                                            AppUtil.sendNotification(activity, "Video chat invitation", "you have a new video chat invitation from ${info.content.user.nickname}")
                                         }
                                     }
                                 }
@@ -293,7 +326,9 @@ class BaseApp : Application() {
                             "match_invite_timeout" -> {
                                 matchVideoDialog?.connectingTimeout()
                                 matchVideoDialog?.cancel()
-                                rematch(1000L)
+                                removeFloatView()
+
+                                rematch(5000L)
 
                                 val activity = currentActivity?.get()
                                 if (activity != null) {
@@ -312,6 +347,12 @@ class BaseApp : Application() {
                                 val typeToken = object : TypeToken<MessageInfo<Int>>() {}
                                 val info = GsonUtils.fromJson<MessageInfo<Int>>(data, typeToken.type) ?: return
                                 matchVideoDialog?.setTime(info.content)
+                                if (!isForeground) {
+                                    matchVideoDialog?.cancel()
+                                } else {
+                                    matchVideoDialog?.setUser(matcher)
+                                    matchVideoDialog?.show()
+                                }
                             }
 
                             "system" -> {
@@ -369,8 +410,6 @@ class BaseApp : Application() {
         val token = mk.decodeString("access_token")
         if (token != null) {
             Config.CLIENT_TOKEN = token
-
-            JLog.i("token = $token")
 
             initChat()
         }
@@ -559,8 +598,6 @@ class BaseApp : Application() {
 
                 firebaseAnalytics = Firebase.analytics
 
-                createFloatView(activity)
-
                 val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
                 if (userInfo != null) {
                     //保证对话框能在所有页面弹出
@@ -714,51 +751,81 @@ class BaseApp : Application() {
         }
     }
 
-
     @SuppressLint("ClickableViewAccessibility")
-    fun createFloatView(activity: Activity) {
-            windowManager = activity.windowManager
+    fun createFloatView(activity: Activity, user: User) {
+        windowManager = activity.windowManager
         val layoutParam = WindowManager.LayoutParams().apply {
             width = ViewGroup.LayoutParams.WRAP_CONTENT
             height = ViewGroup.LayoutParams.WRAP_CONTENT
+            format = PixelFormat.RGBA_8888
             flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+            gravity = Gravity.TOP or Gravity.END
+            y = AppUtil.dp2px(activity, 30f)
         }
 
-        val floatView = LayoutFloatChatBinding.inflate(activity.layoutInflater)
-        windowManager?.addView(floatView.root, layoutParam)
+        floatView = LayoutFloatChatBinding.inflate(activity.layoutInflater)
+        ImageManager.getRoundBitmap(activity, user.avatar) {
+            floatView!!.ivAvatar.setImageBitmap(it)
+        }
 
-        var x = 0
-        var y = 0
-        floatView.root.setOnTouchListener(
-            object : View.OnTouchListener {
-                override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
-                    when (motionEvent.action) {
-                        MotionEvent.ACTION_DOWN -> {
-                            x = motionEvent.rawX.toInt()
-                            y = motionEvent.rawY.toInt()
+        windowManager?.addView(floatView!!.root, layoutParam)
 
-                        }
-                        MotionEvent.ACTION_MOVE -> {
-                            val nowX = motionEvent.rawX.toInt()
-                            val nowY = motionEvent.rawY.toInt()
-                            val movedX = nowX - x
-                            val movedY = nowY - y
-                            x = nowX
-                            y = nowY
-                            layoutParam.apply {
-                                x += movedX
-                                y += movedY
-                            }
-                            //更新悬浮球控件位置
-                            windowManager?.updateViewLayout(view, layoutParam)
-                        }
-                        else -> {
-
-                        }
+        floatView?.root?.setOnTouchListener(object : OnTouchListener {
+            override fun onTouch(view: View?, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        x = event.rawX.toInt()
+                        y = event.rawY.toInt()
+                        downX = event.rawX.toInt()
+                        downY = event.rawY.toInt()
                     }
-                    return false
+
+                    MotionEvent.ACTION_MOVE -> {
+                        val nowX = event.rawX.toInt()
+                        val nowY = event.rawY.toInt()
+                        val movedX = nowX - x
+                        val movedY = nowY - y
+                        x = nowX
+                        y = nowY
+
+                        layoutParam.apply {
+                            x += movedX
+                            y += movedY
+                        }
+
+                        //更新悬浮球控件位置
+                        windowManager?.updateViewLayout(view, layoutParam)
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        val nowX = event.rawX.toInt()
+                        val nowY = event.rawY.toInt()
+                        val movedX = nowX - downX
+                        val movedY = nowY - downY
+
+                        return !(kotlin.math.abs(movedX) < 5 && kotlin.math.abs(movedY) < 5)
+                    }
+
+                    else -> {}
                 }
-            })
+
+                return false
+            }
+        })
+
+        floatView?.root?.setOnClickListener {
+            windowManager?.removeView(floatView?.root)
+            matchVideoDialog?.show()
+        }
+    }
+
+    fun removeFloatView() {
+        if (windowManager != null && floatView != null) {
+            try {
+                windowManager?.removeView(floatView?.root)
+            } catch (e: Exception) {
+            }
+        }
     }
 
     /**
@@ -768,7 +835,7 @@ class BaseApp : Application() {
     private fun startVideoPage(activity: Activity, room: Room) {
         val intent = Intent(activity, VideoActivity::class.java)
         intent.putExtra("room", room)
-        intent.putExtra("user", mMatcher)
+        intent.putExtra("user", matcher)
         intent.putExtra("type", "match")
         startActivity(intent)
     }

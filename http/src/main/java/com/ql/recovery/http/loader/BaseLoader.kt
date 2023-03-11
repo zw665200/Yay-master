@@ -216,6 +216,24 @@ object BaseLoader {
         return RetrofitServiceManager.get().baseService.updateUserInfo(Config.CLIENT_TOKEN, request)
     }
 
+    fun updateAvatar(avatar: String): Observable<Response<Boolean>> {
+        val map = ArrayMap<String, Any>()
+        map["avatar"] = avatar
+
+        val json = GsonUtils.toJson(map)
+        val request = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+        return RetrofitServiceManager.get().baseService.updateUserInfo(Config.CLIENT_TOKEN, request)
+    }
+
+    fun updateNickname(nickname: String): Observable<Response<Boolean>> {
+        val map = ArrayMap<String, Any>()
+        map["nickname"] = nickname
+
+        val json = GsonUtils.toJson(map)
+        val request = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+        return RetrofitServiceManager.get().baseService.updateUserInfo(Config.CLIENT_TOKEN, request)
+    }
+
     fun updateAvatarAndNickname(avatar: String, nickname: String): Observable<Response<Boolean>> {
         val map = ArrayMap<String, Any>()
         map["avatar"] = avatar
@@ -705,15 +723,15 @@ object BaseLoader {
     /**
      * 检查用户是否已领取首次完善资料奖励
      */
-    fun checkFirstCompletionAward(): Observable<Response<Boolean>> {
-        return RetrofitServiceManager.get().baseService.checkFirstCompletionAward(Config.CLIENT_TOKEN)
+    fun checkFirstCompletionReward(): Observable<Response<Boolean>> {
+        return RetrofitServiceManager.get().baseService.checkFirstCompletionReward(Config.CLIENT_TOKEN)
     }
 
     /**
      * 领取首次完善资料奖励
      */
-    fun receiveFirstCompletionAward(): Observable<Response<Boolean>> {
-        return RetrofitServiceManager.get().baseService.receiveFirstCompletionAward(Config.CLIENT_TOKEN)
+    fun receiveFirstCompletionReward(): Observable<Response<Boolean>> {
+        return RetrofitServiceManager.get().baseService.receiveFirstCompletionReward(Config.CLIENT_TOKEN)
     }
 
     //------------------------------message---------------------------------//

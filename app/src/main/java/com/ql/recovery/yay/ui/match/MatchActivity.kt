@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.Color
-import android.net.Uri
 import android.os.*
 import android.view.View
 import com.google.android.exoplayer2.ExoPlayer
@@ -12,8 +11,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.AssetDataSource
-import com.google.android.exoplayer2.upstream.DataSpec
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DataSource
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -45,10 +43,10 @@ class MatchActivity : BaseActivity() {
     private var matchVideoDialog: MatchVideoDialog? = null
     private var matchAudioDialog: MatchAudioDialog? = null
     private var matchFailedDialog: MatchFailedDialog? = null
-    private var mMatcher: User? = null
-    private var mHandler = Handler(Looper.getMainLooper())
+    private var matcher: User? = null
+    private var handler = Handler(Looper.getMainLooper())
     private var exoPlayer: ExoPlayer? = null
-    private var mWaitingDialog: WaitingDialog? = null
+    private var waitingDialog: WaitingDialog? = null
 
     private var videoUri = "file:///android_asset/videos/match_video.mp4"
     private var audioUri = "file:///android_asset/videos/match_audio.mp4"
@@ -69,7 +67,7 @@ class MatchActivity : BaseActivity() {
     override fun initData() {
         exoPlayer = ExoPlayer.Builder(this).build()
         firebaseAnalytics = Firebase.analytics
-        mWaitingDialog = WaitingDialog(this)
+        waitingDialog = WaitingDialog(this)
 
         flushConfig()
         loadOnlineCount()
@@ -106,40 +104,40 @@ class MatchActivity : BaseActivity() {
 
             if (type == "video" || type == "voice") {
                 getUserInfo { userInfo ->
-                    //只有普通用户在匹配页开启匹配，主播进app就开启匹配
-//                    if (userInfo.role == "normal") {
-                    initMatchServer(type)
-                    initTimer(type)
-                    initNotice(type)
-                    initHandler(type)
-//                    }
+                    //只有普通用户在匹配页开启匹配
+                    if (userInfo.role == "normal") {
+                        initTimer(type)
+                        initNotice(type)
+                        initHandler(type)
+                        initMatchServer(type)
+                    }
                 }
             }
         }
     }
 
     private fun initPlayer(type: String) {
-        val assetDataSourceFactory = DefaultDataSourceFactory(this, "user-agent")
-        val assetDataSource = AssetDataSource(this)
-        when (type) {
-            "video" -> {
-                assetDataSource.open(DataSpec(Uri.parse(videoUri)))
-            }
-
-            "voice" -> {
-                assetDataSource.open(DataSpec(Uri.parse(audioUri)))
-            }
-        }
-
         binding.playerView.setShutterBackgroundColor(Color.TRANSPARENT)
         binding.playerView.player = exoPlayer
         exoPlayer?.repeatMode = Player.REPEAT_MODE_ALL
         exoPlayer?.playWhenReady = true
 
-        val videoSource = ProgressiveMediaSource.Factory(assetDataSourceFactory)
-            .createMediaSource(MediaItem.fromUri(assetDataSource.uri!!))
-        exoPlayer?.setMediaSource(videoSource)
-        exoPlayer?.prepare()
+        val dataSourceFactory = DataSource.Factory { AssetDataSource(this@MatchActivity) }
+        when (type) {
+            "video" -> {
+                val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(MediaItem.fromUri(videoUri))
+                exoPlayer?.setMediaSource(mediaSource)
+                exoPlayer?.prepare()
+            }
+
+            "voice" -> {
+                val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(MediaItem.fromUri(audioUri))
+                exoPlayer?.setMediaSource(mediaSource)
+                exoPlayer?.prepare()
+            }
+        }
     }
 
     private fun flushConfig() {
@@ -197,7 +195,10 @@ class MatchActivity : BaseActivity() {
         val type = intent.getStringExtra("type")
         if (type != null && type != "game") {
             getUserInfo { userInfo ->
-                startWebSocketService(userInfo.uid, type, getMatchConfig())
+                //一秒后开启匹配
+                handler.postDelayed({
+                    startWebSocketService(userInfo.uid, type, getMatchConfig())
+                }, 1000L)
             }
         }
     }
@@ -221,7 +222,6 @@ class MatchActivity : BaseActivity() {
                         }
 
                         MatchStatus.Cancel -> {
-                            binding.ivUserBg.visibility = View.GONE
                         }
                     }
                 }
@@ -244,7 +244,6 @@ class MatchActivity : BaseActivity() {
                         }
 
                         MatchStatus.Cancel -> {
-                            binding.ivUserBg.visibility = View.GONE
                         }
                     }
                 }
@@ -263,10 +262,10 @@ class MatchActivity : BaseActivity() {
 
                         when (message.type) {
                             "match_invite" -> {
-//                                val typeToken = object : TypeToken<MessageInfo<Invite>>() {}
-//                                val info = GsonUtils.fromJson<MessageInfo<Invite>>(data, typeToken.type) ?: return
-                                val typeToken = object : TypeToken<MessageInfo<User>>() {}
-                                val info = GsonUtils.fromJson<MessageInfo<User>>(data, typeToken.type) ?: return
+                                val typeToken = object : TypeToken<MessageInfo<Invite>>() {}
+                                val info = GsonUtils.fromJson<MessageInfo<Invite>>(data, typeToken.type) ?: return
+//                                val typeToken = object : TypeToken<MessageInfo<User>>() {}
+//                                val info = GsonUtils.fromJson<MessageInfo<User>>(data, typeToken.type) ?: return
 
                                 //取消所有对话框和计时器
                                 timer?.cancel()
@@ -274,13 +273,11 @@ class MatchActivity : BaseActivity() {
 
                                 when (type) {
                                     "video" -> {
-                                        mMatcher = info.content
-                                        matchVideoDialog?.setUser(info.content)
                                         if (!isFinishing && !isDestroyed) {
-                                            //设置背景图片
-                                            binding.ivUserBg.visibility = View.VISIBLE
-//                                            matchVideoDialog?.setMatchType(info.content.room_type, info.content.transaction_type)
-                                            matchVideoDialog?.setMatchType("match", "")
+                                            matcher = info.content.user
+                                            matchVideoDialog?.setUser(info.content.user)
+                                            matchVideoDialog?.setMatchType(info.content.room_type, info.content.transaction_type)
+//                                            matchVideoDialog?.setMatchType("match", "")
                                             matchVideoDialog?.startConnect()
                                             matchVideoDialog?.show()
 
@@ -294,11 +291,11 @@ class MatchActivity : BaseActivity() {
                                     }
 
                                     "voice" -> {
-//                                        mMatcher = info.content.user
-//                                        matchAudioDialog?.setUser(info.content.user)
-                                        mMatcher = info.content
-                                        matchAudioDialog?.setUser(info.content)
                                         if (!isFinishing && !isDestroyed) {
+                                            matcher = info.content.user
+                                            matchAudioDialog?.setUser(info.content.user)
+//                                        mMatcher = info.content
+//                                        matchAudioDialog?.setUser(info.content)
                                             matchAudioDialog?.startConnect()
                                             matchAudioDialog?.show()
 
@@ -372,7 +369,6 @@ class MatchActivity : BaseActivity() {
                                     "video" -> {
                                         matchVideoDialog?.connectingTimeout()
                                         matchVideoDialog?.cancel()
-                                        binding.ivUserBg.visibility = View.GONE
                                         ReportManager.firebaseCustomLog(firebaseAnalytics, "video_match_timeout", "timeout")
                                         ReportManager.appsFlyerCustomLog(this@MatchActivity, "video_match_timeout", "timeout")
                                     }
@@ -380,7 +376,6 @@ class MatchActivity : BaseActivity() {
                                     "voice" -> {
                                         matchAudioDialog?.connectingTimeout()
                                         matchAudioDialog?.cancel()
-                                        binding.ivUserBg.visibility = View.GONE
                                         ReportManager.firebaseCustomLog(firebaseAnalytics, "voice_match_timeout", "timeout")
                                         ReportManager.appsFlyerCustomLog(this@MatchActivity, "voice_match_timeout", "timeout")
                                     }
@@ -395,13 +390,11 @@ class MatchActivity : BaseActivity() {
                                     "video" -> {
                                         matchVideoDialog?.handOff()
                                         matchVideoDialog?.cancel()
-                                        binding.ivUserBg.visibility = View.GONE
                                         rematch(1500L)
                                     }
                                     "voice" -> {
                                         matchAudioDialog?.handOff()
                                         matchAudioDialog?.cancel()
-                                        binding.ivUserBg.visibility = View.GONE
                                         rematch(1500L)
                                     }
                                 }
@@ -516,7 +509,7 @@ class MatchActivity : BaseActivity() {
 
     private fun waiting(time: Long, func: () -> Unit) {
         if (!isFinishing && !isDestroyed) {
-            mHandler.postDelayed({
+            handler.postDelayed({
                 func()
             }, time)
         }
@@ -524,7 +517,7 @@ class MatchActivity : BaseActivity() {
 
     private fun rematch(time: Long) {
         if (!isFinishing && !isDestroyed) {
-            mHandler.postDelayed({
+            handler.postDelayed({
                 val msg = MessageInfo("rematch", 0, 0, "")
                 val json = GsonUtils.toJson(msg)
                 mWebSocketService?.sendMsg(json)
@@ -535,7 +528,7 @@ class MatchActivity : BaseActivity() {
     private fun startVideoPage(room: Room) {
         val intent = Intent(this, VideoActivity::class.java)
         intent.putExtra("room", room)
-        intent.putExtra("user", mMatcher)
+        intent.putExtra("user", matcher)
         intent.putExtra("type", "match")
         startActivity(intent)
         finish()
@@ -544,7 +537,7 @@ class MatchActivity : BaseActivity() {
     private fun startAudioPage(room: Room) {
         val intent = Intent(this, AudioActivity::class.java)
         intent.putExtra("room", room)
-        intent.putExtra("user", mMatcher)
+        intent.putExtra("user", matcher)
         startActivity(intent)
         finish()
     }
@@ -646,11 +639,11 @@ class MatchActivity : BaseActivity() {
     }
 
     private fun showGameDialog() {
-        mWaitingDialog?.show()
+        waitingDialog?.show()
         if (!DoubleUtils.isFastDoubleClick()) {
             getUserInfo { userInfo ->
                 DataManager.getLotteryCoin { list ->
-                    mWaitingDialog?.cancel()
+                    waitingDialog?.cancel()
                     GameDialog(this, userInfo, null, userInfo.avatar, true).apply {
                         setLotteryGiftList(list, "coin")
                         show()

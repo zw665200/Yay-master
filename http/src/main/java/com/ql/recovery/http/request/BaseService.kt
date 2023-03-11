@@ -661,16 +661,16 @@ interface BaseService {
     /**
      * 检查用户是否已领取首次完善资料奖励
      */
-    @GET("user/checkFirstCompletionAward")
-    fun checkFirstCompletionAward(
+    @GET("user/checkFirstCompletionReward")
+    fun checkFirstCompletionReward(
         @Header("Authorization") authorization: String
     ): Observable<Response<Boolean>>
 
     /**
      * 领取首次完善资料奖励
      */
-    @POST("user/receiveFirstCompletionAward")
-    fun receiveFirstCompletionAward(
+    @POST("user/receiveFirstCompletionReward")
+    fun receiveFirstCompletionReward(
         @Header("Authorization") authorization: String
     ): Observable<Response<Boolean>>
 
