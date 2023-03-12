@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_light_grey"
@@ -224,14 +225,53 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rc_anchor_list"
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_5"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_marginEnd="@dimen/dp_5"
-                android:overScrollMode="never" />
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dp_10"
+                        android:background="@drawable/shape_corner_yellow_8_alpha_20"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/dp_5">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/game_notice" />
+
+                        <com.ql.recovery.yay.ui.self.AutoTextView
+                            android:id="@+id/tv_broadcast"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/dp_10"
+                            app:auto3d_textColor="@color/color_grey"
+                            app:auto3d_textSize="13" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rc_anchor_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:layout_marginEnd="@dimen/dp_5"
+                        android:nestedScrollingEnabled="true"
+                        android:overScrollMode="never" />
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
 
             <com.scwang.smart.refresh.footer.ClassicsFooter
                 android:layout_width="match_parent"

@@ -350,7 +350,8 @@ class BaseApp : Application() {
                                 if (!isForeground) {
                                     matchVideoDialog?.cancel()
                                 } else {
-                                    matchVideoDialog?.setUser(matcher)
+                                    JLog.i("2222 dialog = $matchVideoDialog")
+//                                    matchVideoDialog?.setUser(matcher)
                                     matchVideoDialog?.show()
                                 }
                             }
@@ -585,6 +586,14 @@ class BaseApp : Application() {
                 } else {
                     WeakReference<Activity>(activity)
                 }
+
+                firebaseAnalytics = Firebase.analytics
+
+                val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
+                if (userInfo != null) {
+                    //保证对话框能在所有页面弹出
+                    initAnchorVideoDialog(activity)
+                }
             }
 
             override fun onActivityStarted(activity: Activity) {}
@@ -596,20 +605,15 @@ class BaseApp : Application() {
                     WeakReference<Activity>(activity)
                 }
 
-                firebaseAnalytics = Firebase.analytics
+                activityCount++
+                isForeground = true
+                isScreenOff = false
 
                 val userInfo = MMKV.defaultMMKV().decodeParcelable("user_info", UserInfo::class.java)
                 if (userInfo != null) {
-                    //保证对话框能在所有页面弹出
-                    initAnchorVideoDialog(activity)
-
                     if (userInfo.role == "anchor") {
                         //检测主播在前台时间
-                        activityCount++
                         startAt = System.currentTimeMillis() / 1000L
-
-                        isForeground = true
-                        isScreenOff = false
                     }
                 }
             }

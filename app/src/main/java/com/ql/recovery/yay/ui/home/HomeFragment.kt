@@ -61,12 +61,6 @@ class HomeFragment : BaseFragment() {
         binding?.ivVip?.setOnClickListener { showPrimeDialog() }
         binding?.lottieClub?.setOnClickListener { (requireActivity() as MainActivity).changeFragment(2) }
 
-//        binding!!.tvTest.paint.apply {
-//            strokeWidth = 2f
-//            style = Paint.Style.STROKE
-//            color = Color.RED
-//        }
-
         return binding!!.root
     }
 
@@ -247,29 +241,23 @@ class HomeFragment : BaseFragment() {
             //report
             initReport(userInfo, "match_first_click")
 
-            if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
-                userInfo.nickname.isBlank() || userInfo.photos.isEmpty()
-            ) {
-                DataManager.checkFirstCompletionReward {
-                    if (!it) {
-                        //引导用户完善资料
-                        CompleteProfileDialog(requireActivity(), userInfo) {
-                            //检查视频的权限
-                            checkVideoPermissions {
-                                openMatchPage()
-                            }
-                        }
-                    }
+            checkVideoPermissions {
+                //第一次直接进入匹配
+                val firstMatch = getLocalStorage().decodeBool("first_match", false)
+                if (!firstMatch) {
+                    openMatchPage()
+                    return@checkVideoPermissions
                 }
 
-                return@getUserInfo
-            }
-
-            if (userInfo.country.isBlank()) {
-                startActivity(Intent(requireActivity(), CountryActivity::class.java))
-            } else {
-                //检查视频的权限
-                checkVideoPermissions {
+                //第二次开始检查必备资料是否填写，引导资料填写完整
+                if (userInfo.sex == 0 || userInfo.age == 0 || userInfo.avatar.isBlank() ||
+                    userInfo.nickname.isBlank() || userInfo.photos.isEmpty()
+                ) {
+                    //引导用户完善资料
+                    CompleteProfileDialog(requireActivity(), userInfo) {
+                        openMatchPage()
+                    }
+                } else {
                     openMatchPage()
                 }
             }

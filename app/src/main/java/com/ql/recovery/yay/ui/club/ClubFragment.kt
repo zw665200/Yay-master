@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.*
 import com.netease.yunxin.kit.adapters.DataAdapter
-import com.ql.recovery.bean.Anchor
-import com.ql.recovery.bean.Cate
-import com.ql.recovery.bean.UserInfo
+import com.ql.recovery.bean.*
 import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.callback.FileCallback
@@ -39,6 +39,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     private lateinit var mAdapter: DataAdapter<Anchor>
     private var mainList = mutableListOf<Cate>()
     private var mList = mutableListOf<Anchor>()
+    private var handler = Handler(Looper.getMainLooper())
 
     private var currentPosition = 0
     private var page = 0
@@ -56,6 +57,7 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
 
         initPicsShow()
         getTitleList()
+        getLotteryBroadcastList()
         changeTag("all")
 
         return binding!!.root
@@ -82,11 +84,11 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
             .addBindView { itemView, itemData, position, payloads ->
                 val itemBinding = ItemFunAnchorBinding.bind(itemView)
                 val lp = itemBinding.ivPhoto.layoutParams
-                lp.height = height / 5
+                lp.height = height / 4
                 itemBinding.ivPhoto.layoutParams = lp
 
                 val l = itemBinding.playerView.layoutParams
-                l.height = height / 5
+                l.height = height / 4
                 itemBinding.playerView.layoutParams = l
 
                 if (payloads.isNotEmpty()) {
@@ -105,13 +107,12 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
                     return@addBindView
                 }
 
-                itemBinding.tvName.text = itemData.nickname
-                itemBinding.tvAge.text = itemData.age.toString()
+                itemBinding.tvName.text = itemData.nickname + "," + itemData.age.toString()
 
-                when (itemData.sex) {
-                    1 -> itemBinding.ivGender.setImageResource(R.drawable.pp_xbnn)
-                    2 -> itemBinding.ivGender.setImageResource(R.drawable.pp_xbn)
-                }
+//                when (itemData.sex) {
+//                    1 -> itemBinding.ivGender.setImageResource(R.drawable.pp_xbnn)
+//                    2 -> itemBinding.ivGender.setImageResource(R.drawable.pp_xbn)
+//                }
 
                 if (itemData.online) {
                     itemBinding.onlineStatus.setImageResource(R.drawable.shape_round_green)
@@ -393,6 +394,29 @@ class ClubFragment : BaseFragment(), CoroutineScope by MainScope() {
     }
 
     override fun refreshOnlineTime() {}
+
+    private fun getLotteryBroadcastList() {
+        DataManager.getAnchorMessageList { list ->
+            if (list.isNotEmpty()) {
+                val clubFollow = list[0]
+                binding?.tvBroadcast?.setText(String.format(getString(R.string.club_top_notice), clubFollow.nickname, clubFollow.target_nickname))
+                broadcastLoop(list, 1)
+            }
+        }
+    }
+
+    private fun broadcastLoop(list: List<ClubFollow>, position: Int) {
+        handler.postDelayed({
+            val clubFollow = list[position]
+            binding?.tvBroadcast?.setText(String.format(getString(R.string.club_top_notice), clubFollow.nickname, clubFollow.target_nickname))
+            if (position == list.size - 1) {
+                broadcastLoop(list, 0)
+            } else {
+                broadcastLoop(list, position + 1)
+            }
+
+        }, 2000L)
+    }
 
     private fun toStorePage() {
         if (!DoubleUtils.isFastDoubleClick()) {

@@ -33,6 +33,7 @@ import com.ql.recovery.yay.util.DoubleUtils
 import com.ql.recovery.yay.util.GsonUtils
 import com.ql.recovery.yay.util.JLog
 import com.ql.recovery.yay.util.ToastUtil
+import java.util.Random
 
 class MatchActivity : BaseActivity() {
     private lateinit var binding: ActivityMatchBinding
@@ -50,6 +51,7 @@ class MatchActivity : BaseActivity() {
 
     private var videoUri = "file:///android_asset/videos/match_video.mp4"
     private var audioUri = "file:///android_asset/videos/match_audio.mp4"
+    private var showPrime = false
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityMatchBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -195,10 +197,28 @@ class MatchActivity : BaseActivity() {
         val type = intent.getStringExtra("type")
         if (type != null && type != "game") {
             getUserInfo { userInfo ->
+                val times = getLocalStorage().decodeInt("match_times", 0)
+                if (times == 4) {
+                    DataManager.getProductList("lemon") { list ->
+                        for (child in list) {
+                            if (child.code == "coin_level_one") {
+                                MatchGuideDialog(this, child) {
+                                    //一秒后开启匹配
+                                    waiting(1000L) {
+                                        startWebSocketService(userInfo.uid, type, getMatchConfig())
+                                    }
+                                }
+                                break
+                            }
+                        }
+                    }
+                    return@getUserInfo
+                }
+
                 //一秒后开启匹配
-                handler.postDelayed({
+                waiting(1000L) {
                     startWebSocketService(userInfo.uid, type, getMatchConfig())
-                }, 1000L)
+                }
             }
         }
     }
@@ -216,7 +236,40 @@ class MatchActivity : BaseActivity() {
 
                         MatchStatus.Reject -> {
                             rejectInvite()
-                            rematch(1500L)
+
+                            //当普通用户在匹配池配到第一个付费主播后，如果TA有没有接听，则回到匹配池后就检测宝石余额是否充足（大于等于120），
+                            // 若不足则就弹窗引导购买4.99套餐包（购买过的则随机弹其他套餐包：1.99、6.99、9.99、10.99），如果充足则规则往后走
+                            val times = getLocalStorage().decodeInt("match_times", 0)
+                            if (times == 4) {
+                                getUserInfo { userInfo ->
+                                    if (userInfo.coin < 120) {
+                                        DataManager.getProductList("lemon") { list ->
+                                            var from: Server? = null
+                                            for (child in list) {
+                                                if (child.code == "coin_level_two") {
+                                                    from = child
+                                                }
+                                            }
+
+                                            if (from != null) {
+                                                MatchGuideDialog(this, from) {
+                                                    timer?.start()
+                                                    rematch(1500L)
+                                                }
+                                            } else {
+                                                val randomIndex = Random().nextInt(list.size)
+                                                MatchGuideDialog(this, list[randomIndex]) {
+                                                    timer?.start()
+                                                    rematch(1500L)
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        rematch(1500L)
+                                    }
+                                }
+                            }
+
                             ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_video_match_click", "reject")
                             ReportManager.appsFlyerCustomLog(this, "reject_video_match_click", "reject")
                         }
@@ -346,6 +399,9 @@ class MatchActivity : BaseActivity() {
 
                                 getLocalStorage().encode("recent_record", "match")
 
+                                val times = getLocalStorage().decodeInt("match_times", 0)
+                                getLocalStorage().encode("match_times", times + 1)
+
                                 when (type) {
                                     "video" -> {
                                         matchVideoDialog?.cancel()
@@ -443,6 +499,17 @@ class MatchActivity : BaseActivity() {
             }
 
             override fun onTick(millisUntilFinished: Long) {
+                if (millisUntilFinished < 15000L && !showPrime) {
+                    getUserInfo { userInfo ->
+                        if (!userInfo.is_vip) {
+                            DataManager.getProductList("sub") { list ->
+                                if (list.isEmpty()) return@getProductList
+                                showPrime = true
+                                MatchGuideDialog(this@MatchActivity, list[0]).show()
+                            }
+                        }
+                    }
+                }
             }
         }
 

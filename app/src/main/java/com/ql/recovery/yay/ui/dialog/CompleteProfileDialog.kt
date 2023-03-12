@@ -222,10 +222,16 @@ class CompleteProfileDialog(
                         cancel()
                         DataManager.getUserInfo { }
 
-                        //领取奖励
-                        DataManager.receiveFirstCompletionReward { complete ->
-                            if (complete) {
-                                ProfileFinishDialog(activity).show()
+                        DataManager.checkFirstCompletionReward { isReceived ->
+                            if (!isReceived) {
+                                //领取奖励
+                                DataManager.receiveFirstCompletionReward { complete ->
+                                    if (complete) {
+                                        ProfileFinishDialog(activity).show()
+                                    }
+                                }
+                            } else {
+                                cancel()
                             }
                         }
                     }

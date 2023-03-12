@@ -201,6 +201,15 @@
     <string name="match_call_cost">You will be cost %1d gems/minute</string>
     <string name="match_call_wait_background">Waiting in the background</string>
     <string name="match_call_auto_accept">Auto-accept</string>
+    <string name="match_ad_content_1">First recharge</string>
+    <string name="match_ad_content_2">Get %1s extra gems!</string>
+    <string name="match_ad_content_3">Recharge now, don\'t miss out on fate again~</string>
+    <string name="match_ad_content_4">每日赠送50宝石，尊享会员无限权益</string>
+    <string name="match_ad_title_1">超值充值福利来袭，仅限一次~</string>
+    <string name="match_ad_title_2">宝石不足，限时充值优惠~</string>
+    <string name="match_ad_title_3">订阅会员，加速优质用户匹配</string>
+    <string name="match_sub">订阅会员</string>
+    <string name="match_price">$%1s</string>
 
     <!--match record-->
     <string name="record_title">History</string>
@@ -240,6 +249,7 @@
     <string name="club_score">Score:%1$s</string>
     <string name="club_level">Level:%1$d</string>
     <string name="club_uid">UID:%1$d</string>
+    <string name="club_top_notice">%1s刚刚关注了%2s~</string>
 
     <!--notification-->
     <string name="notification_title">Message</string>

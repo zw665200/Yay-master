@@ -37,4 +37,8 @@ abstract class BaseDialog(
             res(it)
         }
     }
+
+    protected fun getLocalStorage(): MMKV {
+        return mk
+    }
 }

@@ -2,9 +2,7 @@ package com.ql.recovery.yay.ui.dialog
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.graphics.PixelFormat
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Message
@@ -20,13 +18,9 @@ import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.config.MatchStatus
 import com.ql.recovery.yay.databinding.DialogMatchVideoBinding
-import com.ql.recovery.yay.databinding.LayoutFloatChatBinding
 import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.ui.base.BaseDialog
 import com.ql.recovery.yay.ui.self.BreatheInterpolator
-import com.ql.recovery.yay.ui.self.KeyEventFrameLayout
-import com.ql.recovery.yay.util.JLog
-import com.tencent.mmkv.MMKV
 
 
 class MatchVideoDialog(
@@ -86,6 +80,8 @@ class MatchVideoDialog(
             }
         }
 
+        binding.ivAutoAccept.setOnClickListener { }
+
         initTimer()
     }
 
@@ -118,8 +114,6 @@ class MatchVideoDialog(
     fun setUser(user: User?) {
         if (user == null) return
         mUser = user
-
-        JLog.i("before user = $mUser")
 
         Glide.with(activity).load(user.avatar).apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.ivAvatar)
         Glide.with(activity).load(user.cover_url).into(binding.ivUserBg)
@@ -277,6 +271,11 @@ class MatchVideoDialog(
         binding.tvNotice.text = activity.getString(R.string.match_connect_timeout)
         binding.progressView.visibility = View.INVISIBLE
         binding.ivConnect.visibility = View.GONE
+    }
+
+
+    private fun setAutoAccept() {
+
     }
 
     private fun beginAnimation(view: View) {
