@@ -65,6 +65,7 @@ class VideoActivity : BaseActivity() {
     private var gameDialog: GameDialog? = null
     private var timerDialog: TimerDialog? = null
     private var waitingDialog: WaitingDialog? = null
+    private var storeDialog: StoreDialog? = null
     private var requestPayCode = 0x1
     private var isEnough = true
     private var isFinish = false
@@ -151,6 +152,7 @@ class VideoActivity : BaseActivity() {
         binding.includeTitle.ivReport.setOnClickListener { showReportDialog() }
         binding.ivGift.setOnClickListener { showGiftDialog() }
         binding.ivGame.setOnClickListener { showGameDialog(null) }
+        binding.includeBottom.ivAddCoin.setOnClickListener { showStoreDialog() }
 
         //设置editText的属性
         binding.includeBottom.etMessage.imeOptions = EditorInfo.IME_ACTION_SEND
@@ -189,8 +191,9 @@ class VideoActivity : BaseActivity() {
             initTimerDialog()
             initTimer(mRoom!!.duration * 1000L)
 
-            getUserInfo {
-                initializeAndJoinChannel(mRoom!!, it)
+            getUserInfo { userInfo ->
+                storeDialog = StoreDialog(this, userInfo)
+                initializeAndJoinChannel(mRoom!!, userInfo)
                 initChat()
             }
         }
@@ -342,7 +345,8 @@ class VideoActivity : BaseActivity() {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                binding.progressView.progress = AppUtil.timeStamp2Date(millisUntilFinished, "ss").toInt()
+                val progress = AppUtil.timeStamp2Date(millisUntilFinished, "ss").toInt()
+                binding.progressView.progress = progress
                 when (mType) {
                     "match" -> {
                         if (millisUntilFinished > 25000L) {
@@ -350,6 +354,7 @@ class VideoActivity : BaseActivity() {
                             timerDialog?.cancel()
                         } else {
                             binding.progressView.visibility = View.VISIBLE
+                            storeDialog?.setTime(progress)
 
                             //如果金币足够扣下一分钟则切换成自动扣费模式
                             getUserInfo { userInfo ->
@@ -374,22 +379,26 @@ class VideoActivity : BaseActivity() {
                             timerDialog?.cancel()
                             binding.progressView.visibility = View.INVISIBLE
                         } else {
+                            storeDialog?.setTime(progress)
                             //只扣除普通用户的金币
                             getUserInfo { userInfo ->
                                 if (userInfo.role == "normal") {
-                                    binding.progressView.visibility = View.VISIBLE
+                                    if (userInfo.coin < 120) {
+                                        binding.progressView.visibility = View.VISIBLE
 
-                                    //只有玩游戏的时候才弹出倒计时对话框
-                                    if (gameDialog?.isShowing == true) {
-                                        timerDialog?.setTimer(millisUntilFinished)
-                                        timerDialog?.show()
-                                    }
+                                        //只有玩游戏的时候才弹出倒计时对话框
+                                        if (gameDialog?.isShowing == true) {
+                                            timerDialog?.setTimer(millisUntilFinished)
+                                            timerDialog?.show()
+                                        }
 
-                                    //距结束还有2秒的时候扣下一分钟
-                                    if (millisUntilFinished < 2000L) {
-                                        if (!isPaying) {
-                                            isPaying = true
-                                            getAdditionTimeByPersonal()
+                                    } else {
+                                        //距结束还有2秒的时候扣下一分钟
+                                        if (millisUntilFinished < 2000L) {
+                                            if (!isPaying) {
+                                                isPaying = true
+                                                getAdditionTimeByPersonal()
+                                            }
                                         }
                                     }
                                 }
@@ -403,27 +412,30 @@ class VideoActivity : BaseActivity() {
                             timerDialog?.cancel()
                             binding.progressView.visibility = View.INVISIBLE
                         } else {
+                            storeDialog?.setTime(progress)
+
                             //只扣除发起方的金币
                             val from = intent.getStringExtra("from")
                             if (from != null && from == "sender") {
 
-                                //金币不足
-                                if (!isEnough) {
-                                    binding.progressView.visibility = View.VISIBLE
+                                getUserInfo { userInfo ->
+                                    if (userInfo.coin < 120) {
+                                        binding.progressView.visibility = View.VISIBLE
 
-                                    //只有玩游戏的时候才弹出倒计时对话框
-                                    if (gameDialog?.isShowing == true) {
-                                        timerDialog?.setTimer(millisUntilFinished)
-                                        timerDialog?.show()
-                                    }
-                                    return
-                                }
+                                        //只有玩游戏的时候才弹出倒计时对话框
+                                        if (gameDialog?.isShowing == true) {
+                                            timerDialog?.setTimer(millisUntilFinished)
+                                            timerDialog?.show()
+                                        }
 
-                                //距结束还有5秒的时候扣下一分钟
-                                if (millisUntilFinished < 5000L) {
-                                    if (!isPaying) {
-                                        isPaying = true
-                                        getAdditionTimeByPersonal()
+                                    } else {
+                                        //距结束还有2秒的时候扣下一分钟
+                                        if (millisUntilFinished < 2000L) {
+                                            if (!isPaying) {
+                                                isPaying = true
+                                                getAdditionTimeByPersonal()
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -436,6 +448,7 @@ class VideoActivity : BaseActivity() {
                             timerDialog?.cancel()
                             binding.progressView.visibility = View.INVISIBLE
                         } else {
+                            storeDialog?.setTime(progress)
                             getUserInfo { userInfo ->
                                 if (userInfo.role == "normal") {
                                     if (userInfo.coin < 60) {
@@ -898,6 +911,10 @@ class VideoActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun showStoreDialog() {
+        storeDialog?.show()
     }
 
 

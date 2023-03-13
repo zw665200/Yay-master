@@ -159,12 +159,28 @@
                     android:layout_marginTop="@dimen/dp_10"
                     android:background="@drawable/free_gift_bg">
 
-                    <ImageView
-                        android:id="@+id/iv_gift"
+                    <ViewFlipper
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/paishou" />
+                        android:flipInterval="1500"
+                        android:inAnimation="@anim/anim_marquee_in"
+                        android:outAnimation="@anim/anim_marquee_out">
+
+                        <ImageView
+                            android:id="@+id/iv_gift"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/paishou" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/paishou" />
+
+                    </ViewFlipper>
 
                 </FrameLayout>
 

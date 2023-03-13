@@ -10,8 +10,6 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.PurchasesUpdatedListener
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -41,7 +39,6 @@ class StoreDialog(
     private var mList = arrayListOf<Server>()
     private var currentServer: Server? = null
     private var lastClickTime: Long = 0L
-    private lateinit var billingClient: BillingClient
 
     init {
         initVew()
@@ -59,18 +56,8 @@ class StoreDialog(
 
         binding.ivClose.setOnClickListener { cancel() }
 
-        initGoogleClient()
         initServerList()
         loadServerList()
-    }
-
-    private fun initGoogleClient() {
-        val listener = PurchasesUpdatedListener { _, _ -> }
-
-        billingClient = BillingClient.newBuilder(activity)
-            .setListener(listener)
-            .enablePendingPurchases()
-            .build()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -202,10 +189,15 @@ class StoreDialog(
             mList.clear()
             mList.addAll(list)
             mAdapter.notifyDataSetChanged()
+        }
+    }
 
-            PayManager.get().getSubProductList(activity, billingClient, list) { position ->
-                mAdapter.notifyItemChanged(position)
-            }
+    fun setTime(time: Int) {
+        binding.progressView.progress = time
+        if (time > 25000L) {
+            binding.progressView.visibility = View.GONE
+        } else {
+            binding.progressView.visibility = View.VISIBLE
         }
     }
 
