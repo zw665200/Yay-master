@@ -47,5 +47,9 @@ data class ReChargeRecord(
 
 data class OnlineTime(
     var answer_count: Int,
-    var duration: Long
+    var duration: Long,
+    var call_duration: Long,
+    var call_income: Int,
+    var gift_income: Int,
+    var reject_rate: Float
 )

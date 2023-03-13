@@ -6,7 +6,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Message
-import android.view.*
+import android.view.Gravity
+import android.view.View
+import android.view.WindowManager
 import android.view.animation.Animation
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -23,7 +25,7 @@ import com.ql.recovery.yay.ui.base.BaseDialog
 import com.ql.recovery.yay.ui.self.BreatheInterpolator
 
 
-class MatchVideoDialog(
+class MatchDialog(
     private val activity: Activity,
     private val status: (status: MatchStatus, type: String?) -> Unit
 ) : BaseDialog(activity) {
@@ -54,6 +56,13 @@ class MatchVideoDialog(
             }
         }
 
+        val autoAccept = getLocalStorage().decodeBool("auto_accept", false)
+        if (!autoAccept) {
+            binding.ivAutoAccept.setImageResource(R.drawable.filter_close)
+        } else {
+            binding.ivAutoAccept.setImageResource(R.drawable.filter_open)
+        }
+
         binding.ivConnect.setOnClickListener {
             status(MatchStatus.Accept, mType)
         }
@@ -80,7 +89,7 @@ class MatchVideoDialog(
             }
         }
 
-        binding.ivAutoAccept.setOnClickListener { }
+        binding.ivAutoAccept.setOnClickListener { setAutoAccept() }
 
         initTimer()
     }
@@ -90,7 +99,7 @@ class MatchVideoDialog(
         timer = object : CountDownTimer(45000L, 1000L) {
             override fun onFinish() {
                 //45秒之后关闭对话框挂掉视频
-                this@MatchVideoDialog.cancel()
+                this@MatchDialog.cancel()
                 status(MatchStatus.Reject, mType)
 
                 getUserInfo { userInfo ->
@@ -139,6 +148,10 @@ class MatchVideoDialog(
         return mUser
     }
 
+    fun getType(): String? {
+        return mType
+    }
+
     fun setTime(time: Int) {
         if (max == 0) {
             max = time
@@ -149,6 +162,8 @@ class MatchVideoDialog(
     }
 
     fun setMatchType(matchType: String?, transactionType: String?) {
+        mType = matchType
+
         //检查匹配模式
         when (matchType) {
             "match" -> {
@@ -183,14 +198,31 @@ class MatchVideoDialog(
         }
     }
 
-    fun startConnect() {
-        binding.tvNotice.text = activity.getString(R.string.match_video_apply)
+    /**
+     * 接收用户匹配邀请
+     */
+    fun startConnect(type: String) {
         binding.progressView.visibility = View.VISIBLE
         binding.ivHandOff.visibility = View.GONE
         binding.ivConnect.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.GONE
+
+        when (type) {
+            "video" -> {
+                binding.tvNotice.text = activity.getString(R.string.match_video_apply)
+                binding.ivConnect.setImageResource(R.drawable.match_accept_video)
+            }
+
+            "voice" -> {
+                binding.tvNotice.text = activity.getString(R.string.match_audio_apply)
+                binding.ivConnect.setImageResource(R.drawable.match_accept_voice)
+            }
+        }
     }
 
+    /**
+     * 等待对方接受邀请
+     */
     fun waitConnect() {
         binding.tvNotice.text = activity.getString(R.string.match_waiting_to_connect)
         binding.progressView.visibility = View.INVISIBLE
@@ -210,10 +242,16 @@ class MatchVideoDialog(
         binding.ivHandOff.visibility = View.VISIBLE
         binding.viewMargin.visibility = View.VISIBLE
         binding.tvSkip.visibility = View.GONE
+        binding.ivConnect.setImageResource(R.drawable.match_accept_video)
+
+        val autoAccept = getLocalStorage().decodeBool("auto_accept", false)
+        if (autoAccept) {
+            binding.llCalling.visibility = View.GONE
+        }
     }
 
     /**
-     * 被拒绝私人视频邀请
+     * 被对方拒绝私人视频邀请
      */
     fun rejectConnectForPersonal(reason: Reason) {
         binding.progressView.visibility = View.GONE
@@ -275,7 +313,14 @@ class MatchVideoDialog(
 
 
     private fun setAutoAccept() {
-
+        val autoAccept = getLocalStorage().decodeBool("auto_accept", false)
+        if (autoAccept) {
+            binding.ivAutoAccept.setImageResource(R.drawable.filter_close)
+            getLocalStorage().encode("auto_accept", false)
+        } else {
+            binding.ivAutoAccept.setImageResource(R.drawable.filter_open)
+            getLocalStorage().encode("auto_accept", true)
+        }
     }
 
     private fun beginAnimation(view: View) {

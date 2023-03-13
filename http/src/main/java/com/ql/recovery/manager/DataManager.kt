@@ -818,7 +818,7 @@ object DataManager {
      * 查找系统打招呼消息模板
      */
     @SuppressLint("CheckResult")
-    fun getGreetingTemplates(role: String, sex: String, result: (List<Greeting>) -> Unit) {
+    fun getGreetingTemplates(role: String, sex: Int, result: (List<Greeting>) -> Unit) {
         thread {
             BaseLoader.getGreetingTemplates(role, sex)
                 .compose(ResponseTransformer.handleResult())

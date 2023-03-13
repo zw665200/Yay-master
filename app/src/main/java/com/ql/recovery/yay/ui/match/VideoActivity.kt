@@ -1,7 +1,6 @@
 package com.ql.recovery.yay.ui.match
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
@@ -149,7 +148,6 @@ class VideoActivity : BaseActivity() {
         binding.includeTitle.ivSwitchCamera.setOnClickListener { switchCamera() }
         binding.includeBottom.tvSend.setOnClickListener { sendMessage() }
         binding.flSurface.setOnClickListener { binding.includeBottom.etMessage.clearFocus() }
-        binding.includeTimer.tvAdd.setOnClickListener { getAdditionTime() }
         binding.includeTitle.ivReport.setOnClickListener { showReportDialog() }
         binding.ivGift.setOnClickListener { showGiftDialog() }
         binding.ivGame.setOnClickListener { showGameDialog(null) }
@@ -186,6 +184,7 @@ class VideoActivity : BaseActivity() {
 
             initUserInfo(mUser!!)
             initHandler()
+            initCostNotice(mRoom!!, mType!!)
             initGameDialog()
             initTimerDialog()
             initTimer(mRoom!!.duration * 1000L)
@@ -206,29 +205,14 @@ class VideoActivity : BaseActivity() {
 //            .apply(RequestOptions.bitmapTransform(BlurTransformation(this, 15, 8)))
 //            .into(binding.ivBlur)
 
-        //设置名字
-//        binding.includeTitle.tvName.text = user.nickname
-
-        //设置国家
-//        if (user.country.isNotBlank()) {
-//            val res = "file:///android_asset/images/${user.country}.png"
-//            ImageManager.getBitmap(this, res) { bitmap ->
-//                binding.includeTitle.ivNation.setImageBitmap(bitmap)
-//            }
-//        }
-
         //设置关注状态
         when (user.follow_status) {
             1, 3 -> {
-//                binding.includeTitle.tvFollow.text = getString(R.string.match_followed)
                 binding.ivFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_grey_30, null)
-//                binding.includeTitle.tvFollow.setTextColor(Color.WHITE)
             }
 
             else -> {
-//                binding.includeTitle.tvFollow.text = getString(R.string.match_follow)
                 binding.ivFollow.background = ResourcesCompat.getDrawable(resources, R.drawable.shape_corner_yellow, null)
-//                binding.includeTitle.tvFollow.setTextColor(Color.BLACK)
             }
         }
     }
@@ -304,6 +288,34 @@ class VideoActivity : BaseActivity() {
         }
     }
 
+    private fun initCostNotice(room: Room, type: String) {
+        getUserInfo { userInfo ->
+            if (userInfo.role == "normal") {
+                binding.includeBottom.tvCoin.text = userInfo.coin.toString()
+                when (type) {
+                    "match" -> {
+                        binding.includeBottom.tvRoomCostNotice.text = String.format(getString(R.string.match_room_cost_minute_start), room.duration, 60)
+                    }
+
+                    "pri_match", "private" -> {
+                        binding.includeBottom.tvRoomCostNotice.text = String.format(getString(R.string.match_call_cost), 120)
+                    }
+                }
+            } else {
+                binding.includeBottom.llCoin.visibility = View.GONE
+                when (type) {
+                    "match" -> {
+                        binding.includeBottom.tvRoomCostNotice.text = String.format(getString(R.string.match_call_income), 60)
+                    }
+
+                    "pri_match", "private" -> {
+                        binding.includeBottom.tvRoomCostNotice.text = String.format(getString(R.string.match_call_income), 120)
+                    }
+                }
+            }
+        }
+    }
+
     private fun initGameDialog() {
         getUserInfo { userInfo ->
             gameDialog = GameDialog(this, userInfo, mRoom!!.room_id, mUser!!.avatar, false)
@@ -312,7 +324,7 @@ class VideoActivity : BaseActivity() {
 
     private fun initTimerDialog() {
         timerDialog = TimerDialog(this) {
-            getAdditionTime()
+            getAdditionTimeByAuto()
         }
     }
 
@@ -330,23 +342,56 @@ class VideoActivity : BaseActivity() {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                binding.includeTimer.tvTimer.text = AppUtil.timeStamp2Date(millisUntilFinished, "ss")
+                binding.progressView.progress = AppUtil.timeStamp2Date(millisUntilFinished, "ss").toInt()
                 when (mType) {
                     "match" -> {
-                        if (millisUntilFinished > 30000L) {
-//                            timerDialog?.cancel()
-//                            binding.includeTimer.root.visibility = View.INVISIBLE
+                        if (millisUntilFinished > 25000L) {
+                            binding.progressView.visibility = View.INVISIBLE
+                            timerDialog?.cancel()
                         } else {
-                            val pkg = mRoom?.`package`
-                            if (pkg != null && pkg.type == "keep") {
-                                binding.includeTimer.root.visibility = View.INVISIBLE
-                            } else {
-                                binding.includeTimer.root.visibility = View.VISIBLE
+                            binding.progressView.visibility = View.VISIBLE
 
-                                //只有玩游戏的时候才弹出倒计时对话框
-                                if (gameDialog?.isShowing == true) {
-                                    timerDialog?.setTimer(millisUntilFinished)
-                                    timerDialog?.show()
+                            //如果金币足够扣下一分钟则切换成自动扣费模式
+                            getUserInfo { userInfo ->
+                                if (userInfo.role == "normal") {
+                                    if (userInfo.coin > 60) {
+                                        mType = "auto"
+                                    }
+
+                                    //只有玩游戏的时候才弹出倒计时对话框
+                                    if (gameDialog?.isShowing == true) {
+                                        timerDialog?.setTimer(millisUntilFinished)
+                                        timerDialog?.show()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    "pri_match" -> {
+                        if (millisUntilFinished > 30000L) {
+                            isPaying = false
+                            timerDialog?.cancel()
+                            binding.progressView.visibility = View.INVISIBLE
+                        } else {
+                            //只扣除普通用户的金币
+                            getUserInfo { userInfo ->
+                                if (userInfo.role == "normal") {
+                                    binding.progressView.visibility = View.VISIBLE
+
+                                    //只有玩游戏的时候才弹出倒计时对话框
+                                    if (gameDialog?.isShowing == true) {
+                                        timerDialog?.setTimer(millisUntilFinished)
+                                        timerDialog?.show()
+                                    }
+
+                                    //距结束还有2秒的时候扣下一分钟
+                                    if (millisUntilFinished < 2000L) {
+                                        if (!isPaying) {
+                                            isPaying = true
+                                            getAdditionTimeByPersonal()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -356,7 +401,7 @@ class VideoActivity : BaseActivity() {
                         if (millisUntilFinished > 30000L) {
                             isPaying = false
                             timerDialog?.cancel()
-                            binding.includeTimer.root.visibility = View.INVISIBLE
+                            binding.progressView.visibility = View.INVISIBLE
                         } else {
                             //只扣除发起方的金币
                             val from = intent.getStringExtra("from")
@@ -364,7 +409,7 @@ class VideoActivity : BaseActivity() {
 
                                 //金币不足
                                 if (!isEnough) {
-                                    binding.includeTimer.root.visibility = View.VISIBLE
+                                    binding.progressView.visibility = View.VISIBLE
 
                                     //只有玩游戏的时候才弹出倒计时对话框
                                     if (gameDialog?.isShowing == true) {
@@ -386,17 +431,30 @@ class VideoActivity : BaseActivity() {
                     }
 
                     "auto" -> {
-                        if (millisUntilFinished > 30000L) {
+                        if (millisUntilFinished > 25000L) {
                             isPaying = false
                             timerDialog?.cancel()
-                            binding.includeTimer.root.visibility = View.INVISIBLE
+                            binding.progressView.visibility = View.INVISIBLE
                         } else {
+                            getUserInfo { userInfo ->
+                                if (userInfo.role == "normal") {
+                                    if (userInfo.coin < 60) {
+                                        mType = "match"
+                                    } else {
+                                        //距结束还有2秒的时候扣下一分钟,只扣普通用户，主播免费
+                                        if (millisUntilFinished < 2000L) {
+                                            if (!isPaying) {
+                                                isPaying = true
+                                                getAdditionTimeByAuto()
+                                            }
+                                        }
 
-                            //距结束还有5秒的时候扣下一分钟
-                            if (millisUntilFinished < 5000L) {
-                                if (!isPaying) {
-                                    isPaying = true
-                                    getAdditionTimeByAuto()
+                                        //只有玩游戏的时候才弹出倒计时对话框
+                                        if (gameDialog?.isShowing == true) {
+                                            timerDialog?.setTimer(millisUntilFinished)
+                                            timerDialog?.show()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -467,42 +525,6 @@ class VideoActivity : BaseActivity() {
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(observerReceive, true)
     }
 
-    private fun getAdditionTime() {
-        DataManager.getUserInfo { userInfo ->
-            AdditionDialog(this, userInfo, mRoom!!.room_id) { room, addition ->
-                mRoom = room
-
-                //关闭倒计时对话框
-                timerDialog?.cancel()
-
-                //刷新房间的token
-                mRtcEngine?.renewToken(room.token)
-
-                //如果选择按分钟计时，付费模式变成自动扣除
-                if (addition.type == "keep") {
-                    mType = "auto"
-
-                    //如果金币不支持扣下一分钟，则双方显示倒计时，切换成普通扣费模式
-                    DataManager.getUserInfo { userInfo ->
-                        if (userInfo.coin < 60) {
-                            mType = "match"
-                            val msgInfo = MsgInfo("room_extra_time_failed")
-                            sendSelfMessage(GsonUtils.toJson(msgInfo))
-                        }
-                    }
-                }
-
-                //重置计时器
-                timer?.cancel()
-                initTimer(room.duration * 1000L)
-                timer?.start()
-
-                ReportManager.firebaseCustomLog(firebaseAnalytics, "add_time_success", addition.type)
-                ReportManager.appsFlyerCustomLog(this@VideoActivity, "add_time_success", addition.type)
-            }
-        }
-    }
-
     private fun getAdditionTimeByAuto() {
         DataManager.getAdditionPriceList("match") { list ->
             for (addition in list) {
@@ -529,23 +551,9 @@ class VideoActivity : BaseActivity() {
                             //支付完成
                             isPaying = false
 
-                            if (mType == "auto") {
-                                //如果金币不支持扣下一分钟，则双方显示倒计时，切换成普通扣费模式
-                                DataManager.getUserInfo { userInfo ->
-                                    if (userInfo.coin < 60) {
-                                        mType = "match"
-                                        val msgInfo = MsgInfo("room_extra_time_failed")
-                                        sendSelfMessage(GsonUtils.toJson(msgInfo))
-                                    }
-                                }
-                            }
+                            //如果金币不支持扣下一分钟，则显示倒计时
+                            DataManager.getUserInfo {}
 
-                            if (mType == "private") {
-                                //如果金币不支持扣下一分钟，则发起方显示倒计时
-                                DataManager.getUserInfo { userInfo ->
-                                    isEnough = userInfo.coin >= 60
-                                }
-                            }
                         } else {
                             isEnough = false
                         }

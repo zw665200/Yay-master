@@ -29,11 +29,8 @@ import com.ql.recovery.yay.manager.ReportManager
 import com.ql.recovery.yay.service.SosWebSocketClientService
 import com.ql.recovery.yay.ui.base.BaseActivity
 import com.ql.recovery.yay.ui.dialog.*
-import com.ql.recovery.yay.util.DoubleUtils
-import com.ql.recovery.yay.util.GsonUtils
-import com.ql.recovery.yay.util.JLog
-import com.ql.recovery.yay.util.ToastUtil
-import java.util.Random
+import com.ql.recovery.yay.util.*
+import java.util.*
 
 class MatchActivity : BaseActivity() {
     private lateinit var binding: ActivityMatchBinding
@@ -41,17 +38,16 @@ class MatchActivity : BaseActivity() {
     private var timer: CountDownTimer? = null
     private var mWebSocketService: SosWebSocketClientService? = null
     private var bindIntent: Intent? = null
-    private var matchVideoDialog: MatchVideoDialog? = null
-    private var matchAudioDialog: MatchAudioDialog? = null
+    private var matchDialog: MatchDialog? = null
     private var matchFailedDialog: MatchFailedDialog? = null
     private var matcher: User? = null
     private var handler = Handler(Looper.getMainLooper())
     private var exoPlayer: ExoPlayer? = null
     private var waitingDialog: WaitingDialog? = null
+    private var rejectCallTimes = 0
 
     private var videoUri = "file:///android_asset/videos/match_video.mp4"
     private var audioUri = "file:///android_asset/videos/match_audio.mp4"
-    private var showPrime = false
 
     override fun getViewBinding(baseBinding: ActivityBaseBinding) {
         binding = ActivityMatchBinding.inflate(layoutInflater, baseBinding.flBase, true)
@@ -71,11 +67,26 @@ class MatchActivity : BaseActivity() {
         firebaseAnalytics = Firebase.analytics
         waitingDialog = WaitingDialog(this)
 
+        checkMatchTimes()
         flushConfig()
         loadOnlineCount()
         initMatch()
     }
 
+    /**
+     * 每日重置匹配规则
+     */
+    private fun checkMatchTimes() {
+        val today = AppUtil.getTodayDate()
+        val date = getLocalStorage().decodeString("match_date", AppUtil.timeStamp2Date(System.currentTimeMillis(), "yyyy-MM-dd"))
+        if (today != date) {
+            getLocalStorage().encode("match_times", 1)
+        }
+    }
+
+    /**
+     * 初始化匹配
+     */
     private fun initMatch() {
         val type = intent.getStringExtra("type")
         if (type != null) {
@@ -106,12 +117,21 @@ class MatchActivity : BaseActivity() {
 
             if (type == "video" || type == "voice") {
                 getUserInfo { userInfo ->
-                    //只有普通用户在匹配页开启匹配
+                    //只有普通用户在匹配页开启匹配，主播进app就开始视频匹配
                     if (userInfo.role == "normal") {
-                        initTimer(type)
-                        initNotice(type)
+                        initTimer(type, 30000L)
                         initHandler(type)
-                        initMatchServer(type)
+                        initMatchDialog(type)
+                        startMatch()
+                    }
+
+                    //主播语音匹配是进入才开启
+                    if (type == "voice" && userInfo.role == "anchor") {
+                        //关闭全局匹配池连接
+                        Config.mainHandler?.sendEmptyMessage(0x10010)
+                        initHandler(type)
+                        initMatchDialog(type)
+                        startMatch()
                     }
                 }
             }
@@ -186,14 +206,19 @@ class MatchActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 在线人数
+     */
     private fun loadOnlineCount() {
         DataManager.getOnlineCount { count ->
             binding.tvOnlineCount.text = count.toString()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    /**
+     * 开始匹配
+     */
+    private fun startMatch() {
         val type = intent.getStringExtra("type")
         if (type != null && type != "game") {
             getUserInfo { userInfo ->
@@ -223,83 +248,63 @@ class MatchActivity : BaseActivity() {
         }
     }
 
-    private fun initMatchServer(type: String) {
-        when (type) {
-            "video" -> {
-                matchVideoDialog = MatchVideoDialog(this) { status, _ ->
-                    when (status) {
-                        MatchStatus.Accept -> {
-                            acceptInvite(type)
-                            ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_video_match_click", "accept")
-                            ReportManager.appsFlyerCustomLog(this, "accept_video_match_click", "accept")
-                        }
+    private fun initMatchDialog(type: String) {
+        matchDialog = MatchDialog(this) { status, _ ->
+            when (status) {
+                MatchStatus.Accept -> {
+                    acceptInvite()
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_video_match_click", "accept")
+                    ReportManager.appsFlyerCustomLog(this, "accept_video_match_click", "accept")
+                }
 
-                        MatchStatus.Reject -> {
-                            rejectInvite()
+                MatchStatus.Reject -> {
+                    rejectInvite()
 
-                            //当普通用户在匹配池配到第一个付费主播后，如果TA有没有接听，则回到匹配池后就检测宝石余额是否充足（大于等于120），
-                            // 若不足则就弹窗引导购买4.99套餐包（购买过的则随机弹其他套餐包：1.99、6.99、9.99、10.99），如果充足则规则往后走
-                            val times = getLocalStorage().decodeInt("match_times", 0)
-                            if (times == 4) {
-                                getUserInfo { userInfo ->
-                                    if (userInfo.coin < 120) {
-                                        DataManager.getProductList("lemon") { list ->
-                                            var from: Server? = null
-                                            for (child in list) {
-                                                if (child.code == "coin_level_two") {
-                                                    from = child
-                                                }
-                                            }
+                    //当普通用户在匹配池配到第一个付费主播后，如果TA有没有接听，则回到匹配池后就检测宝石余额是否充足（大于等于120），
+                    // 若不足则就弹窗引导购买4.99套餐包（购买过的则随机弹其他套餐包：1.99、6.99、9.99、10.99），如果充足则规则往后走
+                    val times = getLocalStorage().decodeInt("match_times", 0)
+                    if (times == 4) {
+                        timer?.cancel()
+                        getUserInfo { userInfo ->
+                            if (userInfo.coin < 120) {
+                                DataManager.getProductList("lemon") { list ->
+                                    var from: Server? = null
+                                    for (child in list) {
+                                        if (child.code == "coin_level_two") {
+                                            from = child
+                                        }
+                                    }
 
-                                            if (from != null) {
-                                                MatchGuideDialog(this, from) {
-                                                    timer?.start()
-                                                    rematch(1500L)
-                                                }
-                                            } else {
-                                                val randomIndex = Random().nextInt(list.size)
-                                                MatchGuideDialog(this, list[randomIndex]) {
-                                                    timer?.start()
-                                                    rematch(1500L)
-                                                }
-                                            }
+                                    if (from != null) {
+                                        MatchGuideDialog(this, from) {
+                                            initTimer(type, 30000L)
+                                            timer?.start()
+                                            rematch(1500L)
                                         }
                                     } else {
-                                        rematch(1500L)
+                                        val randomIndex = Random().nextInt(list.size)
+                                        MatchGuideDialog(this, list[randomIndex]) {
+                                            timer?.start()
+                                            rematch(1500L)
+                                        }
                                     }
                                 }
+                            } else {
+                                rematch(1500L)
                             }
-
-                            ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_video_match_click", "reject")
-                            ReportManager.appsFlyerCustomLog(this, "reject_video_match_click", "reject")
-                        }
-
-                        MatchStatus.Cancel -> {
                         }
                     }
-                }
-            }
 
-            "voice" -> {
-                matchAudioDialog = MatchAudioDialog(this) { status ->
-                    when (status) {
-                        MatchStatus.Accept -> {
-                            acceptInvite(type)
-                            ReportManager.firebaseCustomLog(firebaseAnalytics, "accept_voice_match_click", "accept")
-                            ReportManager.appsFlyerCustomLog(this, "accept_voice_match_click", "accept")
-                        }
-
-                        MatchStatus.Reject -> {
-                            rejectInvite()
-                            rematch(1500L)
-                            ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_voice_match_click", "reject")
-                            ReportManager.appsFlyerCustomLog(this, "reject_voice_match_click", "reject")
-                        }
-
-                        MatchStatus.Cancel -> {
-                        }
+                    //记录连续拒接的次数
+                    if (times == 5) {
+                        rejectCallTimes++
                     }
+
+                    ReportManager.firebaseCustomLog(firebaseAnalytics, "reject_video_match_click", "reject")
+                    ReportManager.appsFlyerCustomLog(this, "reject_video_match_click", "reject")
                 }
+
+                MatchStatus.Cancel -> {}
             }
         }
     }
@@ -317,76 +322,45 @@ class MatchActivity : BaseActivity() {
                             "match_invite" -> {
                                 val typeToken = object : TypeToken<MessageInfo<Invite>>() {}
                                 val info = GsonUtils.fromJson<MessageInfo<Invite>>(data, typeToken.type) ?: return
-//                                val typeToken = object : TypeToken<MessageInfo<User>>() {}
-//                                val info = GsonUtils.fromJson<MessageInfo<User>>(data, typeToken.type) ?: return
 
                                 //取消所有对话框和计时器
                                 timer?.cancel()
                                 matchFailedDialog?.cancel()
 
-                                when (type) {
-                                    "video" -> {
-                                        if (!isFinishing && !isDestroyed) {
-                                            matcher = info.content.user
-                                            matchVideoDialog?.setUser(info.content.user)
-                                            matchVideoDialog?.setMatchType(info.content.room_type, info.content.transaction_type)
-//                                            matchVideoDialog?.setMatchType("match", "")
-                                            matchVideoDialog?.startConnect()
-                                            matchVideoDialog?.show()
+                                if (!isFinishing && !isDestroyed) {
+                                    matcher = info.content.user
+                                    matchDialog?.setUser(info.content.user)
+                                    matchDialog?.setMatchType(info.content.room_type, info.content.transaction_type)
+                                    matchDialog?.startConnect(type)
+                                    matchDialog?.show()
 
-                                            //免提模式
-                                            val config = getMatchConfig()
-                                            if (config.hand_free) {
-                                                matchVideoDialog?.waitConnect()
-                                                acceptInvite(type)
-                                            }
-                                        }
+                                    //全局免提
+                                    val autoAccept = getLocalStorage().decodeBool("auto_accept", false)
+                                    if (autoAccept) {
+                                        matchDialog?.waitConnect()
+                                        acceptInvite()
                                     }
 
-                                    "voice" -> {
-                                        if (!isFinishing && !isDestroyed) {
-                                            matcher = info.content.user
-                                            matchAudioDialog?.setUser(info.content.user)
-//                                        mMatcher = info.content
-//                                        matchAudioDialog?.setUser(info.content)
-                                            matchAudioDialog?.startConnect()
-                                            matchAudioDialog?.show()
-
-                                            //免提模式
-                                            val config = getMatchConfig()
-                                            if (config.hand_free) {
-                                                matchAudioDialog?.waitConnect()
-                                                acceptInvite(type)
-                                            }
-                                        }
+                                    //局部免提
+                                    val config = getMatchConfig()
+                                    if (config.hand_free) {
+                                        matchDialog?.waitConnect()
+                                        acceptInvite()
                                     }
                                 }
                             }
 
-                            "match_accept_invite" -> {
-
-                            }
+                            "match_accept_invite" -> {}
 
                             "match_reject_invite" -> {
                                 //重新计算匹配中的时间
                                 timer?.cancel()
-                                initTimer(type)
+                                initTimer(type, 30000L)
                                 timer?.start()
 
-                                when (type) {
-                                    "video" -> {
-                                        matchVideoDialog?.handOff()
-                                        waiting(1500L) {
-                                            matchVideoDialog?.cancel()
-                                        }
-                                    }
-
-                                    "voice" -> {
-                                        matchAudioDialog?.handOff()
-                                        waiting(1500L) {
-                                            matchAudioDialog?.cancel()
-                                        }
-                                    }
+                                matchDialog?.handOff()
+                                waiting(1500L) {
+                                    matchDialog?.cancel()
                                 }
 
                                 //5秒后进入匹配池
@@ -399,18 +373,26 @@ class MatchActivity : BaseActivity() {
 
                                 getLocalStorage().encode("recent_record", "match")
 
+                                //充值未接次数
+                                rejectCallTimes = 0
+
+                                //第一次直接进入聊天
+                                val firstMatch = getLocalStorage().decodeBool("first_match", false)
+                                if (!firstMatch) {
+                                    getLocalStorage().encode("first_match", true)
+                                }
+
+                                //记录每天进入聊天的次数
                                 val times = getLocalStorage().decodeInt("match_times", 0)
                                 getLocalStorage().encode("match_times", times + 1)
 
-                                when (type) {
-                                    "video" -> {
-                                        matchVideoDialog?.cancel()
-                                        startVideoPage(info.content)
-                                    }
-
-                                    "voice" -> {
-                                        matchAudioDialog?.cancel()
-                                        startAudioPage(info.content)
+                                //关闭对话框，进入到聊天
+                                matchDialog?.cancel()
+                                val roomType = matchDialog?.getType()
+                                if (roomType != null) {
+                                    when (type) {
+                                        "video" -> startVideoPage(info.content, roomType)
+                                        "voice" -> startVoicePage(info.content, roomType)
                                     }
                                 }
                             }
@@ -418,20 +400,26 @@ class MatchActivity : BaseActivity() {
                             "match_invite_timeout" -> {
                                 //重新计算匹配中的时间
                                 timer?.cancel()
-                                initTimer(type)
+                                initTimer(type, 30000L)
                                 timer?.start()
+
+                                //关闭对话框
+                                matchDialog?.connectingTimeout()
+                                matchDialog?.cancel()
+
+                                //记录连续拒接的次数
+                                val times = getLocalStorage().decodeInt("match_times", 0)
+                                if (times == 5) {
+                                    rejectCallTimes++
+                                }
 
                                 when (type) {
                                     "video" -> {
-                                        matchVideoDialog?.connectingTimeout()
-                                        matchVideoDialog?.cancel()
                                         ReportManager.firebaseCustomLog(firebaseAnalytics, "video_match_timeout", "timeout")
                                         ReportManager.appsFlyerCustomLog(this@MatchActivity, "video_match_timeout", "timeout")
                                     }
 
                                     "voice" -> {
-                                        matchAudioDialog?.connectingTimeout()
-                                        matchAudioDialog?.cancel()
                                         ReportManager.firebaseCustomLog(firebaseAnalytics, "voice_match_timeout", "timeout")
                                         ReportManager.appsFlyerCustomLog(this@MatchActivity, "voice_match_timeout", "timeout")
                                     }
@@ -442,32 +430,15 @@ class MatchActivity : BaseActivity() {
 
                             "match_peer_disconnect" -> {
                                 timer?.cancel()
-                                when (type) {
-                                    "video" -> {
-                                        matchVideoDialog?.handOff()
-                                        matchVideoDialog?.cancel()
-                                        rematch(1500L)
-                                    }
-                                    "voice" -> {
-                                        matchAudioDialog?.handOff()
-                                        matchAudioDialog?.cancel()
-                                        rematch(1500L)
-                                    }
-                                }
+                                matchDialog?.handOff()
+                                matchDialog?.cancel()
+                                rematch(1500L)
                             }
 
                             "match_countdown" -> {
                                 val typeToken = object : TypeToken<MessageInfo<Int>>() {}
                                 val info = GsonUtils.fromJson<MessageInfo<Int>>(data, typeToken.type) ?: return
-                                when (type) {
-                                    "video" -> {
-                                        matchVideoDialog?.setTime(info.content)
-                                    }
-
-                                    "voice" -> {
-                                        matchAudioDialog?.setTime(info.content)
-                                    }
-                                }
+                                matchDialog?.setTime(info.content)
                             }
 
                             "system" -> {
@@ -486,8 +457,8 @@ class MatchActivity : BaseActivity() {
         }
     }
 
-    private fun initTimer(type: String) {
-        timer = object : CountDownTimer(30000L, 1000L) {
+    private fun initTimer(type: String, time: Long) {
+        timer = object : CountDownTimer(time, 1000L) {
             override fun onFinish() {
                 if (!isFinishing && !isDestroyed) {
                     if (type == "video" || type == "voice") {
@@ -499,13 +470,17 @@ class MatchActivity : BaseActivity() {
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                if (millisUntilFinished < 15000L && !showPrime) {
+                if (millisUntilFinished < 15000L) {
+                    timer?.cancel()
                     getUserInfo { userInfo ->
                         if (!userInfo.is_vip) {
                             DataManager.getProductList("sub") { list ->
                                 if (list.isEmpty()) return@getProductList
-                                showPrime = true
-                                MatchGuideDialog(this@MatchActivity, list[0]).show()
+                                MatchGuideDialog(this@MatchActivity, list[0]) {
+                                    //取消对话框后继续计时
+                                    initTimer(type, 15000L)
+                                    timer?.start()
+                                }
                             }
                         }
                     }
@@ -555,15 +530,11 @@ class MatchActivity : BaseActivity() {
         }
     }
 
-    private fun acceptInvite(type: String) {
+    private fun acceptInvite() {
         val msg = MsgInfo("match_accept_invite")
         val json = GsonUtils.toJson(msg)
         mWebSocketService?.sendMsg(json)
-
-        when (type) {
-            "video" -> matchVideoDialog?.waitConnect()
-            "voice" -> matchAudioDialog?.waitConnect()
-        }
+        matchDialog?.waitConnect()
     }
 
     private fun rejectInvite() {
@@ -584,27 +555,47 @@ class MatchActivity : BaseActivity() {
 
     private fun rematch(time: Long) {
         if (!isFinishing && !isDestroyed) {
-            handler.postDelayed({
-                val msg = MessageInfo("rematch", 0, 0, "")
-                val json = GsonUtils.toJson(msg)
-                mWebSocketService?.sendMsg(json)
-            }, time)
+            getUserInfo { userInfo ->
+                if (!userInfo.is_vip && rejectCallTimes == 5) {
+                    timer?.cancel()
+                    DataManager.getProductList("sub") { list ->
+                        if (list.isEmpty()) return@getProductList
+                        MatchGuideDialog(this, list[0]) {
+                            rejectCallTimes = 0
+                            timer?.start()
+                            //重新匹配
+                            handler.postDelayed({
+                                val msg = MessageInfo("rematch", 0, 0, "")
+                                val json = GsonUtils.toJson(msg)
+                                mWebSocketService?.sendMsg(json)
+                            }, time)
+                        }
+                    }
+                } else {
+                    handler.postDelayed({
+                        val msg = MessageInfo("rematch", 0, 0, "")
+                        val json = GsonUtils.toJson(msg)
+                        mWebSocketService?.sendMsg(json)
+                    }, time)
+                }
+            }
         }
     }
 
-    private fun startVideoPage(room: Room) {
+    private fun startVideoPage(room: Room, type: String) {
         val intent = Intent(this, VideoActivity::class.java)
         intent.putExtra("room", room)
         intent.putExtra("user", matcher)
-        intent.putExtra("type", "match")
+        intent.putExtra("type", type)
         startActivity(intent)
         finish()
     }
 
-    private fun startAudioPage(room: Room) {
+    private fun startVoicePage(room: Room, type: String) {
         val intent = Intent(this, AudioActivity::class.java)
         intent.putExtra("room", room)
         intent.putExtra("user", matcher)
+        intent.putExtra("type", type)
         startActivity(intent)
         finish()
     }
@@ -726,8 +717,6 @@ class MatchActivity : BaseActivity() {
 
         val type = intent.getStringExtra("type")
         if (type != null && type != "game") {
-            closeService()
-
             //刷新金币数量
             Config.mainHandler?.sendEmptyMessage(0x10006)
             Config.subscriberHandler?.sendEmptyMessage(0x10001)
@@ -743,6 +732,7 @@ class MatchActivity : BaseActivity() {
         val type = intent.getStringExtra("type")
         if (type == "video" || type == "voice") {
             timer?.cancel()
+            closeService()
         }
     }
 
@@ -760,8 +750,7 @@ class MatchActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        matchVideoDialog?.cancel()
-        matchAudioDialog?.cancel()
+        matchDialog?.cancel()
         finish()
     }
 }

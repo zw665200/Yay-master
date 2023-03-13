@@ -3,22 +3,17 @@ package com.ql.recovery.yay.ui.dialog
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.os.Handler
-import android.os.Looper
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.ViewPager2
+import androidx.recyclerview.widget.GridLayoutManager
 import com.android.billingclient.api.*
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.netease.yunxin.kit.adapters.DataAdapter
 import com.netease.yunxin.kit.common.utils.ThreadUtils.runOnUiThread
-import com.ql.recovery.bean.Prime
 import com.ql.recovery.bean.Server
 import com.ql.recovery.bean.UserInfo
 import com.ql.recovery.config.Config
@@ -40,12 +35,8 @@ class PrimeDialog(
 ) : Dialog(activity, R.style.app_dialog2) {
     private lateinit var binding: DialogPrimeBinding
     private lateinit var firebaseAnalytics: FirebaseAnalytics
-    private lateinit var pagerAdapter: DataAdapter<Prime>
-    private lateinit var billingClient: BillingClient
-    private var handler = Handler(Looper.getMainLooper())
-    private var runnable: Runnable? = null
-    private var currentPosition = 0
-    private var mList = arrayListOf<Prime>()
+    private lateinit var pagerAdapter: DataAdapter<Int>
+    private var mList = arrayListOf<Int>()
     private var lastClickTime = 0L
     private var currentServer: Server? = null
     private var mType = Type.Pay
@@ -61,7 +52,8 @@ class PrimeDialog(
 
         firebaseAnalytics = Firebase.analytics
 
-        binding.tvCommit.setOnClickListener { checkPay() }
+        binding.ivClose.setOnClickListener { cancel() }
+        binding.flMember.setOnClickListener { checkPay() }
 
         getSubProductList()
         initViewPager()
@@ -70,9 +62,9 @@ class PrimeDialog(
         if (isPrime) {
             initPrimeStatus()
         } else {
-            binding.llPrice.visibility = View.VISIBLE
-            binding.flDemon.visibility = View.GONE
-
+            binding.flMember.visibility = View.VISIBLE
+            binding.flClaim.visibility = View.GONE
+            binding.tvEndTime.visibility = View.GONE
             mType = Type.Pay
         }
 
@@ -83,8 +75,8 @@ class PrimeDialog(
     }
 
     private fun initPrimeStatus() {
-        binding.llPrice.visibility = View.GONE
-        binding.flDemon.visibility = View.VISIBLE
+        binding.flMember.visibility = View.GONE
+        binding.flClaim.visibility = View.VISIBLE
 
         mType = Type.Reward
         checkVIPStatus()
@@ -94,135 +86,81 @@ class PrimeDialog(
     }
 
     private fun initViewPager() {
-        if (runnable != null) {
-            return
-        }
-
-        runnable = kotlinx.coroutines.Runnable {
-            if (currentPosition == mList.size - 1) {
-                currentPosition = 0
-                binding.vpRights.setCurrentItem(0, false)
-            } else {
-                currentPosition += 1
-                binding.vpRights.setCurrentItem(currentPosition, false)
-            }
-        }
-
-        binding.vpRights.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                    binding.vpRights.setCurrentItem(currentPosition, false)
-                    return
-                }
-
-                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                    handler.removeCallbacks(runnable!!)
-                }
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                currentPosition = position
-                handler.postDelayed(runnable!!, 3000)
-
-                for (pos in 0 until binding.llIndicator.childCount) {
-                    val view = binding.llIndicator.getChildAt(pos)
-                    if (pos == position) {
-                        view.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_white, null)
-                    } else {
-                        view.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_grey, null)
-                    }
-                }
-            }
-
-        })
-
-        pagerAdapter = DataAdapter.Builder<Prime>()
+        pagerAdapter = DataAdapter.Builder<Int>()
             .setData(mList)
             .setLayoutId(R.layout.item_prime)
             .addBindView { itemView, itemData ->
                 val itemBinding = ItemPrimeBinding.bind(itemView)
-                itemBinding.ivPic.setImageResource(itemData.icon)
-                itemBinding.tvName.text = itemData.res
+                itemBinding.ivPic.setImageResource(itemData)
+
+                itemView.post {
+                    val width = itemView.width
+                    val lp = itemView.layoutParams
+                    lp.height = width * 253 / 483
+                    itemView.layoutParams = lp
+                }
             }
             .create()
 
-        val compositePageTransformer = CompositePageTransformer()
-
-        binding.vpRights.apply {
-            adapter = pagerAdapter
-            setPageTransformer(compositePageTransformer)
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        }
+        binding.rcBenefits.adapter = pagerAdapter
+        binding.rcBenefits.layoutManager = GridLayoutManager(activity, 2)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getBenefitsList() {
-        DataManager.getBasePrice { basePrice ->
-            mList.clear()
-            mList.add(Prime(R.drawable.prime_01, String.format(activity.getString(R.string.prime_rights_01), (basePrice.match_filter.sex_cost * basePrice.match_filter.vip_discounts).toInt())))
-            mList.add(Prime(R.drawable.prime_02, activity.getString(R.string.prime_rights_02)))
-            mList.add(Prime(R.drawable.prime_03, activity.getString(R.string.prime_rights_03)))
-            mList.add(Prime(R.drawable.prime_04, activity.getString(R.string.prime_rights_04)))
-            mList.add(Prime(R.drawable.prime_05, activity.getString(R.string.prime_rights_05)))
-            mList.add(Prime(R.drawable.prime_06, activity.getString(R.string.prime_rights_06)))
-            mList.add(Prime(R.drawable.prime_07, activity.getString(R.string.prime_rights_07)))
-            mList.add(Prime(R.drawable.prime_08, activity.getString(R.string.prime_rights_08)))
+        mList.clear()
+        mList.add(R.drawable.benefits_1)
+        mList.add(R.drawable.benefits_2)
+        mList.add(R.drawable.benefits_3)
+        mList.add(R.drawable.benefits_4)
+        mList.add(R.drawable.benefits_5)
+        mList.add(R.drawable.benefits_6)
+        mList.add(R.drawable.benefits_7)
+        mList.add(R.drawable.benefits_8)
 
-            pagerAdapter.notifyItemRangeChanged(0, mList.size)
-
-            for (item in 1..mList.size) {
-                val view = View(activity)
-                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                lp.setMargins(AppUtil.dp2px(activity, 5f), 0, 0, 0)
-                lp.width = AppUtil.dp2px(activity, 5f)
-                lp.height = AppUtil.dp2px(activity, 5f)
-                view.layoutParams = lp
-                view.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_grey, null)
-                binding.llIndicator.addView(view)
-            }
-        }
+        pagerAdapter.notifyDataSetChanged()
     }
 
     @SuppressLint("SetTextI18n")
     private fun getSubProductList() {
-        val listener = PurchasesUpdatedListener { billingResult, purchases -> }
-
-        billingClient = BillingClient.newBuilder(activity)
-            .setListener(listener)
-            .enablePendingPurchases()
-            .build()
-
         DataManager.getProductList("sub") { serverList ->
             if (serverList.isNotEmpty()) {
                 currentServer = serverList[0]
-                binding.tvPrice.text = "$${currentServer!!.price}"
+                binding.tvPrice.text = "$${currentServer!!.price}/Mon"
 
-                PayManager.get().getSubProductList(activity, billingClient, serverList) { position ->
-                    currentServer = serverList[position]
-                    binding.tvPrice.text = "${currentServer!!.change_Price}"
+                if (!isPrime) {
+                    val price = 5.99 - serverList[0].price.toFloat()
+                    binding.tvReduce.text = String.format(activity.getString(R.string.prime_reduce), price)
                 }
             }
         }
     }
 
     private fun checkVIPStatus() {
+        DataManager.checkDailyReward { isClaimd ->
+            if (isClaimd) {
+                binding.tvCount.text = String.format(activity.getString(R.string.prime_vip_daily_benefits_day), 50)
+                binding.tvClaim.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_light_yellow, null)
+                binding.tvClaim.text = activity.getString(R.string.prime_get)
+            } else {
+                binding.tvCount.text = String.format(activity.getString(R.string.prime_vip_daily_benefits_day), 50)
+                binding.tvClaim.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_yellow_8, null)
+                binding.tvClaim.text = activity.getString(R.string.prime_get_free)
+            }
+        }
+
         DataManager.getVipStatus { vip ->
             //设置会员截止时间
             binding.tvEndTime.text = String.format(activity.getString(R.string.prime_end_time), AppUtil.timeStamp2Date(vip.expires_date, ""))
 
             if (vip.received) {
-                binding.ivCheck.visibility = View.VISIBLE
-                binding.tvCount.text = vip.number_of_coins.toString()
-                binding.tvCommit.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_light_yellow, null)
-                binding.tvCommit.text = activity.getString(R.string.prime_get)
+                binding.tvCount.text = String.format(activity.getString(R.string.prime_vip_daily_benefits_day), vip.number_of_coins)
+                binding.tvClaim.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_light_yellow, null)
+                binding.tvClaim.text = activity.getString(R.string.prime_get)
             } else {
-                binding.ivCheck.visibility = View.GONE
-                binding.tvCount.text = vip.number_of_coins.toString()
-                binding.tvCommit.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_yellow_10, null)
-                binding.tvCommit.text = activity.getString(R.string.prime_get_free)
+                binding.tvCount.text = String.format(activity.getString(R.string.prime_vip_daily_benefits_day), vip.number_of_coins)
+                binding.tvClaim.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_yellow_8, null)
+                binding.tvClaim.text = activity.getString(R.string.prime_get_free)
             }
         }
     }
@@ -237,10 +175,9 @@ class PrimeDialog(
     private fun getReward() {
         DataManager.getVipReward {
             if (it) {
-                binding.tvCommit.isEnabled = false
-                binding.ivCheck.visibility = View.VISIBLE
-                binding.tvCommit.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_light_yellow, null)
-                binding.tvCommit.text = activity.getString(R.string.prime_get)
+                binding.tvClaim.isEnabled = false
+                binding.tvClaim.background = ResourcesCompat.getDrawable(activity.resources, R.drawable.shape_corner_light_yellow, null)
+                binding.tvClaim.text = activity.getString(R.string.prime_get)
 
                 //刷新用户信息
                 Config.mainHandler?.sendEmptyMessage(0x10006)

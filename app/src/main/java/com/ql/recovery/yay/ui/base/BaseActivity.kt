@@ -26,7 +26,7 @@ import com.ql.recovery.manager.DataManager
 import com.ql.recovery.yay.R
 import com.ql.recovery.yay.databinding.ActivityBaseBinding
 import com.ql.recovery.yay.manager.ReportManager
-import com.ql.recovery.yay.ui.dialog.MatchVideoDialog
+import com.ql.recovery.yay.ui.dialog.MatchDialog
 import com.ql.recovery.yay.ui.dialog.NoticeDialog
 import com.ql.recovery.yay.ui.guide.GuideActivity
 import com.ql.recovery.yay.ui.match.VideoActivity
@@ -37,7 +37,7 @@ abstract class BaseActivity : FragmentActivity() {
     private lateinit var baseBinding: ActivityBaseBinding
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     private var mk = MMKV.defaultMMKV()
-    private var dialog: MatchVideoDialog? = null
+    private var dialog: MatchDialog? = null
     private var startAt = 0L
     private var leaveAt = 0L
 

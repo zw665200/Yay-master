@@ -111,7 +111,7 @@ class DailyClubDialog(
     private fun doTask() {
         if (checkList.isNotEmpty()) {
             for (child in checkList) {
-                DataManager.getGreetingTemplates("normal", "woman") { list ->
+                DataManager.getGreetingTemplates("normal", 2) { list ->
                     //随机选一条内容
                     val random = Random().nextInt(list.size)
                     //自动发送打招呼内容

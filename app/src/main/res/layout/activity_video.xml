@@ -104,15 +104,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_40" />
 
-    <include
-        android:id="@+id/include_timer"
-        layout="@layout/layout_add_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dp_100"
-        android:visibility="gone" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -213,8 +204,8 @@
                     app:bottom_textSize="@dimen/sp_16"
                     app:max="100"
                     app:progress="25"
-                    app:stroke_width="@dimen/dp_1"
-                    app:progress_color="@color/color_purple_744df6"/>
+                    app:progress_color="@color/color_purple_744df6"
+                    app:stroke_width="@dimen/dp_1" />
 
             </LinearLayout>
 

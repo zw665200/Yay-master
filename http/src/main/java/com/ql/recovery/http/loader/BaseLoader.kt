@@ -500,7 +500,7 @@ object BaseLoader {
     /**
      * 查找系统打招呼消息模板
      */
-    fun getGreetingTemplates(role: String, sex: String): Observable<Response<List<Greeting>>> {
+    fun getGreetingTemplates(role: String, sex: Int): Observable<Response<List<Greeting>>> {
         return RetrofitServiceManager.get().baseService.getGreetingTemplates(Config.CLIENT_TOKEN, role, sex)
     }
 

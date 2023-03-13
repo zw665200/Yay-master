@@ -514,7 +514,7 @@ interface BaseService {
     fun getGreetingTemplates(
         @Header("Authorization") authorization: String,
         @Query("role") role: String,
-        @Query("sex") sex: String
+        @Query("sex") sex: Int
     ): Observable<Response<List<Greeting>>>
 
     /**

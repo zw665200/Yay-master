@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_30"
-            android:src="@drawable/match_accept" />
+            android:src="@drawable/match_accept_video" />
 
         <LinearLayout
             android:id="@+id/ll_rematch"

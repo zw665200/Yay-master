@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient_audio"
+    android:background="@drawable/bg_wl"
     android:fitsSystemWindows="false"
     android:focusable="true"
     android:focusableInTouchMode="true">
@@ -66,7 +67,7 @@
                                 android:id="@+id/iv_your_avatar"
                                 android:layout_width="@dimen/dp_80"
                                 android:layout_height="@dimen/dp_80"
-                                android:layout_gravity="center"/>
+                                android:layout_gravity="center" />
 
                         </FrameLayout>
 
@@ -212,6 +213,38 @@
                 android:layout_marginEnd="@dimen/sp_15"
                 android:orientation="vertical">
 
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/free_gift_bg">
+
+                    <ImageView
+                        android:id="@+id/iv_gift"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/paishou" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/sf_gift_bg">
+
+                    <ImageView
+                        android:id="@+id/iv_gift_sf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/sf_gift" />
+
+                </FrameLayout>
+
                 <ImageView
                     android:id="@+id/iv_game"
                     android:layout_width="wrap_content"
@@ -219,16 +252,21 @@
                     android:layout_gravity="center|end"
                     android:layout_marginTop="@dimen/dp_10"
                     android:gravity="center"
-                    android:src="@drawable/pp_yx" />
+                    android:src="@drawable/ic_game_audio" />
 
-                <ImageView
-                    android:id="@+id/iv_gift"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|end"
+                <com.ql.recovery.yay.ui.self.ProgressView
+                    android:id="@+id/progress_View"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:gravity="center"
-                    android:src="@drawable/pp_gift" />
+                    app:bottom_text="30"
+                    app:bottom_textColor="@color/color_purple_744df6"
+                    app:bottom_textSize="@dimen/sp_16"
+                    app:max="100"
+                    app:progress="25"
+                    app:progress_color="@color/color_purple_744df6"
+                    app:stroke_width="@dimen/dp_1" />
 
             </LinearLayout>
 
@@ -246,7 +284,7 @@
             android:id="@+id/include_bottom"
             layout="@layout/layout_bottom_match"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_80"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom" />
 
     </LinearLayout>

@@ -3,11 +3,9 @@ package com.ql.recovery.yay.ui.dialog
 import android.animation.AnimatorSet
 import android.app.Activity
 import android.app.Dialog
-import android.graphics.Typeface
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import com.blongho.country_data.World
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions

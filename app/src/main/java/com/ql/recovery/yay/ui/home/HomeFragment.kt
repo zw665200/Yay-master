@@ -1,8 +1,6 @@
 package com.ql.recovery.yay.ui.home
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +23,6 @@ import com.ql.recovery.yay.ui.dialog.CompleteProfileDialog
 import com.ql.recovery.yay.ui.dialog.FilterDialog
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
 import com.ql.recovery.yay.ui.match.MatchActivity
-import com.ql.recovery.yay.ui.mine.CountryActivity
 import com.ql.recovery.yay.ui.store.StoreActivity
 import com.ql.recovery.yay.util.AppUtil
 import com.ql.recovery.yay.util.DoubleUtils

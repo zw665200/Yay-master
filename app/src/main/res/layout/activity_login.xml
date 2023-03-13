@@ -115,12 +115,15 @@
             android:padding="@dimen/dp_20"
             android:text="@string/login_phone_login"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/sp_16" />
+            android:textSize="@dimen/sp_16"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_30"
+            android:layout_marginStart="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_30"
+            android:layout_marginEnd="@dimen/dp_30"
             android:orientation="horizontal">
 
             <View
@@ -146,6 +149,14 @@
                 android:background="@color/color_dark_grey" />
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/login_guest"
+            android:textColor="@color/color_dark_grey"
+            android:textSize="@dimen/sp_14" />
 
         <LinearLayout
             android:layout_width="match_parent"

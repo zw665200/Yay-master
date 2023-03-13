@@ -76,7 +76,7 @@ class MainActivity : BaseFragmentActivity() {
     }
 
     override fun initView() {
-//        checkDailyRecommend()
+        checkDailyRecommend()
         checkMemberDailyReward()
 
         getUserInfo { userInfo ->
@@ -95,11 +95,12 @@ class MainActivity : BaseFragmentActivity() {
      */
     private fun checkDailyRecommend() {
         getUserInfo { userInfo ->
-            if (userInfo.role != "anchor") {
+            if (userInfo.role == "normal") {
                 val today = AppUtil.getTodayDay()
                 val date = getLocalStorage().decodeString("daily_recommend_date", "")
                 if (today != date) {
                     handler.postDelayed({
+                        getLocalStorage().encode("daily_recommend_date", today)
                         DailyClubDialog(this).show()
                     }, 1000L)
                 }
@@ -226,6 +227,30 @@ class MainActivity : BaseFragmentActivity() {
                         val message = MessageInfo("rematch", 0, 0, "")
                         val json = GsonUtils.toJson(message)
                         mWebSocketService?.sendMsg(json)
+                    }
+
+                    0x10010 -> {
+                        //进入匹配池
+                        getUserInfo { userInfo ->
+                            //只有身份是主播时全程开启匹配
+                            if (userInfo.role == "anchor") {
+                                if (mWebSocketService == null) {
+                                    //开启匹配链接
+                                    startWebSocketService(userInfo.uid, "video", getMatchConfig())
+                                }
+                            }
+                        }
+                    }
+
+                    0x10011 -> {
+                        getUserInfo { userInfo ->
+                            if (userInfo.role == "anchor") {
+                                if (mWebSocketService != null) {
+                                    //离开匹配池
+                                    closeService()
+                                }
+                            }
+                        }
                     }
                 }
             }

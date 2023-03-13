@@ -19,7 +19,7 @@
     <string name="login_facebook">Login With Facebook</string>
     <string name="login_whatsapp">Login with Test(Demo)</string>
     <string name="login_google">Login with Google</string>
-    <string name="login_guest">Login with Guest</string>
+    <string name="login_guest">Guest</string>
     <string name="login_phone_register">Register by phone</string>
     <string name="login_phone_login">Login by phone</string>
     <string name="login_input_number">Enter the phone number</string>
@@ -210,6 +210,9 @@
     <string name="match_ad_title_3">订阅会员，加速优质用户匹配</string>
     <string name="match_sub">订阅会员</string>
     <string name="match_price">$%1s</string>
+    <string name="match_room_cost_minute_start">After %1ss, you will be cost %2d</string>
+    <string name="match_room_cost_minute_end">/min</string>
+    <string name="match_room_not_enough">余额不足，25秒后通话将会挂断，请充值~</string>
 
     <!--match record-->
     <string name="record_title">History</string>
@@ -277,6 +280,10 @@
     <string name="mine_photo_wall">Photo wall</string>
     <string name="mine_online_time">Online hours today：</string>
     <string name="mine_get_phone_count">Calls today：</string>
+    <string name="mine_call_time">Calls hours today：</string>
+    <string name="mine_reject_rates">Calls reject rates today：</string>
+    <string name="mine_call_benefits">Calls benefits today：</string>
+    <string name="mine_gifts_benefits">Gifts benefits today：</string>
 
     <!--chat-->
     <string name="chat_video_blur_tip">The blur effect disappears when facing the camera</string>
@@ -505,7 +512,7 @@
     <string name="history_item_name">Recharge Time</string>
 
     <!--prime-->
-    <string name="prime_title">Get Yay VIP</string>
+    <string name="prime_title">Get Yay Prime</string>
     <string name="prime_rights_tip">Enjoy <font color="#FBD930">eight benefits</font></string>
     <string name="prime_sub">Subscribe now</string>
     <string name="prime_rights_01">Each matching filter only costs %1$d gems (Gender/ Country)</string>
@@ -522,6 +529,10 @@
     <string name="prime_end_time">Membership is valid until:%1$s</string>
     <string name="prime_daily_coin_title">Get your coins today</string>
     <string name="prime_daily_coin_get">Claim</string>
+    <string name="prime_benefits">Membership benefits</string>
+    <string name="prime_reduce">First subscribe reduce $%1s</string>
+    <string name="prime_vip_daily_benefits">VIP Daily Benefits</string>
+    <string name="prime_vip_daily_benefits_day">%1d/day</string>
 
     <!--game-->
     <string name="game_title">Probability theory</string>

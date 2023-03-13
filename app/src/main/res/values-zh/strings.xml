@@ -238,6 +238,10 @@
     <string name="mine_photo_wall">照片墙</string>
     <string name="mine_online_time">今日累计在线时长：</string>
     <string name="mine_get_phone_count">累计接通电话次数：</string>
+    <string name="mine_call_time">今天通话时长：</string>
+    <string name="mine_reject_rates">今天拒接率：</string>
+    <string name="mine_call_benefits">今天通话收益：</string>
+    <string name="mine_gifts_benefits">今天礼物收益：</string>
 
     <!--chat-->
     <string name="chat_video_blur_tip">对方面对镜头模糊效果就会消失</string>

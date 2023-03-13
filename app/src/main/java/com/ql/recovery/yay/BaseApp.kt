@@ -47,7 +47,7 @@ import com.ql.recovery.yay.databinding.LayoutFloatChatBinding
 import com.ql.recovery.yay.manager.DBManager
 import com.ql.recovery.yay.manager.ImageManager
 import com.ql.recovery.yay.manager.ReportManager
-import com.ql.recovery.yay.ui.dialog.MatchVideoDialog
+import com.ql.recovery.yay.ui.dialog.MatchDialog
 import com.ql.recovery.yay.ui.dialog.NoticeDialog
 import com.ql.recovery.yay.ui.dialog.PrimeDialog
 import com.ql.recovery.yay.ui.login.LoginActivity
@@ -85,7 +85,7 @@ class BaseApp : Application() {
     private var downY = 0
 
     //对话框和悬浮窗
-    private var matchVideoDialog: MatchVideoDialog? = null
+    private var matchDialog: MatchDialog? = null
     private var windowManager: WindowManager? = null
     private var floatView: LayoutFloatChatBinding? = null
 
@@ -274,15 +274,22 @@ class BaseApp : Application() {
                                 if (activity != null) {
                                     if (!activity.isFinishing && !activity.isDestroyed) {
                                         matcher = info.content.user
-                                        matchVideoDialog?.setUser(info.content.user)
-                                        matchVideoDialog?.setMatchType(info.content.room_type, info.content.transaction_type)
-                                        matchVideoDialog?.startConnect()
-                                        matchVideoDialog?.show()
+                                        matchDialog?.setUser(info.content.user)
+                                        matchDialog?.setMatchType(info.content.room_type, info.content.transaction_type)
+                                        matchDialog?.startConnect("video")
+                                        matchDialog?.show()
+
+                                        //全局免提
+                                        val autoAccept = MMKV.defaultMMKV().decodeBool("auto_accept", false)
+                                        if (autoAccept) {
+                                            matchDialog?.waitConnect()
+                                            acceptInvite()
+                                        }
 
                                         //免提模式
                                         val config = getMatchConfig()
                                         if (config.hand_free) {
-                                            matchVideoDialog?.waitConnect()
+                                            matchDialog?.waitConnect()
                                             acceptInvite()
                                         }
 
@@ -294,18 +301,16 @@ class BaseApp : Application() {
                                 }
                             }
 
-                            "match_accept_invite" -> {
-
-                            }
+                            "match_accept_invite" -> {}
 
                             "match_reject_invite" -> {
-                                matchVideoDialog?.handOff()
+                                matchDialog?.handOff()
 
                                 //5秒后进入匹配池
                                 rematch(5000L)
 
                                 handler.postDelayed({
-                                    matchVideoDialog?.cancel()
+                                    matchDialog?.cancel()
                                 }, 1500L)
                             }
 
@@ -315,7 +320,7 @@ class BaseApp : Application() {
 
                                 MMKV.defaultMMKV().encode("recent_record", "match")
 
-                                matchVideoDialog?.cancel()
+                                matchDialog?.cancel()
 
                                 val activity = currentActivity?.get()
                                 if (activity != null) {
@@ -324,8 +329,8 @@ class BaseApp : Application() {
                             }
 
                             "match_invite_timeout" -> {
-                                matchVideoDialog?.connectingTimeout()
-                                matchVideoDialog?.cancel()
+                                matchDialog?.connectingTimeout()
+                                matchDialog?.cancel()
                                 removeFloatView()
 
                                 rematch(5000L)
@@ -338,21 +343,19 @@ class BaseApp : Application() {
                             }
 
                             "match_peer_disconnect" -> {
-                                matchVideoDialog?.handOff()
-                                matchVideoDialog?.cancel()
+                                matchDialog?.handOff()
+                                matchDialog?.cancel()
                                 rematch(1500L)
                             }
 
                             "match_countdown" -> {
                                 val typeToken = object : TypeToken<MessageInfo<Int>>() {}
                                 val info = GsonUtils.fromJson<MessageInfo<Int>>(data, typeToken.type) ?: return
-                                matchVideoDialog?.setTime(info.content)
+                                matchDialog?.setTime(info.content)
                                 if (!isForeground) {
-                                    matchVideoDialog?.cancel()
+                                    matchDialog?.cancel()
                                 } else {
-                                    JLog.i("2222 dialog = $matchVideoDialog")
-//                                    matchVideoDialog?.setUser(matcher)
-                                    matchVideoDialog?.show()
+                                    matchDialog?.show()
                                 }
                             }
 
@@ -638,16 +641,16 @@ class BaseApp : Application() {
     }
 
     private fun initAnchorVideoDialog(activity: Activity) {
-        matchVideoDialog = MatchVideoDialog(activity) { status, type ->
-            val user = matchVideoDialog?.getUser()
+        matchDialog = MatchDialog(activity) { status, type ->
+            val user = matchDialog?.getUser()
             if (user != null) {
                 if (type == "private") {
                     when (status) {
                         MatchStatus.Accept -> {
-                            matchVideoDialog?.waitConnectForPersonal()
+                            matchDialog?.waitConnectForPersonal()
                             DataManager.handlerVideoInvite(user.uid, true, "default") { room ->
                                 if (room != null) {
-                                    matchVideoDialog?.cancel()
+                                    matchDialog?.cancel()
                                     startVideoPay(activity, room, user, "receiver")
                                 }
                             }
@@ -697,12 +700,26 @@ class BaseApp : Application() {
     /**
      * 弹出视频聊天对话框（接收方）
      */
-    private fun showVideoChat(user: User) {
-        if (matchVideoDialog != null && matchVideoDialog?.isShowing == false) {
-            matchVideoDialog?.setUser(user)
-            matchVideoDialog?.setMatchType("private", null)
-            matchVideoDialog?.startConnectForPersonal()
-            matchVideoDialog?.show()
+    private fun showVideoChat(activity: Activity, user: User) {
+        if (matchDialog != null && matchDialog?.isShowing == false) {
+            matchDialog?.setUser(user)
+            matchDialog?.setMatchType("private", null)
+            matchDialog?.startConnectForPersonal()
+            matchDialog?.show()
+
+            //设置了免提模式，3秒后自动进入视频聊天
+            val autoAccept = MMKV.defaultMMKV().decodeBool("auto_accept", false)
+            if (autoAccept) {
+                handler.postDelayed({
+                    matchDialog?.waitConnectForPersonal()
+                    DataManager.handlerVideoInvite(user.uid, true, "default") { room ->
+                        if (room != null) {
+                            matchDialog?.cancel()
+                            startVideoPay(activity, room, user, "receiver")
+                        }
+                    }
+                }, 3000L)
+            }
         }
     }
 
@@ -710,11 +727,11 @@ class BaseApp : Application() {
      * 弹出视频聊天对话框（发起方）
      */
     private fun showVideoChatFromMyself(user: User) {
-        if (matchVideoDialog != null && matchVideoDialog?.isShowing == false) {
-            matchVideoDialog?.setUser(user)
-            matchVideoDialog?.setMatchType("private", null)
-            matchVideoDialog?.waitConnectForPersonal()
-            matchVideoDialog?.show()
+        if (matchDialog != null && matchDialog?.isShowing == false) {
+            matchDialog?.setUser(user)
+            matchDialog?.setMatchType("private", null)
+            matchDialog?.waitConnectForPersonal()
+            matchDialog?.show()
         }
     }
 
@@ -819,7 +836,7 @@ class BaseApp : Application() {
 
         floatView?.root?.setOnClickListener {
             windowManager?.removeView(floatView?.root)
-            matchVideoDialog?.show()
+            matchDialog?.show()
         }
     }
 
@@ -845,7 +862,7 @@ class BaseApp : Application() {
     }
 
     private fun acceptInvite() {
-        matchVideoDialog?.waitConnect()
+        matchDialog?.waitConnect()
         Config.mainHandler?.sendEmptyMessage(0x10007)
     }
 
@@ -896,8 +913,7 @@ class BaseApp : Application() {
                                     && !name.contains("AudioActivity")
                                     && !name.contains("GameActivity")
                                 ) {
-                                    matchVideoDialog?.setMatchType("private", null)
-                                    showVideoChat(info.content)
+                                    showVideoChat(activity, info.content)
                                 } else {
                                     //自动拒绝对方的邀请
                                     DataManager.handlerVideoInvite(info.content.uid, false, "busy") {}
@@ -911,11 +927,11 @@ class BaseApp : Application() {
                         val typeToken = object : TypeToken<MessageInfo<Room>>() {}
                         val info = GsonUtils.fromJson<MessageInfo<Room>>(json, typeToken.type)
                         if (info != null) {
-                            if (matchVideoDialog != null) {
-                                val user = matchVideoDialog!!.getUser()
+                            if (matchDialog != null) {
+                                val user = matchDialog!!.getUser()
                                 if (user != null) {
-                                    if (matchVideoDialog?.isShowing == true) {
-                                        matchVideoDialog?.cancel()
+                                    if (matchDialog?.isShowing == true) {
+                                        matchDialog?.cancel()
                                         val activity = currentActivity?.get()
                                         if (activity != null) {
                                             startVideoPay(activity, info.content, user, "sender")
@@ -931,11 +947,11 @@ class BaseApp : Application() {
                         val typeToken = object : TypeToken<MessageInfo<Reason>>() {}
                         val info = GsonUtils.fromJson<MessageInfo<Reason>>(json, typeToken.type)
                         if (info != null) {
-                            if (matchVideoDialog != null) {
-                                matchVideoDialog?.rejectConnectForPersonal(info.content)
+                            if (matchDialog != null) {
+                                matchDialog?.rejectConnectForPersonal(info.content)
 
                                 //2秒后关闭对话框
-                                handler.postDelayed({ matchVideoDialog?.cancel() }, 2000L)
+                                handler.postDelayed({ matchDialog?.cancel() }, 2000L)
 
                                 //如果进入房间则通知房间取消视频
                                 Config.roomHandler?.sendEmptyMessage(0x10005)

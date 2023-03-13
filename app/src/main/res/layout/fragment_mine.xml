@@ -203,53 +203,226 @@
                 android:background="@drawable/match_mask">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/dp_15"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/mine_online_time"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sp_12" />
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tv_online_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/din_b"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sp_12" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dp_15"
+                                android:text="@string/mine_online_time"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_11" />
+
+                            <TextView
+                                android:id="@+id/tv_online_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/din_m"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_12" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="@dimen/dp_10"
+                            android:layout_gravity="center_vertical"
+                            android:background="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:text="@string/mine_get_phone_count"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_11" />
+
+                            <TextView
+                                android:id="@+id/tv_call_times"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/din_m"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_12" />
+
+                            <ImageView
+                                android:id="@+id/iv_unfold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end|center_vertical"
+                                android:layout_marginStart="@dimen/dp_15"
+                                android:padding="@dimen/dp_5"
+                                android:src="@drawable/i_d" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_second_data"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/dp_10"
-                        android:text="@string/mine_get_phone_count"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sp_12" />
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/tv_call_times"
-                        android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dp_15"
+                                android:text="@string/mine_call_time"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_11" />
+
+                            <TextView
+                                android:id="@+id/tv_call_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/din_m"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_12" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="@dimen/dp_10"
+                            android:layout_gravity="center_vertical"
+                            android:background="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:text="@string/mine_reject_rates"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_11" />
+
+                            <TextView
+                                android:id="@+id/tv_call_reject_rate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/din_m"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_12" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_third_data"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/din_b"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/sp_12" />
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dp_15"
+                                android:text="@string/mine_call_benefits"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_11" />
+
+                            <TextView
+                                android:id="@+id/tv_call_benefit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/din_m"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_12" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="@dimen/dp_10"
+                            android:layout_gravity="center_vertical"
+                            android:background="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:text="@string/mine_gifts_benefits"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_11" />
+
+                            <TextView
+                                android:id="@+id/tv_gift_benefit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/din_m"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sp_12" />
+
+                            <ImageView
+                                android:id="@+id/iv_fold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end|center_vertical"
+                                android:layout_marginStart="@dimen/dp_15"
+                                android:padding="@dimen/dp_5"
+                                android:src="@drawable/i_b" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/iv_refresh"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="@dimen/dp_15"
-                    android:src="@drawable/mine_refresh" />
 
             </FrameLayout>
 

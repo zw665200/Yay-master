@@ -60,7 +60,8 @@ class MineFragment : BaseFragment() {
         binding!!.llFollowing.setOnClickListener { toFollowPage() }
         binding!!.includeUser.tvLevel.setOnClickListener { toLevelPage() }
         binding!!.includeUser.tvScore.setOnClickListener { toScorePage() }
-        binding!!.ivRefresh.setOnClickListener { requestToUpdateOnlineTime() }
+        binding!!.ivUnfold.setOnClickListener { unFold() }
+        binding!!.ivFold.setOnClickListener { fold() }
 
         waitingDialog = WaitingDialog(requireActivity())
         getUserInfo()
@@ -233,6 +234,7 @@ class MineFragment : BaseFragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun getAnchorOnline() {
         getUserInfo { userInfo ->
             if (userInfo.role == "anchor") {
@@ -241,9 +243,25 @@ class MineFragment : BaseFragment() {
                     JLog.i("allTime = $allTime")
                     binding?.tvOnlineTime?.text = allTime.toString()
                     binding?.tvCallTimes?.text = onlineTime.answer_count.toString()
+                    binding?.tvCallTime?.text = AppUtil.second2Hour(onlineTime.call_duration)
+                    binding?.tvCallRejectRate?.text = "${onlineTime.reject_rate}%"
+                    binding?.tvCallBenefit?.text = "${onlineTime.call_income} gems"
+                    binding?.tvGiftBenefit?.text = "${onlineTime.gift_income} gems"
                 }
             }
         }
+    }
+
+    private fun unFold() {
+        binding?.ivUnfold?.visibility = View.GONE
+        binding?.llSecondData?.visibility = View.VISIBLE
+        binding?.llThirdData?.visibility = View.VISIBLE
+    }
+
+    private fun fold() {
+        binding?.ivUnfold?.visibility = View.VISIBLE
+        binding?.llSecondData?.visibility = View.GONE
+        binding?.llThirdData?.visibility = View.GONE
     }
 
     @SuppressLint("NotifyDataSetChanged")
